@@ -1,4945 +1,478 @@
+/*
+ * ATTENTION: The "eval" devtool has been used (maybe by default in mode: "development").
+ * This devtool is neither made for production nor for readable output files.
+ * It uses "eval()" calls to create a separate source file in the browser devtools.
+ * If you are trying to read the output file, select a different devtool (https://webpack.js.org/configuration/devtool/)
+ * or disable the default devtool with "devtool: false".
+ * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
+ */
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 4716:
-/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+/***/ "./index.js":
+/*!******************!*\
+  !*** ./index.js ***!
+  \******************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-const core = __nccwpck_require__(4181);
-const path = __nccwpck_require__(9411);
-const fs = __nccwpck_require__(7561);
-const toml = __nccwpck_require__(2521);
-
-function run() {
-  try {
-    const fileName = core.getInput("file", { required: true });
-    const key = core.getInput("key", { required: true });
-    const value = core.getInput("value", { required: true });
-
-    const filePath = path.join(process.env.GITHUB_WORKSPACE, fileName);
-
-    let tomlContent = getTomlContent(filePath);
-    let tomlObj = parseTomlContent(tomlContent);
-
-    updateToml(tomlObj, key, value);
-    writeTomlObj(tomlObj, filePath);
-  } catch (error) {
-    core.setFailed(error.message);
-  }
-}
-
-function updateToml(tomlObj, key, value) {
-  let keys = key.split(".");
-
-  if (keys.length == 1) {
-    tomlObj[keys[0]] = value;
-    return;
-  }
-
-  let targetTable = null;
-  for (let index = 0; index < keys.length - 1; index++) {
-    if (targetTable === null) {
-      targetTable = tomlObj[keys[index]];
-    } else if (targetTable[keys[index]] === undefined) {
-      let newTable = {};
-      targetTable[keys[index]] = newTable;
-      targetTable = newTable;
-    } else {
-      targetTable = targetTable[keys[index]];
-    }
-  }
-  targetTable[keys[keys.length - 1]] = value;
-}
-
-function getTomlValue(tomlObj, key) {
-  let keys = key.split(".");
-
-  let targetTable = null;
-  for (let index = 0; index < keys.length; index++) {
-    if (targetTable === null) {
-      targetTable = tomlObj[keys[index]];
-    } else {
-      targetTable = targetTable[keys[index]];
-    }
-  }
-
-  return targetTable;
-}
-
-function getTomlContent(filePath) {
-  if (!fs.existsSync(filePath)) {
-    throw new Error(`The toml file does not exist: ${filePath}`);
-  }
-
-  return fs.readFileSync(filePath, "utf8");
-}
-
-function parseTomlContent(tomlContent) {
-  return toml.parse(tomlContent);
-}
-
-function stringifyToml(tomlObj) {
-  return toml.stringify(tomlObj);
-}
-
-function writeTomlObj(tomlObj, filePath) {
-  fs.writeFileSync(filePath, stringifyToml(tomlObj));
-}
-
-module.exports = {
-  updateToml,
-  getTomlValue,
-  getTomlContent,
-  parseTomlContent,
-  stringifyToml,
-  writeTomlObj,
-};
-
-run();
-
+eval("const core = __webpack_require__(/*! @actions/core */ \"./node_modules/@actions/core/lib/core.js\");\nconst path = __webpack_require__(/*! node:path */ \"node:path\");\nconst fs = __webpack_require__(/*! node:fs */ \"node:fs\");\nconst toml = __webpack_require__(/*! @iarna/toml */ \"./node_modules/@iarna/toml/toml.js\");\n\nfunction run() {\n  try {\n    const fileName = core.getInput(\"file\", { required: true });\n    const key = core.getInput(\"key\", { required: true });\n    const value = core.getInput(\"value\", { required: true });\n\n    const filePath = path.join(process.env.GITHUB_WORKSPACE, fileName);\n    core.info(`TOML filePath: ${filePath}`);\n    core.info(`TOML fileName: ${fileName}`);\n    let tomlContent = getTomlContent(filePath);\n    \n    let tomlObj = parseTomlContent(tomlContent);\n\n    updateToml(tomlObj, key, value);\n    writeTomlObj(tomlObj, fileName);\n  } catch (error) {\n    core.setFailed(error.message);\n  }\n}\n\nfunction updateToml(tomlObj, key, value) {\n  let keys = key.split(\".\");\n\n  if (keys.length == 1) {\n    tomlObj[keys[0]] = value;\n    return;\n  }\n\n  let targetTable = null;\n  for (let index = 0; index < keys.length - 1; index++) {\n    if (targetTable === null) {\n      targetTable = tomlObj[keys[index]];\n    } else if (targetTable[keys[index]] === undefined) {\n      let newTable = {};\n      targetTable[keys[index]] = newTable;\n      targetTable = newTable;\n    } else {\n      targetTable = targetTable[keys[index]];\n    }\n  }\n  targetTable[keys[keys.length - 1]] = value;\n}\n\nfunction getTomlValue(tomlObj, key) {\n  let keys = key.split(\".\");\n\n  let targetTable = null;\n  for (let index = 0; index < keys.length; index++) {\n    if (targetTable === null) {\n      targetTable = tomlObj[keys[index]];\n    } else {\n      targetTable = targetTable[keys[index]];\n    }\n  }\n\n  return targetTable;\n}\n\nfunction getTomlContent(filePath) {\n  if (!fs.existsSync(filePath)) {\n    throw new Error(`The toml file does not exist: ${filePath}`);\n  }\n\n  return fs.readFileSync(filePath, \"utf8\");\n}\n\nfunction parseTomlContent(tomlContent) {\n  return toml.parse(tomlContent);\n}\n\nfunction stringifyToml(tomlObj) {\n  return toml.stringify(tomlObj);\n}\n\nfunction writeTomlObj(tomlObj, filePath) {\n  fs.writeFileSync(filePath, stringifyToml(tomlObj));\n}\n\nmodule.exports = {\n  updateToml,\n  getTomlValue,\n  getTomlContent,\n  parseTomlContent,\n  stringifyToml,\n  writeTomlObj,\n};\n\nrun();\n\n\n//# sourceURL=webpack://toml-editor/./index.js?");
 
 /***/ }),
 
-/***/ 9777:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+/***/ "./node_modules/@actions/core/lib/command.js":
+/*!***************************************************!*\
+  !*** ./node_modules/@actions/core/lib/command.js ***!
+  \***************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.issue = exports.issueCommand = void 0;
-const os = __importStar(__nccwpck_require__(2037));
-const utils_1 = __nccwpck_require__(9855);
-/**
- * Commands
- *
- * Command Format:
- *   ::name key=value,key=value::message
- *
- * Examples:
- *   ::warning::This is the message
- *   ::set-env name=MY_VAR::some value
- */
-function issueCommand(command, properties, message) {
-    const cmd = new Command(command, properties, message);
-    process.stdout.write(cmd.toString() + os.EOL);
-}
-exports.issueCommand = issueCommand;
-function issue(name, message = '') {
-    issueCommand(name, {}, message);
-}
-exports.issue = issue;
-const CMD_STRING = '::';
-class Command {
-    constructor(command, properties, message) {
-        if (!command) {
-            command = 'missing.command';
-        }
-        this.command = command;
-        this.properties = properties;
-        this.message = message;
-    }
-    toString() {
-        let cmdStr = CMD_STRING + this.command;
-        if (this.properties && Object.keys(this.properties).length > 0) {
-            cmdStr += ' ';
-            let first = true;
-            for (const key in this.properties) {
-                if (this.properties.hasOwnProperty(key)) {
-                    const val = this.properties[key];
-                    if (val) {
-                        if (first) {
-                            first = false;
-                        }
-                        else {
-                            cmdStr += ',';
-                        }
-                        cmdStr += `${key}=${escapeProperty(val)}`;
-                    }
-                }
-            }
-        }
-        cmdStr += `${CMD_STRING}${escapeData(this.message)}`;
-        return cmdStr;
-    }
-}
-function escapeData(s) {
-    return utils_1.toCommandValue(s)
-        .replace(/%/g, '%25')
-        .replace(/\r/g, '%0D')
-        .replace(/\n/g, '%0A');
-}
-function escapeProperty(s) {
-    return utils_1.toCommandValue(s)
-        .replace(/%/g, '%25')
-        .replace(/\r/g, '%0D')
-        .replace(/\n/g, '%0A')
-        .replace(/:/g, '%3A')
-        .replace(/,/g, '%2C');
-}
-//# sourceMappingURL=command.js.map
+eval("\nvar __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {\n    if (k2 === undefined) k2 = k;\n    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });\n}) : (function(o, m, k, k2) {\n    if (k2 === undefined) k2 = k;\n    o[k2] = m[k];\n}));\nvar __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {\n    Object.defineProperty(o, \"default\", { enumerable: true, value: v });\n}) : function(o, v) {\n    o[\"default\"] = v;\n});\nvar __importStar = (this && this.__importStar) || function (mod) {\n    if (mod && mod.__esModule) return mod;\n    var result = {};\n    if (mod != null) for (var k in mod) if (k !== \"default\" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);\n    __setModuleDefault(result, mod);\n    return result;\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexports.issue = exports.issueCommand = void 0;\nconst os = __importStar(__webpack_require__(/*! os */ \"os\"));\nconst utils_1 = __webpack_require__(/*! ./utils */ \"./node_modules/@actions/core/lib/utils.js\");\n/**\n * Commands\n *\n * Command Format:\n *   ::name key=value,key=value::message\n *\n * Examples:\n *   ::warning::This is the message\n *   ::set-env name=MY_VAR::some value\n */\nfunction issueCommand(command, properties, message) {\n    const cmd = new Command(command, properties, message);\n    process.stdout.write(cmd.toString() + os.EOL);\n}\nexports.issueCommand = issueCommand;\nfunction issue(name, message = '') {\n    issueCommand(name, {}, message);\n}\nexports.issue = issue;\nconst CMD_STRING = '::';\nclass Command {\n    constructor(command, properties, message) {\n        if (!command) {\n            command = 'missing.command';\n        }\n        this.command = command;\n        this.properties = properties;\n        this.message = message;\n    }\n    toString() {\n        let cmdStr = CMD_STRING + this.command;\n        if (this.properties && Object.keys(this.properties).length > 0) {\n            cmdStr += ' ';\n            let first = true;\n            for (const key in this.properties) {\n                if (this.properties.hasOwnProperty(key)) {\n                    const val = this.properties[key];\n                    if (val) {\n                        if (first) {\n                            first = false;\n                        }\n                        else {\n                            cmdStr += ',';\n                        }\n                        cmdStr += `${key}=${escapeProperty(val)}`;\n                    }\n                }\n            }\n        }\n        cmdStr += `${CMD_STRING}${escapeData(this.message)}`;\n        return cmdStr;\n    }\n}\nfunction escapeData(s) {\n    return utils_1.toCommandValue(s)\n        .replace(/%/g, '%25')\n        .replace(/\\r/g, '%0D')\n        .replace(/\\n/g, '%0A');\n}\nfunction escapeProperty(s) {\n    return utils_1.toCommandValue(s)\n        .replace(/%/g, '%25')\n        .replace(/\\r/g, '%0D')\n        .replace(/\\n/g, '%0A')\n        .replace(/:/g, '%3A')\n        .replace(/,/g, '%2C');\n}\n//# sourceMappingURL=command.js.map\n\n//# sourceURL=webpack://toml-editor/./node_modules/@actions/core/lib/command.js?");
 
 /***/ }),
 
-/***/ 4181:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+/***/ "./node_modules/@actions/core/lib/core.js":
+/*!************************************************!*\
+  !*** ./node_modules/@actions/core/lib/core.js ***!
+  \************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getIDToken = exports.getState = exports.saveState = exports.group = exports.endGroup = exports.startGroup = exports.info = exports.notice = exports.warning = exports.error = exports.debug = exports.isDebug = exports.setFailed = exports.setCommandEcho = exports.setOutput = exports.getBooleanInput = exports.getMultilineInput = exports.getInput = exports.addPath = exports.setSecret = exports.exportVariable = exports.ExitCode = void 0;
-const command_1 = __nccwpck_require__(9777);
-const file_command_1 = __nccwpck_require__(3679);
-const utils_1 = __nccwpck_require__(9855);
-const os = __importStar(__nccwpck_require__(2037));
-const path = __importStar(__nccwpck_require__(1017));
-const uuid_1 = __nccwpck_require__(53);
-const oidc_utils_1 = __nccwpck_require__(6266);
-/**
- * The code to exit an action
- */
-var ExitCode;
-(function (ExitCode) {
-    /**
-     * A code indicating that the action was successful
-     */
-    ExitCode[ExitCode["Success"] = 0] = "Success";
-    /**
-     * A code indicating that the action was a failure
-     */
-    ExitCode[ExitCode["Failure"] = 1] = "Failure";
-})(ExitCode = exports.ExitCode || (exports.ExitCode = {}));
-//-----------------------------------------------------------------------
-// Variables
-//-----------------------------------------------------------------------
-/**
- * Sets env variable for this action and future actions in the job
- * @param name the name of the variable to set
- * @param val the value of the variable. Non-string values will be converted to a string via JSON.stringify
- */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function exportVariable(name, val) {
-    const convertedVal = utils_1.toCommandValue(val);
-    process.env[name] = convertedVal;
-    const filePath = process.env['GITHUB_ENV'] || '';
-    if (filePath) {
-        const delimiter = `ghadelimiter_${uuid_1.v4()}`;
-        // These should realistically never happen, but just in case someone finds a way to exploit uuid generation let's not allow keys or values that contain the delimiter.
-        if (name.includes(delimiter)) {
-            throw new Error(`Unexpected input: name should not contain the delimiter "${delimiter}"`);
-        }
-        if (convertedVal.includes(delimiter)) {
-            throw new Error(`Unexpected input: value should not contain the delimiter "${delimiter}"`);
-        }
-        const commandValue = `${name}<<${delimiter}${os.EOL}${convertedVal}${os.EOL}${delimiter}`;
-        file_command_1.issueCommand('ENV', commandValue);
-    }
-    else {
-        command_1.issueCommand('set-env', { name }, convertedVal);
-    }
-}
-exports.exportVariable = exportVariable;
-/**
- * Registers a secret which will get masked from logs
- * @param secret value of the secret
- */
-function setSecret(secret) {
-    command_1.issueCommand('add-mask', {}, secret);
-}
-exports.setSecret = setSecret;
-/**
- * Prepends inputPath to the PATH (for this action and future actions)
- * @param inputPath
- */
-function addPath(inputPath) {
-    const filePath = process.env['GITHUB_PATH'] || '';
-    if (filePath) {
-        file_command_1.issueCommand('PATH', inputPath);
-    }
-    else {
-        command_1.issueCommand('add-path', {}, inputPath);
-    }
-    process.env['PATH'] = `${inputPath}${path.delimiter}${process.env['PATH']}`;
-}
-exports.addPath = addPath;
-/**
- * Gets the value of an input.
- * Unless trimWhitespace is set to false in InputOptions, the value is also trimmed.
- * Returns an empty string if the value is not defined.
- *
- * @param     name     name of the input to get
- * @param     options  optional. See InputOptions.
- * @returns   string
- */
-function getInput(name, options) {
-    const val = process.env[`INPUT_${name.replace(/ /g, '_').toUpperCase()}`] || '';
-    if (options && options.required && !val) {
-        throw new Error(`Input required and not supplied: ${name}`);
-    }
-    if (options && options.trimWhitespace === false) {
-        return val;
-    }
-    return val.trim();
-}
-exports.getInput = getInput;
-/**
- * Gets the values of an multiline input.  Each value is also trimmed.
- *
- * @param     name     name of the input to get
- * @param     options  optional. See InputOptions.
- * @returns   string[]
- *
- */
-function getMultilineInput(name, options) {
-    const inputs = getInput(name, options)
-        .split('\n')
-        .filter(x => x !== '');
-    return inputs;
-}
-exports.getMultilineInput = getMultilineInput;
-/**
- * Gets the input value of the boolean type in the YAML 1.2 "core schema" specification.
- * Support boolean input list: `true | True | TRUE | false | False | FALSE` .
- * The return value is also in boolean type.
- * ref: https://yaml.org/spec/1.2/spec.html#id2804923
- *
- * @param     name     name of the input to get
- * @param     options  optional. See InputOptions.
- * @returns   boolean
- */
-function getBooleanInput(name, options) {
-    const trueValue = ['true', 'True', 'TRUE'];
-    const falseValue = ['false', 'False', 'FALSE'];
-    const val = getInput(name, options);
-    if (trueValue.includes(val))
-        return true;
-    if (falseValue.includes(val))
-        return false;
-    throw new TypeError(`Input does not meet YAML 1.2 "Core Schema" specification: ${name}\n` +
-        `Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
-}
-exports.getBooleanInput = getBooleanInput;
-/**
- * Sets the value of an output.
- *
- * @param     name     name of the output to set
- * @param     value    value to store. Non-string values will be converted to a string via JSON.stringify
- */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function setOutput(name, value) {
-    process.stdout.write(os.EOL);
-    command_1.issueCommand('set-output', { name }, value);
-}
-exports.setOutput = setOutput;
-/**
- * Enables or disables the echoing of commands into stdout for the rest of the step.
- * Echoing is disabled by default if ACTIONS_STEP_DEBUG is not set.
- *
- */
-function setCommandEcho(enabled) {
-    command_1.issue('echo', enabled ? 'on' : 'off');
-}
-exports.setCommandEcho = setCommandEcho;
-//-----------------------------------------------------------------------
-// Results
-//-----------------------------------------------------------------------
-/**
- * Sets the action status to failed.
- * When the action exits it will be with an exit code of 1
- * @param message add error issue message
- */
-function setFailed(message) {
-    process.exitCode = ExitCode.Failure;
-    error(message);
-}
-exports.setFailed = setFailed;
-//-----------------------------------------------------------------------
-// Logging Commands
-//-----------------------------------------------------------------------
-/**
- * Gets whether Actions Step Debug is on or not
- */
-function isDebug() {
-    return process.env['RUNNER_DEBUG'] === '1';
-}
-exports.isDebug = isDebug;
-/**
- * Writes debug message to user log
- * @param message debug message
- */
-function debug(message) {
-    command_1.issueCommand('debug', {}, message);
-}
-exports.debug = debug;
-/**
- * Adds an error issue
- * @param message error issue message. Errors will be converted to string via toString()
- * @param properties optional properties to add to the annotation.
- */
-function error(message, properties = {}) {
-    command_1.issueCommand('error', utils_1.toCommandProperties(properties), message instanceof Error ? message.toString() : message);
-}
-exports.error = error;
-/**
- * Adds a warning issue
- * @param message warning issue message. Errors will be converted to string via toString()
- * @param properties optional properties to add to the annotation.
- */
-function warning(message, properties = {}) {
-    command_1.issueCommand('warning', utils_1.toCommandProperties(properties), message instanceof Error ? message.toString() : message);
-}
-exports.warning = warning;
-/**
- * Adds a notice issue
- * @param message notice issue message. Errors will be converted to string via toString()
- * @param properties optional properties to add to the annotation.
- */
-function notice(message, properties = {}) {
-    command_1.issueCommand('notice', utils_1.toCommandProperties(properties), message instanceof Error ? message.toString() : message);
-}
-exports.notice = notice;
-/**
- * Writes info to log with console.log.
- * @param message info message
- */
-function info(message) {
-    process.stdout.write(message + os.EOL);
-}
-exports.info = info;
-/**
- * Begin an output group.
- *
- * Output until the next `groupEnd` will be foldable in this group
- *
- * @param name The name of the output group
- */
-function startGroup(name) {
-    command_1.issue('group', name);
-}
-exports.startGroup = startGroup;
-/**
- * End an output group.
- */
-function endGroup() {
-    command_1.issue('endgroup');
-}
-exports.endGroup = endGroup;
-/**
- * Wrap an asynchronous function call in a group.
- *
- * Returns the same type as the function itself.
- *
- * @param name The name of the group
- * @param fn The function to wrap in the group
- */
-function group(name, fn) {
-    return __awaiter(this, void 0, void 0, function* () {
-        startGroup(name);
-        let result;
-        try {
-            result = yield fn();
-        }
-        finally {
-            endGroup();
-        }
-        return result;
-    });
-}
-exports.group = group;
-//-----------------------------------------------------------------------
-// Wrapper action state
-//-----------------------------------------------------------------------
-/**
- * Saves state for current action, the state can only be retrieved by this action's post job execution.
- *
- * @param     name     name of the state to store
- * @param     value    value to store. Non-string values will be converted to a string via JSON.stringify
- */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function saveState(name, value) {
-    command_1.issueCommand('save-state', { name }, value);
-}
-exports.saveState = saveState;
-/**
- * Gets the value of an state set by this action's main execution.
- *
- * @param     name     name of the state to get
- * @returns   string
- */
-function getState(name) {
-    return process.env[`STATE_${name}`] || '';
-}
-exports.getState = getState;
-function getIDToken(aud) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return yield oidc_utils_1.OidcClient.getIDToken(aud);
-    });
-}
-exports.getIDToken = getIDToken;
-/**
- * Summary exports
- */
-var summary_1 = __nccwpck_require__(3154);
-Object.defineProperty(exports, "summary", ({ enumerable: true, get: function () { return summary_1.summary; } }));
-/**
- * @deprecated use core.summary
- */
-var summary_2 = __nccwpck_require__(3154);
-Object.defineProperty(exports, "markdownSummary", ({ enumerable: true, get: function () { return summary_2.markdownSummary; } }));
-/**
- * Path exports
- */
-var path_utils_1 = __nccwpck_require__(4605);
-Object.defineProperty(exports, "toPosixPath", ({ enumerable: true, get: function () { return path_utils_1.toPosixPath; } }));
-Object.defineProperty(exports, "toWin32Path", ({ enumerable: true, get: function () { return path_utils_1.toWin32Path; } }));
-Object.defineProperty(exports, "toPlatformPath", ({ enumerable: true, get: function () { return path_utils_1.toPlatformPath; } }));
-//# sourceMappingURL=core.js.map
+eval("\nvar __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {\n    if (k2 === undefined) k2 = k;\n    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });\n}) : (function(o, m, k, k2) {\n    if (k2 === undefined) k2 = k;\n    o[k2] = m[k];\n}));\nvar __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {\n    Object.defineProperty(o, \"default\", { enumerable: true, value: v });\n}) : function(o, v) {\n    o[\"default\"] = v;\n});\nvar __importStar = (this && this.__importStar) || function (mod) {\n    if (mod && mod.__esModule) return mod;\n    var result = {};\n    if (mod != null) for (var k in mod) if (k !== \"default\" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);\n    __setModuleDefault(result, mod);\n    return result;\n};\nvar __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {\n    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }\n    return new (P || (P = Promise))(function (resolve, reject) {\n        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }\n        function rejected(value) { try { step(generator[\"throw\"](value)); } catch (e) { reject(e); } }\n        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }\n        step((generator = generator.apply(thisArg, _arguments || [])).next());\n    });\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexports.getIDToken = exports.getState = exports.saveState = exports.group = exports.endGroup = exports.startGroup = exports.info = exports.notice = exports.warning = exports.error = exports.debug = exports.isDebug = exports.setFailed = exports.setCommandEcho = exports.setOutput = exports.getBooleanInput = exports.getMultilineInput = exports.getInput = exports.addPath = exports.setSecret = exports.exportVariable = exports.ExitCode = void 0;\nconst command_1 = __webpack_require__(/*! ./command */ \"./node_modules/@actions/core/lib/command.js\");\nconst file_command_1 = __webpack_require__(/*! ./file-command */ \"./node_modules/@actions/core/lib/file-command.js\");\nconst utils_1 = __webpack_require__(/*! ./utils */ \"./node_modules/@actions/core/lib/utils.js\");\nconst os = __importStar(__webpack_require__(/*! os */ \"os\"));\nconst path = __importStar(__webpack_require__(/*! path */ \"path\"));\nconst uuid_1 = __webpack_require__(/*! uuid */ \"./node_modules/uuid/dist/esm-node/index.js\");\nconst oidc_utils_1 = __webpack_require__(/*! ./oidc-utils */ \"./node_modules/@actions/core/lib/oidc-utils.js\");\n/**\n * The code to exit an action\n */\nvar ExitCode;\n(function (ExitCode) {\n    /**\n     * A code indicating that the action was successful\n     */\n    ExitCode[ExitCode[\"Success\"] = 0] = \"Success\";\n    /**\n     * A code indicating that the action was a failure\n     */\n    ExitCode[ExitCode[\"Failure\"] = 1] = \"Failure\";\n})(ExitCode = exports.ExitCode || (exports.ExitCode = {}));\n//-----------------------------------------------------------------------\n// Variables\n//-----------------------------------------------------------------------\n/**\n * Sets env variable for this action and future actions in the job\n * @param name the name of the variable to set\n * @param val the value of the variable. Non-string values will be converted to a string via JSON.stringify\n */\n// eslint-disable-next-line @typescript-eslint/no-explicit-any\nfunction exportVariable(name, val) {\n    const convertedVal = utils_1.toCommandValue(val);\n    process.env[name] = convertedVal;\n    const filePath = process.env['GITHUB_ENV'] || '';\n    if (filePath) {\n        const delimiter = `ghadelimiter_${uuid_1.v4()}`;\n        // These should realistically never happen, but just in case someone finds a way to exploit uuid generation let's not allow keys or values that contain the delimiter.\n        if (name.includes(delimiter)) {\n            throw new Error(`Unexpected input: name should not contain the delimiter \"${delimiter}\"`);\n        }\n        if (convertedVal.includes(delimiter)) {\n            throw new Error(`Unexpected input: value should not contain the delimiter \"${delimiter}\"`);\n        }\n        const commandValue = `${name}<<${delimiter}${os.EOL}${convertedVal}${os.EOL}${delimiter}`;\n        file_command_1.issueCommand('ENV', commandValue);\n    }\n    else {\n        command_1.issueCommand('set-env', { name }, convertedVal);\n    }\n}\nexports.exportVariable = exportVariable;\n/**\n * Registers a secret which will get masked from logs\n * @param secret value of the secret\n */\nfunction setSecret(secret) {\n    command_1.issueCommand('add-mask', {}, secret);\n}\nexports.setSecret = setSecret;\n/**\n * Prepends inputPath to the PATH (for this action and future actions)\n * @param inputPath\n */\nfunction addPath(inputPath) {\n    const filePath = process.env['GITHUB_PATH'] || '';\n    if (filePath) {\n        file_command_1.issueCommand('PATH', inputPath);\n    }\n    else {\n        command_1.issueCommand('add-path', {}, inputPath);\n    }\n    process.env['PATH'] = `${inputPath}${path.delimiter}${process.env['PATH']}`;\n}\nexports.addPath = addPath;\n/**\n * Gets the value of an input.\n * Unless trimWhitespace is set to false in InputOptions, the value is also trimmed.\n * Returns an empty string if the value is not defined.\n *\n * @param     name     name of the input to get\n * @param     options  optional. See InputOptions.\n * @returns   string\n */\nfunction getInput(name, options) {\n    const val = process.env[`INPUT_${name.replace(/ /g, '_').toUpperCase()}`] || '';\n    if (options && options.required && !val) {\n        throw new Error(`Input required and not supplied: ${name}`);\n    }\n    if (options && options.trimWhitespace === false) {\n        return val;\n    }\n    return val.trim();\n}\nexports.getInput = getInput;\n/**\n * Gets the values of an multiline input.  Each value is also trimmed.\n *\n * @param     name     name of the input to get\n * @param     options  optional. See InputOptions.\n * @returns   string[]\n *\n */\nfunction getMultilineInput(name, options) {\n    const inputs = getInput(name, options)\n        .split('\\n')\n        .filter(x => x !== '');\n    return inputs;\n}\nexports.getMultilineInput = getMultilineInput;\n/**\n * Gets the input value of the boolean type in the YAML 1.2 \"core schema\" specification.\n * Support boolean input list: `true | True | TRUE | false | False | FALSE` .\n * The return value is also in boolean type.\n * ref: https://yaml.org/spec/1.2/spec.html#id2804923\n *\n * @param     name     name of the input to get\n * @param     options  optional. See InputOptions.\n * @returns   boolean\n */\nfunction getBooleanInput(name, options) {\n    const trueValue = ['true', 'True', 'TRUE'];\n    const falseValue = ['false', 'False', 'FALSE'];\n    const val = getInput(name, options);\n    if (trueValue.includes(val))\n        return true;\n    if (falseValue.includes(val))\n        return false;\n    throw new TypeError(`Input does not meet YAML 1.2 \"Core Schema\" specification: ${name}\\n` +\n        `Support boolean input list: \\`true | True | TRUE | false | False | FALSE\\``);\n}\nexports.getBooleanInput = getBooleanInput;\n/**\n * Sets the value of an output.\n *\n * @param     name     name of the output to set\n * @param     value    value to store. Non-string values will be converted to a string via JSON.stringify\n */\n// eslint-disable-next-line @typescript-eslint/no-explicit-any\nfunction setOutput(name, value) {\n    process.stdout.write(os.EOL);\n    command_1.issueCommand('set-output', { name }, value);\n}\nexports.setOutput = setOutput;\n/**\n * Enables or disables the echoing of commands into stdout for the rest of the step.\n * Echoing is disabled by default if ACTIONS_STEP_DEBUG is not set.\n *\n */\nfunction setCommandEcho(enabled) {\n    command_1.issue('echo', enabled ? 'on' : 'off');\n}\nexports.setCommandEcho = setCommandEcho;\n//-----------------------------------------------------------------------\n// Results\n//-----------------------------------------------------------------------\n/**\n * Sets the action status to failed.\n * When the action exits it will be with an exit code of 1\n * @param message add error issue message\n */\nfunction setFailed(message) {\n    process.exitCode = ExitCode.Failure;\n    error(message);\n}\nexports.setFailed = setFailed;\n//-----------------------------------------------------------------------\n// Logging Commands\n//-----------------------------------------------------------------------\n/**\n * Gets whether Actions Step Debug is on or not\n */\nfunction isDebug() {\n    return process.env['RUNNER_DEBUG'] === '1';\n}\nexports.isDebug = isDebug;\n/**\n * Writes debug message to user log\n * @param message debug message\n */\nfunction debug(message) {\n    command_1.issueCommand('debug', {}, message);\n}\nexports.debug = debug;\n/**\n * Adds an error issue\n * @param message error issue message. Errors will be converted to string via toString()\n * @param properties optional properties to add to the annotation.\n */\nfunction error(message, properties = {}) {\n    command_1.issueCommand('error', utils_1.toCommandProperties(properties), message instanceof Error ? message.toString() : message);\n}\nexports.error = error;\n/**\n * Adds a warning issue\n * @param message warning issue message. Errors will be converted to string via toString()\n * @param properties optional properties to add to the annotation.\n */\nfunction warning(message, properties = {}) {\n    command_1.issueCommand('warning', utils_1.toCommandProperties(properties), message instanceof Error ? message.toString() : message);\n}\nexports.warning = warning;\n/**\n * Adds a notice issue\n * @param message notice issue message. Errors will be converted to string via toString()\n * @param properties optional properties to add to the annotation.\n */\nfunction notice(message, properties = {}) {\n    command_1.issueCommand('notice', utils_1.toCommandProperties(properties), message instanceof Error ? message.toString() : message);\n}\nexports.notice = notice;\n/**\n * Writes info to log with console.log.\n * @param message info message\n */\nfunction info(message) {\n    process.stdout.write(message + os.EOL);\n}\nexports.info = info;\n/**\n * Begin an output group.\n *\n * Output until the next `groupEnd` will be foldable in this group\n *\n * @param name The name of the output group\n */\nfunction startGroup(name) {\n    command_1.issue('group', name);\n}\nexports.startGroup = startGroup;\n/**\n * End an output group.\n */\nfunction endGroup() {\n    command_1.issue('endgroup');\n}\nexports.endGroup = endGroup;\n/**\n * Wrap an asynchronous function call in a group.\n *\n * Returns the same type as the function itself.\n *\n * @param name The name of the group\n * @param fn The function to wrap in the group\n */\nfunction group(name, fn) {\n    return __awaiter(this, void 0, void 0, function* () {\n        startGroup(name);\n        let result;\n        try {\n            result = yield fn();\n        }\n        finally {\n            endGroup();\n        }\n        return result;\n    });\n}\nexports.group = group;\n//-----------------------------------------------------------------------\n// Wrapper action state\n//-----------------------------------------------------------------------\n/**\n * Saves state for current action, the state can only be retrieved by this action's post job execution.\n *\n * @param     name     name of the state to store\n * @param     value    value to store. Non-string values will be converted to a string via JSON.stringify\n */\n// eslint-disable-next-line @typescript-eslint/no-explicit-any\nfunction saveState(name, value) {\n    command_1.issueCommand('save-state', { name }, value);\n}\nexports.saveState = saveState;\n/**\n * Gets the value of an state set by this action's main execution.\n *\n * @param     name     name of the state to get\n * @returns   string\n */\nfunction getState(name) {\n    return process.env[`STATE_${name}`] || '';\n}\nexports.getState = getState;\nfunction getIDToken(aud) {\n    return __awaiter(this, void 0, void 0, function* () {\n        return yield oidc_utils_1.OidcClient.getIDToken(aud);\n    });\n}\nexports.getIDToken = getIDToken;\n/**\n * Summary exports\n */\nvar summary_1 = __webpack_require__(/*! ./summary */ \"./node_modules/@actions/core/lib/summary.js\");\nObject.defineProperty(exports, \"summary\", ({ enumerable: true, get: function () { return summary_1.summary; } }));\n/**\n * @deprecated use core.summary\n */\nvar summary_2 = __webpack_require__(/*! ./summary */ \"./node_modules/@actions/core/lib/summary.js\");\nObject.defineProperty(exports, \"markdownSummary\", ({ enumerable: true, get: function () { return summary_2.markdownSummary; } }));\n/**\n * Path exports\n */\nvar path_utils_1 = __webpack_require__(/*! ./path-utils */ \"./node_modules/@actions/core/lib/path-utils.js\");\nObject.defineProperty(exports, \"toPosixPath\", ({ enumerable: true, get: function () { return path_utils_1.toPosixPath; } }));\nObject.defineProperty(exports, \"toWin32Path\", ({ enumerable: true, get: function () { return path_utils_1.toWin32Path; } }));\nObject.defineProperty(exports, \"toPlatformPath\", ({ enumerable: true, get: function () { return path_utils_1.toPlatformPath; } }));\n//# sourceMappingURL=core.js.map\n\n//# sourceURL=webpack://toml-editor/./node_modules/@actions/core/lib/core.js?");
 
 /***/ }),
 
-/***/ 3679:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+/***/ "./node_modules/@actions/core/lib/file-command.js":
+/*!********************************************************!*\
+  !*** ./node_modules/@actions/core/lib/file-command.js ***!
+  \********************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
-
-// For internal use, subject to change.
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.issueCommand = void 0;
-// We use any as a valid input type
-/* eslint-disable @typescript-eslint/no-explicit-any */
-const fs = __importStar(__nccwpck_require__(7147));
-const os = __importStar(__nccwpck_require__(2037));
-const utils_1 = __nccwpck_require__(9855);
-function issueCommand(command, message) {
-    const filePath = process.env[`GITHUB_${command}`];
-    if (!filePath) {
-        throw new Error(`Unable to find environment variable for file command ${command}`);
-    }
-    if (!fs.existsSync(filePath)) {
-        throw new Error(`Missing file at path: ${filePath}`);
-    }
-    fs.appendFileSync(filePath, `${utils_1.toCommandValue(message)}${os.EOL}`, {
-        encoding: 'utf8'
-    });
-}
-exports.issueCommand = issueCommand;
-//# sourceMappingURL=file-command.js.map
+eval("\n// For internal use, subject to change.\nvar __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {\n    if (k2 === undefined) k2 = k;\n    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });\n}) : (function(o, m, k, k2) {\n    if (k2 === undefined) k2 = k;\n    o[k2] = m[k];\n}));\nvar __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {\n    Object.defineProperty(o, \"default\", { enumerable: true, value: v });\n}) : function(o, v) {\n    o[\"default\"] = v;\n});\nvar __importStar = (this && this.__importStar) || function (mod) {\n    if (mod && mod.__esModule) return mod;\n    var result = {};\n    if (mod != null) for (var k in mod) if (k !== \"default\" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);\n    __setModuleDefault(result, mod);\n    return result;\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexports.issueCommand = void 0;\n// We use any as a valid input type\n/* eslint-disable @typescript-eslint/no-explicit-any */\nconst fs = __importStar(__webpack_require__(/*! fs */ \"fs\"));\nconst os = __importStar(__webpack_require__(/*! os */ \"os\"));\nconst utils_1 = __webpack_require__(/*! ./utils */ \"./node_modules/@actions/core/lib/utils.js\");\nfunction issueCommand(command, message) {\n    const filePath = process.env[`GITHUB_${command}`];\n    if (!filePath) {\n        throw new Error(`Unable to find environment variable for file command ${command}`);\n    }\n    if (!fs.existsSync(filePath)) {\n        throw new Error(`Missing file at path: ${filePath}`);\n    }\n    fs.appendFileSync(filePath, `${utils_1.toCommandValue(message)}${os.EOL}`, {\n        encoding: 'utf8'\n    });\n}\nexports.issueCommand = issueCommand;\n//# sourceMappingURL=file-command.js.map\n\n//# sourceURL=webpack://toml-editor/./node_modules/@actions/core/lib/file-command.js?");
 
 /***/ }),
 
-/***/ 6266:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+/***/ "./node_modules/@actions/core/lib/oidc-utils.js":
+/*!******************************************************!*\
+  !*** ./node_modules/@actions/core/lib/oidc-utils.js ***!
+  \******************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
-
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.OidcClient = void 0;
-const http_client_1 = __nccwpck_require__(5754);
-const auth_1 = __nccwpck_require__(1475);
-const core_1 = __nccwpck_require__(4181);
-class OidcClient {
-    static createHttpClient(allowRetry = true, maxRetry = 10) {
-        const requestOptions = {
-            allowRetries: allowRetry,
-            maxRetries: maxRetry
-        };
-        return new http_client_1.HttpClient('actions/oidc-client', [new auth_1.BearerCredentialHandler(OidcClient.getRequestToken())], requestOptions);
-    }
-    static getRequestToken() {
-        const token = process.env['ACTIONS_ID_TOKEN_REQUEST_TOKEN'];
-        if (!token) {
-            throw new Error('Unable to get ACTIONS_ID_TOKEN_REQUEST_TOKEN env variable');
-        }
-        return token;
-    }
-    static getIDTokenUrl() {
-        const runtimeUrl = process.env['ACTIONS_ID_TOKEN_REQUEST_URL'];
-        if (!runtimeUrl) {
-            throw new Error('Unable to get ACTIONS_ID_TOKEN_REQUEST_URL env variable');
-        }
-        return runtimeUrl;
-    }
-    static getCall(id_token_url) {
-        var _a;
-        return __awaiter(this, void 0, void 0, function* () {
-            const httpclient = OidcClient.createHttpClient();
-            const res = yield httpclient
-                .getJson(id_token_url)
-                .catch(error => {
-                throw new Error(`Failed to get ID Token. \n 
-        Error Code : ${error.statusCode}\n 
-        Error Message: ${error.result.message}`);
-            });
-            const id_token = (_a = res.result) === null || _a === void 0 ? void 0 : _a.value;
-            if (!id_token) {
-                throw new Error('Response json body do not have ID Token field');
-            }
-            return id_token;
-        });
-    }
-    static getIDToken(audience) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                // New ID Token is requested from action service
-                let id_token_url = OidcClient.getIDTokenUrl();
-                if (audience) {
-                    const encodedAudience = encodeURIComponent(audience);
-                    id_token_url = `${id_token_url}&audience=${encodedAudience}`;
-                }
-                core_1.debug(`ID token url is ${id_token_url}`);
-                const id_token = yield OidcClient.getCall(id_token_url);
-                core_1.setSecret(id_token);
-                return id_token;
-            }
-            catch (error) {
-                throw new Error(`Error message: ${error.message}`);
-            }
-        });
-    }
-}
-exports.OidcClient = OidcClient;
-//# sourceMappingURL=oidc-utils.js.map
+eval("\nvar __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {\n    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }\n    return new (P || (P = Promise))(function (resolve, reject) {\n        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }\n        function rejected(value) { try { step(generator[\"throw\"](value)); } catch (e) { reject(e); } }\n        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }\n        step((generator = generator.apply(thisArg, _arguments || [])).next());\n    });\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexports.OidcClient = void 0;\nconst http_client_1 = __webpack_require__(/*! @actions/http-client */ \"./node_modules/@actions/http-client/lib/index.js\");\nconst auth_1 = __webpack_require__(/*! @actions/http-client/lib/auth */ \"./node_modules/@actions/http-client/lib/auth.js\");\nconst core_1 = __webpack_require__(/*! ./core */ \"./node_modules/@actions/core/lib/core.js\");\nclass OidcClient {\n    static createHttpClient(allowRetry = true, maxRetry = 10) {\n        const requestOptions = {\n            allowRetries: allowRetry,\n            maxRetries: maxRetry\n        };\n        return new http_client_1.HttpClient('actions/oidc-client', [new auth_1.BearerCredentialHandler(OidcClient.getRequestToken())], requestOptions);\n    }\n    static getRequestToken() {\n        const token = process.env['ACTIONS_ID_TOKEN_REQUEST_TOKEN'];\n        if (!token) {\n            throw new Error('Unable to get ACTIONS_ID_TOKEN_REQUEST_TOKEN env variable');\n        }\n        return token;\n    }\n    static getIDTokenUrl() {\n        const runtimeUrl = process.env['ACTIONS_ID_TOKEN_REQUEST_URL'];\n        if (!runtimeUrl) {\n            throw new Error('Unable to get ACTIONS_ID_TOKEN_REQUEST_URL env variable');\n        }\n        return runtimeUrl;\n    }\n    static getCall(id_token_url) {\n        var _a;\n        return __awaiter(this, void 0, void 0, function* () {\n            const httpclient = OidcClient.createHttpClient();\n            const res = yield httpclient\n                .getJson(id_token_url)\n                .catch(error => {\n                throw new Error(`Failed to get ID Token. \\n \n        Error Code : ${error.statusCode}\\n \n        Error Message: ${error.result.message}`);\n            });\n            const id_token = (_a = res.result) === null || _a === void 0 ? void 0 : _a.value;\n            if (!id_token) {\n                throw new Error('Response json body do not have ID Token field');\n            }\n            return id_token;\n        });\n    }\n    static getIDToken(audience) {\n        return __awaiter(this, void 0, void 0, function* () {\n            try {\n                // New ID Token is requested from action service\n                let id_token_url = OidcClient.getIDTokenUrl();\n                if (audience) {\n                    const encodedAudience = encodeURIComponent(audience);\n                    id_token_url = `${id_token_url}&audience=${encodedAudience}`;\n                }\n                core_1.debug(`ID token url is ${id_token_url}`);\n                const id_token = yield OidcClient.getCall(id_token_url);\n                core_1.setSecret(id_token);\n                return id_token;\n            }\n            catch (error) {\n                throw new Error(`Error message: ${error.message}`);\n            }\n        });\n    }\n}\nexports.OidcClient = OidcClient;\n//# sourceMappingURL=oidc-utils.js.map\n\n//# sourceURL=webpack://toml-editor/./node_modules/@actions/core/lib/oidc-utils.js?");
 
 /***/ }),
 
-/***/ 4605:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+/***/ "./node_modules/@actions/core/lib/path-utils.js":
+/*!******************************************************!*\
+  !*** ./node_modules/@actions/core/lib/path-utils.js ***!
+  \******************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.toPlatformPath = exports.toWin32Path = exports.toPosixPath = void 0;
-const path = __importStar(__nccwpck_require__(1017));
-/**
- * toPosixPath converts the given path to the posix form. On Windows, \\ will be
- * replaced with /.
- *
- * @param pth. Path to transform.
- * @return string Posix path.
- */
-function toPosixPath(pth) {
-    return pth.replace(/[\\]/g, '/');
-}
-exports.toPosixPath = toPosixPath;
-/**
- * toWin32Path converts the given path to the win32 form. On Linux, / will be
- * replaced with \\.
- *
- * @param pth. Path to transform.
- * @return string Win32 path.
- */
-function toWin32Path(pth) {
-    return pth.replace(/[/]/g, '\\');
-}
-exports.toWin32Path = toWin32Path;
-/**
- * toPlatformPath converts the given path to a platform-specific path. It does
- * this by replacing instances of / and \ with the platform-specific path
- * separator.
- *
- * @param pth The path to platformize.
- * @return string The platform-specific path.
- */
-function toPlatformPath(pth) {
-    return pth.replace(/[/\\]/g, path.sep);
-}
-exports.toPlatformPath = toPlatformPath;
-//# sourceMappingURL=path-utils.js.map
+eval("\nvar __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {\n    if (k2 === undefined) k2 = k;\n    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });\n}) : (function(o, m, k, k2) {\n    if (k2 === undefined) k2 = k;\n    o[k2] = m[k];\n}));\nvar __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {\n    Object.defineProperty(o, \"default\", { enumerable: true, value: v });\n}) : function(o, v) {\n    o[\"default\"] = v;\n});\nvar __importStar = (this && this.__importStar) || function (mod) {\n    if (mod && mod.__esModule) return mod;\n    var result = {};\n    if (mod != null) for (var k in mod) if (k !== \"default\" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);\n    __setModuleDefault(result, mod);\n    return result;\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexports.toPlatformPath = exports.toWin32Path = exports.toPosixPath = void 0;\nconst path = __importStar(__webpack_require__(/*! path */ \"path\"));\n/**\n * toPosixPath converts the given path to the posix form. On Windows, \\\\ will be\n * replaced with /.\n *\n * @param pth. Path to transform.\n * @return string Posix path.\n */\nfunction toPosixPath(pth) {\n    return pth.replace(/[\\\\]/g, '/');\n}\nexports.toPosixPath = toPosixPath;\n/**\n * toWin32Path converts the given path to the win32 form. On Linux, / will be\n * replaced with \\\\.\n *\n * @param pth. Path to transform.\n * @return string Win32 path.\n */\nfunction toWin32Path(pth) {\n    return pth.replace(/[/]/g, '\\\\');\n}\nexports.toWin32Path = toWin32Path;\n/**\n * toPlatformPath converts the given path to a platform-specific path. It does\n * this by replacing instances of / and \\ with the platform-specific path\n * separator.\n *\n * @param pth The path to platformize.\n * @return string The platform-specific path.\n */\nfunction toPlatformPath(pth) {\n    return pth.replace(/[/\\\\]/g, path.sep);\n}\nexports.toPlatformPath = toPlatformPath;\n//# sourceMappingURL=path-utils.js.map\n\n//# sourceURL=webpack://toml-editor/./node_modules/@actions/core/lib/path-utils.js?");
 
 /***/ }),
 
-/***/ 3154:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+/***/ "./node_modules/@actions/core/lib/summary.js":
+/*!***************************************************!*\
+  !*** ./node_modules/@actions/core/lib/summary.js ***!
+  \***************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
-
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.summary = exports.markdownSummary = exports.SUMMARY_DOCS_URL = exports.SUMMARY_ENV_VAR = void 0;
-const os_1 = __nccwpck_require__(2037);
-const fs_1 = __nccwpck_require__(7147);
-const { access, appendFile, writeFile } = fs_1.promises;
-exports.SUMMARY_ENV_VAR = 'GITHUB_STEP_SUMMARY';
-exports.SUMMARY_DOCS_URL = 'https://docs.github.com/actions/using-workflows/workflow-commands-for-github-actions#adding-a-job-summary';
-class Summary {
-    constructor() {
-        this._buffer = '';
-    }
-    /**
-     * Finds the summary file path from the environment, rejects if env var is not found or file does not exist
-     * Also checks r/w permissions.
-     *
-     * @returns step summary file path
-     */
-    filePath() {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (this._filePath) {
-                return this._filePath;
-            }
-            const pathFromEnv = process.env[exports.SUMMARY_ENV_VAR];
-            if (!pathFromEnv) {
-                throw new Error(`Unable to find environment variable for $${exports.SUMMARY_ENV_VAR}. Check if your runtime environment supports job summaries.`);
-            }
-            try {
-                yield access(pathFromEnv, fs_1.constants.R_OK | fs_1.constants.W_OK);
-            }
-            catch (_a) {
-                throw new Error(`Unable to access summary file: '${pathFromEnv}'. Check if the file has correct read/write permissions.`);
-            }
-            this._filePath = pathFromEnv;
-            return this._filePath;
-        });
-    }
-    /**
-     * Wraps content in an HTML tag, adding any HTML attributes
-     *
-     * @param {string} tag HTML tag to wrap
-     * @param {string | null} content content within the tag
-     * @param {[attribute: string]: string} attrs key-value list of HTML attributes to add
-     *
-     * @returns {string} content wrapped in HTML element
-     */
-    wrap(tag, content, attrs = {}) {
-        const htmlAttrs = Object.entries(attrs)
-            .map(([key, value]) => ` ${key}="${value}"`)
-            .join('');
-        if (!content) {
-            return `<${tag}${htmlAttrs}>`;
-        }
-        return `<${tag}${htmlAttrs}>${content}</${tag}>`;
-    }
-    /**
-     * Writes text in the buffer to the summary buffer file and empties buffer. Will append by default.
-     *
-     * @param {SummaryWriteOptions} [options] (optional) options for write operation
-     *
-     * @returns {Promise<Summary>} summary instance
-     */
-    write(options) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const overwrite = !!(options === null || options === void 0 ? void 0 : options.overwrite);
-            const filePath = yield this.filePath();
-            const writeFunc = overwrite ? writeFile : appendFile;
-            yield writeFunc(filePath, this._buffer, { encoding: 'utf8' });
-            return this.emptyBuffer();
-        });
-    }
-    /**
-     * Clears the summary buffer and wipes the summary file
-     *
-     * @returns {Summary} summary instance
-     */
-    clear() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.emptyBuffer().write({ overwrite: true });
-        });
-    }
-    /**
-     * Returns the current summary buffer as a string
-     *
-     * @returns {string} string of summary buffer
-     */
-    stringify() {
-        return this._buffer;
-    }
-    /**
-     * If the summary buffer is empty
-     *
-     * @returns {boolen} true if the buffer is empty
-     */
-    isEmptyBuffer() {
-        return this._buffer.length === 0;
-    }
-    /**
-     * Resets the summary buffer without writing to summary file
-     *
-     * @returns {Summary} summary instance
-     */
-    emptyBuffer() {
-        this._buffer = '';
-        return this;
-    }
-    /**
-     * Adds raw text to the summary buffer
-     *
-     * @param {string} text content to add
-     * @param {boolean} [addEOL=false] (optional) append an EOL to the raw text (default: false)
-     *
-     * @returns {Summary} summary instance
-     */
-    addRaw(text, addEOL = false) {
-        this._buffer += text;
-        return addEOL ? this.addEOL() : this;
-    }
-    /**
-     * Adds the operating system-specific end-of-line marker to the buffer
-     *
-     * @returns {Summary} summary instance
-     */
-    addEOL() {
-        return this.addRaw(os_1.EOL);
-    }
-    /**
-     * Adds an HTML codeblock to the summary buffer
-     *
-     * @param {string} code content to render within fenced code block
-     * @param {string} lang (optional) language to syntax highlight code
-     *
-     * @returns {Summary} summary instance
-     */
-    addCodeBlock(code, lang) {
-        const attrs = Object.assign({}, (lang && { lang }));
-        const element = this.wrap('pre', this.wrap('code', code), attrs);
-        return this.addRaw(element).addEOL();
-    }
-    /**
-     * Adds an HTML list to the summary buffer
-     *
-     * @param {string[]} items list of items to render
-     * @param {boolean} [ordered=false] (optional) if the rendered list should be ordered or not (default: false)
-     *
-     * @returns {Summary} summary instance
-     */
-    addList(items, ordered = false) {
-        const tag = ordered ? 'ol' : 'ul';
-        const listItems = items.map(item => this.wrap('li', item)).join('');
-        const element = this.wrap(tag, listItems);
-        return this.addRaw(element).addEOL();
-    }
-    /**
-     * Adds an HTML table to the summary buffer
-     *
-     * @param {SummaryTableCell[]} rows table rows
-     *
-     * @returns {Summary} summary instance
-     */
-    addTable(rows) {
-        const tableBody = rows
-            .map(row => {
-            const cells = row
-                .map(cell => {
-                if (typeof cell === 'string') {
-                    return this.wrap('td', cell);
-                }
-                const { header, data, colspan, rowspan } = cell;
-                const tag = header ? 'th' : 'td';
-                const attrs = Object.assign(Object.assign({}, (colspan && { colspan })), (rowspan && { rowspan }));
-                return this.wrap(tag, data, attrs);
-            })
-                .join('');
-            return this.wrap('tr', cells);
-        })
-            .join('');
-        const element = this.wrap('table', tableBody);
-        return this.addRaw(element).addEOL();
-    }
-    /**
-     * Adds a collapsable HTML details element to the summary buffer
-     *
-     * @param {string} label text for the closed state
-     * @param {string} content collapsable content
-     *
-     * @returns {Summary} summary instance
-     */
-    addDetails(label, content) {
-        const element = this.wrap('details', this.wrap('summary', label) + content);
-        return this.addRaw(element).addEOL();
-    }
-    /**
-     * Adds an HTML image tag to the summary buffer
-     *
-     * @param {string} src path to the image you to embed
-     * @param {string} alt text description of the image
-     * @param {SummaryImageOptions} options (optional) addition image attributes
-     *
-     * @returns {Summary} summary instance
-     */
-    addImage(src, alt, options) {
-        const { width, height } = options || {};
-        const attrs = Object.assign(Object.assign({}, (width && { width })), (height && { height }));
-        const element = this.wrap('img', null, Object.assign({ src, alt }, attrs));
-        return this.addRaw(element).addEOL();
-    }
-    /**
-     * Adds an HTML section heading element
-     *
-     * @param {string} text heading text
-     * @param {number | string} [level=1] (optional) the heading level, default: 1
-     *
-     * @returns {Summary} summary instance
-     */
-    addHeading(text, level) {
-        const tag = `h${level}`;
-        const allowedTag = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(tag)
-            ? tag
-            : 'h1';
-        const element = this.wrap(allowedTag, text);
-        return this.addRaw(element).addEOL();
-    }
-    /**
-     * Adds an HTML thematic break (<hr>) to the summary buffer
-     *
-     * @returns {Summary} summary instance
-     */
-    addSeparator() {
-        const element = this.wrap('hr', null);
-        return this.addRaw(element).addEOL();
-    }
-    /**
-     * Adds an HTML line break (<br>) to the summary buffer
-     *
-     * @returns {Summary} summary instance
-     */
-    addBreak() {
-        const element = this.wrap('br', null);
-        return this.addRaw(element).addEOL();
-    }
-    /**
-     * Adds an HTML blockquote to the summary buffer
-     *
-     * @param {string} text quote text
-     * @param {string} cite (optional) citation url
-     *
-     * @returns {Summary} summary instance
-     */
-    addQuote(text, cite) {
-        const attrs = Object.assign({}, (cite && { cite }));
-        const element = this.wrap('blockquote', text, attrs);
-        return this.addRaw(element).addEOL();
-    }
-    /**
-     * Adds an HTML anchor tag to the summary buffer
-     *
-     * @param {string} text link text/content
-     * @param {string} href hyperlink
-     *
-     * @returns {Summary} summary instance
-     */
-    addLink(text, href) {
-        const element = this.wrap('a', text, { href });
-        return this.addRaw(element).addEOL();
-    }
-}
-const _summary = new Summary();
-/**
- * @deprecated use `core.summary`
- */
-exports.markdownSummary = _summary;
-exports.summary = _summary;
-//# sourceMappingURL=summary.js.map
+eval("\nvar __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {\n    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }\n    return new (P || (P = Promise))(function (resolve, reject) {\n        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }\n        function rejected(value) { try { step(generator[\"throw\"](value)); } catch (e) { reject(e); } }\n        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }\n        step((generator = generator.apply(thisArg, _arguments || [])).next());\n    });\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexports.summary = exports.markdownSummary = exports.SUMMARY_DOCS_URL = exports.SUMMARY_ENV_VAR = void 0;\nconst os_1 = __webpack_require__(/*! os */ \"os\");\nconst fs_1 = __webpack_require__(/*! fs */ \"fs\");\nconst { access, appendFile, writeFile } = fs_1.promises;\nexports.SUMMARY_ENV_VAR = 'GITHUB_STEP_SUMMARY';\nexports.SUMMARY_DOCS_URL = 'https://docs.github.com/actions/using-workflows/workflow-commands-for-github-actions#adding-a-job-summary';\nclass Summary {\n    constructor() {\n        this._buffer = '';\n    }\n    /**\n     * Finds the summary file path from the environment, rejects if env var is not found or file does not exist\n     * Also checks r/w permissions.\n     *\n     * @returns step summary file path\n     */\n    filePath() {\n        return __awaiter(this, void 0, void 0, function* () {\n            if (this._filePath) {\n                return this._filePath;\n            }\n            const pathFromEnv = process.env[exports.SUMMARY_ENV_VAR];\n            if (!pathFromEnv) {\n                throw new Error(`Unable to find environment variable for $${exports.SUMMARY_ENV_VAR}. Check if your runtime environment supports job summaries.`);\n            }\n            try {\n                yield access(pathFromEnv, fs_1.constants.R_OK | fs_1.constants.W_OK);\n            }\n            catch (_a) {\n                throw new Error(`Unable to access summary file: '${pathFromEnv}'. Check if the file has correct read/write permissions.`);\n            }\n            this._filePath = pathFromEnv;\n            return this._filePath;\n        });\n    }\n    /**\n     * Wraps content in an HTML tag, adding any HTML attributes\n     *\n     * @param {string} tag HTML tag to wrap\n     * @param {string | null} content content within the tag\n     * @param {[attribute: string]: string} attrs key-value list of HTML attributes to add\n     *\n     * @returns {string} content wrapped in HTML element\n     */\n    wrap(tag, content, attrs = {}) {\n        const htmlAttrs = Object.entries(attrs)\n            .map(([key, value]) => ` ${key}=\"${value}\"`)\n            .join('');\n        if (!content) {\n            return `<${tag}${htmlAttrs}>`;\n        }\n        return `<${tag}${htmlAttrs}>${content}</${tag}>`;\n    }\n    /**\n     * Writes text in the buffer to the summary buffer file and empties buffer. Will append by default.\n     *\n     * @param {SummaryWriteOptions} [options] (optional) options for write operation\n     *\n     * @returns {Promise<Summary>} summary instance\n     */\n    write(options) {\n        return __awaiter(this, void 0, void 0, function* () {\n            const overwrite = !!(options === null || options === void 0 ? void 0 : options.overwrite);\n            const filePath = yield this.filePath();\n            const writeFunc = overwrite ? writeFile : appendFile;\n            yield writeFunc(filePath, this._buffer, { encoding: 'utf8' });\n            return this.emptyBuffer();\n        });\n    }\n    /**\n     * Clears the summary buffer and wipes the summary file\n     *\n     * @returns {Summary} summary instance\n     */\n    clear() {\n        return __awaiter(this, void 0, void 0, function* () {\n            return this.emptyBuffer().write({ overwrite: true });\n        });\n    }\n    /**\n     * Returns the current summary buffer as a string\n     *\n     * @returns {string} string of summary buffer\n     */\n    stringify() {\n        return this._buffer;\n    }\n    /**\n     * If the summary buffer is empty\n     *\n     * @returns {boolen} true if the buffer is empty\n     */\n    isEmptyBuffer() {\n        return this._buffer.length === 0;\n    }\n    /**\n     * Resets the summary buffer without writing to summary file\n     *\n     * @returns {Summary} summary instance\n     */\n    emptyBuffer() {\n        this._buffer = '';\n        return this;\n    }\n    /**\n     * Adds raw text to the summary buffer\n     *\n     * @param {string} text content to add\n     * @param {boolean} [addEOL=false] (optional) append an EOL to the raw text (default: false)\n     *\n     * @returns {Summary} summary instance\n     */\n    addRaw(text, addEOL = false) {\n        this._buffer += text;\n        return addEOL ? this.addEOL() : this;\n    }\n    /**\n     * Adds the operating system-specific end-of-line marker to the buffer\n     *\n     * @returns {Summary} summary instance\n     */\n    addEOL() {\n        return this.addRaw(os_1.EOL);\n    }\n    /**\n     * Adds an HTML codeblock to the summary buffer\n     *\n     * @param {string} code content to render within fenced code block\n     * @param {string} lang (optional) language to syntax highlight code\n     *\n     * @returns {Summary} summary instance\n     */\n    addCodeBlock(code, lang) {\n        const attrs = Object.assign({}, (lang && { lang }));\n        const element = this.wrap('pre', this.wrap('code', code), attrs);\n        return this.addRaw(element).addEOL();\n    }\n    /**\n     * Adds an HTML list to the summary buffer\n     *\n     * @param {string[]} items list of items to render\n     * @param {boolean} [ordered=false] (optional) if the rendered list should be ordered or not (default: false)\n     *\n     * @returns {Summary} summary instance\n     */\n    addList(items, ordered = false) {\n        const tag = ordered ? 'ol' : 'ul';\n        const listItems = items.map(item => this.wrap('li', item)).join('');\n        const element = this.wrap(tag, listItems);\n        return this.addRaw(element).addEOL();\n    }\n    /**\n     * Adds an HTML table to the summary buffer\n     *\n     * @param {SummaryTableCell[]} rows table rows\n     *\n     * @returns {Summary} summary instance\n     */\n    addTable(rows) {\n        const tableBody = rows\n            .map(row => {\n            const cells = row\n                .map(cell => {\n                if (typeof cell === 'string') {\n                    return this.wrap('td', cell);\n                }\n                const { header, data, colspan, rowspan } = cell;\n                const tag = header ? 'th' : 'td';\n                const attrs = Object.assign(Object.assign({}, (colspan && { colspan })), (rowspan && { rowspan }));\n                return this.wrap(tag, data, attrs);\n            })\n                .join('');\n            return this.wrap('tr', cells);\n        })\n            .join('');\n        const element = this.wrap('table', tableBody);\n        return this.addRaw(element).addEOL();\n    }\n    /**\n     * Adds a collapsable HTML details element to the summary buffer\n     *\n     * @param {string} label text for the closed state\n     * @param {string} content collapsable content\n     *\n     * @returns {Summary} summary instance\n     */\n    addDetails(label, content) {\n        const element = this.wrap('details', this.wrap('summary', label) + content);\n        return this.addRaw(element).addEOL();\n    }\n    /**\n     * Adds an HTML image tag to the summary buffer\n     *\n     * @param {string} src path to the image you to embed\n     * @param {string} alt text description of the image\n     * @param {SummaryImageOptions} options (optional) addition image attributes\n     *\n     * @returns {Summary} summary instance\n     */\n    addImage(src, alt, options) {\n        const { width, height } = options || {};\n        const attrs = Object.assign(Object.assign({}, (width && { width })), (height && { height }));\n        const element = this.wrap('img', null, Object.assign({ src, alt }, attrs));\n        return this.addRaw(element).addEOL();\n    }\n    /**\n     * Adds an HTML section heading element\n     *\n     * @param {string} text heading text\n     * @param {number | string} [level=1] (optional) the heading level, default: 1\n     *\n     * @returns {Summary} summary instance\n     */\n    addHeading(text, level) {\n        const tag = `h${level}`;\n        const allowedTag = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(tag)\n            ? tag\n            : 'h1';\n        const element = this.wrap(allowedTag, text);\n        return this.addRaw(element).addEOL();\n    }\n    /**\n     * Adds an HTML thematic break (<hr>) to the summary buffer\n     *\n     * @returns {Summary} summary instance\n     */\n    addSeparator() {\n        const element = this.wrap('hr', null);\n        return this.addRaw(element).addEOL();\n    }\n    /**\n     * Adds an HTML line break (<br>) to the summary buffer\n     *\n     * @returns {Summary} summary instance\n     */\n    addBreak() {\n        const element = this.wrap('br', null);\n        return this.addRaw(element).addEOL();\n    }\n    /**\n     * Adds an HTML blockquote to the summary buffer\n     *\n     * @param {string} text quote text\n     * @param {string} cite (optional) citation url\n     *\n     * @returns {Summary} summary instance\n     */\n    addQuote(text, cite) {\n        const attrs = Object.assign({}, (cite && { cite }));\n        const element = this.wrap('blockquote', text, attrs);\n        return this.addRaw(element).addEOL();\n    }\n    /**\n     * Adds an HTML anchor tag to the summary buffer\n     *\n     * @param {string} text link text/content\n     * @param {string} href hyperlink\n     *\n     * @returns {Summary} summary instance\n     */\n    addLink(text, href) {\n        const element = this.wrap('a', text, { href });\n        return this.addRaw(element).addEOL();\n    }\n}\nconst _summary = new Summary();\n/**\n * @deprecated use `core.summary`\n */\nexports.markdownSummary = _summary;\nexports.summary = _summary;\n//# sourceMappingURL=summary.js.map\n\n//# sourceURL=webpack://toml-editor/./node_modules/@actions/core/lib/summary.js?");
 
 /***/ }),
 
-/***/ 9855:
+/***/ "./node_modules/@actions/core/lib/utils.js":
+/*!*************************************************!*\
+  !*** ./node_modules/@actions/core/lib/utils.js ***!
+  \*************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
-
-// We use any as a valid input type
-/* eslint-disable @typescript-eslint/no-explicit-any */
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.toCommandProperties = exports.toCommandValue = void 0;
-/**
- * Sanitizes an input into a string so it can be passed into issueCommand safely
- * @param input input to sanitize into a string
- */
-function toCommandValue(input) {
-    if (input === null || input === undefined) {
-        return '';
-    }
-    else if (typeof input === 'string' || input instanceof String) {
-        return input;
-    }
-    return JSON.stringify(input);
-}
-exports.toCommandValue = toCommandValue;
-/**
- *
- * @param annotationProperties
- * @returns The command properties to send with the actual annotation command
- * See IssueCommandProperties: https://github.com/actions/runner/blob/main/src/Runner.Worker/ActionCommandManager.cs#L646
- */
-function toCommandProperties(annotationProperties) {
-    if (!Object.keys(annotationProperties).length) {
-        return {};
-    }
-    return {
-        title: annotationProperties.title,
-        file: annotationProperties.file,
-        line: annotationProperties.startLine,
-        endLine: annotationProperties.endLine,
-        col: annotationProperties.startColumn,
-        endColumn: annotationProperties.endColumn
-    };
-}
-exports.toCommandProperties = toCommandProperties;
-//# sourceMappingURL=utils.js.map
+eval("\n// We use any as a valid input type\n/* eslint-disable @typescript-eslint/no-explicit-any */\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexports.toCommandProperties = exports.toCommandValue = void 0;\n/**\n * Sanitizes an input into a string so it can be passed into issueCommand safely\n * @param input input to sanitize into a string\n */\nfunction toCommandValue(input) {\n    if (input === null || input === undefined) {\n        return '';\n    }\n    else if (typeof input === 'string' || input instanceof String) {\n        return input;\n    }\n    return JSON.stringify(input);\n}\nexports.toCommandValue = toCommandValue;\n/**\n *\n * @param annotationProperties\n * @returns The command properties to send with the actual annotation command\n * See IssueCommandProperties: https://github.com/actions/runner/blob/main/src/Runner.Worker/ActionCommandManager.cs#L646\n */\nfunction toCommandProperties(annotationProperties) {\n    if (!Object.keys(annotationProperties).length) {\n        return {};\n    }\n    return {\n        title: annotationProperties.title,\n        file: annotationProperties.file,\n        line: annotationProperties.startLine,\n        endLine: annotationProperties.endLine,\n        col: annotationProperties.startColumn,\n        endColumn: annotationProperties.endColumn\n    };\n}\nexports.toCommandProperties = toCommandProperties;\n//# sourceMappingURL=utils.js.map\n\n//# sourceURL=webpack://toml-editor/./node_modules/@actions/core/lib/utils.js?");
 
 /***/ }),
 
-/***/ 1475:
+/***/ "./node_modules/@actions/http-client/lib/auth.js":
+/*!*******************************************************!*\
+  !*** ./node_modules/@actions/http-client/lib/auth.js ***!
+  \*******************************************************/
 /***/ (function(__unused_webpack_module, exports) {
 
 "use strict";
-
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.PersonalAccessTokenCredentialHandler = exports.BearerCredentialHandler = exports.BasicCredentialHandler = void 0;
-class BasicCredentialHandler {
-    constructor(username, password) {
-        this.username = username;
-        this.password = password;
-    }
-    prepareRequest(options) {
-        if (!options.headers) {
-            throw Error('The request has no headers');
-        }
-        options.headers['Authorization'] = `Basic ${Buffer.from(`${this.username}:${this.password}`).toString('base64')}`;
-    }
-    // This handler cannot handle 401
-    canHandleAuthentication() {
-        return false;
-    }
-    handleAuthentication() {
-        return __awaiter(this, void 0, void 0, function* () {
-            throw new Error('not implemented');
-        });
-    }
-}
-exports.BasicCredentialHandler = BasicCredentialHandler;
-class BearerCredentialHandler {
-    constructor(token) {
-        this.token = token;
-    }
-    // currently implements pre-authorization
-    // TODO: support preAuth = false where it hooks on 401
-    prepareRequest(options) {
-        if (!options.headers) {
-            throw Error('The request has no headers');
-        }
-        options.headers['Authorization'] = `Bearer ${this.token}`;
-    }
-    // This handler cannot handle 401
-    canHandleAuthentication() {
-        return false;
-    }
-    handleAuthentication() {
-        return __awaiter(this, void 0, void 0, function* () {
-            throw new Error('not implemented');
-        });
-    }
-}
-exports.BearerCredentialHandler = BearerCredentialHandler;
-class PersonalAccessTokenCredentialHandler {
-    constructor(token) {
-        this.token = token;
-    }
-    // currently implements pre-authorization
-    // TODO: support preAuth = false where it hooks on 401
-    prepareRequest(options) {
-        if (!options.headers) {
-            throw Error('The request has no headers');
-        }
-        options.headers['Authorization'] = `Basic ${Buffer.from(`PAT:${this.token}`).toString('base64')}`;
-    }
-    // This handler cannot handle 401
-    canHandleAuthentication() {
-        return false;
-    }
-    handleAuthentication() {
-        return __awaiter(this, void 0, void 0, function* () {
-            throw new Error('not implemented');
-        });
-    }
-}
-exports.PersonalAccessTokenCredentialHandler = PersonalAccessTokenCredentialHandler;
-//# sourceMappingURL=auth.js.map
+eval("\nvar __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {\n    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }\n    return new (P || (P = Promise))(function (resolve, reject) {\n        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }\n        function rejected(value) { try { step(generator[\"throw\"](value)); } catch (e) { reject(e); } }\n        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }\n        step((generator = generator.apply(thisArg, _arguments || [])).next());\n    });\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexports.PersonalAccessTokenCredentialHandler = exports.BearerCredentialHandler = exports.BasicCredentialHandler = void 0;\nclass BasicCredentialHandler {\n    constructor(username, password) {\n        this.username = username;\n        this.password = password;\n    }\n    prepareRequest(options) {\n        if (!options.headers) {\n            throw Error('The request has no headers');\n        }\n        options.headers['Authorization'] = `Basic ${Buffer.from(`${this.username}:${this.password}`).toString('base64')}`;\n    }\n    // This handler cannot handle 401\n    canHandleAuthentication() {\n        return false;\n    }\n    handleAuthentication() {\n        return __awaiter(this, void 0, void 0, function* () {\n            throw new Error('not implemented');\n        });\n    }\n}\nexports.BasicCredentialHandler = BasicCredentialHandler;\nclass BearerCredentialHandler {\n    constructor(token) {\n        this.token = token;\n    }\n    // currently implements pre-authorization\n    // TODO: support preAuth = false where it hooks on 401\n    prepareRequest(options) {\n        if (!options.headers) {\n            throw Error('The request has no headers');\n        }\n        options.headers['Authorization'] = `Bearer ${this.token}`;\n    }\n    // This handler cannot handle 401\n    canHandleAuthentication() {\n        return false;\n    }\n    handleAuthentication() {\n        return __awaiter(this, void 0, void 0, function* () {\n            throw new Error('not implemented');\n        });\n    }\n}\nexports.BearerCredentialHandler = BearerCredentialHandler;\nclass PersonalAccessTokenCredentialHandler {\n    constructor(token) {\n        this.token = token;\n    }\n    // currently implements pre-authorization\n    // TODO: support preAuth = false where it hooks on 401\n    prepareRequest(options) {\n        if (!options.headers) {\n            throw Error('The request has no headers');\n        }\n        options.headers['Authorization'] = `Basic ${Buffer.from(`PAT:${this.token}`).toString('base64')}`;\n    }\n    // This handler cannot handle 401\n    canHandleAuthentication() {\n        return false;\n    }\n    handleAuthentication() {\n        return __awaiter(this, void 0, void 0, function* () {\n            throw new Error('not implemented');\n        });\n    }\n}\nexports.PersonalAccessTokenCredentialHandler = PersonalAccessTokenCredentialHandler;\n//# sourceMappingURL=auth.js.map\n\n//# sourceURL=webpack://toml-editor/./node_modules/@actions/http-client/lib/auth.js?");
 
 /***/ }),
 
-/***/ 5754:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+/***/ "./node_modules/@actions/http-client/lib/index.js":
+/*!********************************************************!*\
+  !*** ./node_modules/@actions/http-client/lib/index.js ***!
+  \********************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.HttpClient = exports.isHttps = exports.HttpClientResponse = exports.HttpClientError = exports.getProxyUrl = exports.MediaTypes = exports.Headers = exports.HttpCodes = void 0;
-const http = __importStar(__nccwpck_require__(3685));
-const https = __importStar(__nccwpck_require__(5687));
-const pm = __importStar(__nccwpck_require__(5804));
-const tunnel = __importStar(__nccwpck_require__(586));
-var HttpCodes;
-(function (HttpCodes) {
-    HttpCodes[HttpCodes["OK"] = 200] = "OK";
-    HttpCodes[HttpCodes["MultipleChoices"] = 300] = "MultipleChoices";
-    HttpCodes[HttpCodes["MovedPermanently"] = 301] = "MovedPermanently";
-    HttpCodes[HttpCodes["ResourceMoved"] = 302] = "ResourceMoved";
-    HttpCodes[HttpCodes["SeeOther"] = 303] = "SeeOther";
-    HttpCodes[HttpCodes["NotModified"] = 304] = "NotModified";
-    HttpCodes[HttpCodes["UseProxy"] = 305] = "UseProxy";
-    HttpCodes[HttpCodes["SwitchProxy"] = 306] = "SwitchProxy";
-    HttpCodes[HttpCodes["TemporaryRedirect"] = 307] = "TemporaryRedirect";
-    HttpCodes[HttpCodes["PermanentRedirect"] = 308] = "PermanentRedirect";
-    HttpCodes[HttpCodes["BadRequest"] = 400] = "BadRequest";
-    HttpCodes[HttpCodes["Unauthorized"] = 401] = "Unauthorized";
-    HttpCodes[HttpCodes["PaymentRequired"] = 402] = "PaymentRequired";
-    HttpCodes[HttpCodes["Forbidden"] = 403] = "Forbidden";
-    HttpCodes[HttpCodes["NotFound"] = 404] = "NotFound";
-    HttpCodes[HttpCodes["MethodNotAllowed"] = 405] = "MethodNotAllowed";
-    HttpCodes[HttpCodes["NotAcceptable"] = 406] = "NotAcceptable";
-    HttpCodes[HttpCodes["ProxyAuthenticationRequired"] = 407] = "ProxyAuthenticationRequired";
-    HttpCodes[HttpCodes["RequestTimeout"] = 408] = "RequestTimeout";
-    HttpCodes[HttpCodes["Conflict"] = 409] = "Conflict";
-    HttpCodes[HttpCodes["Gone"] = 410] = "Gone";
-    HttpCodes[HttpCodes["TooManyRequests"] = 429] = "TooManyRequests";
-    HttpCodes[HttpCodes["InternalServerError"] = 500] = "InternalServerError";
-    HttpCodes[HttpCodes["NotImplemented"] = 501] = "NotImplemented";
-    HttpCodes[HttpCodes["BadGateway"] = 502] = "BadGateway";
-    HttpCodes[HttpCodes["ServiceUnavailable"] = 503] = "ServiceUnavailable";
-    HttpCodes[HttpCodes["GatewayTimeout"] = 504] = "GatewayTimeout";
-})(HttpCodes = exports.HttpCodes || (exports.HttpCodes = {}));
-var Headers;
-(function (Headers) {
-    Headers["Accept"] = "accept";
-    Headers["ContentType"] = "content-type";
-})(Headers = exports.Headers || (exports.Headers = {}));
-var MediaTypes;
-(function (MediaTypes) {
-    MediaTypes["ApplicationJson"] = "application/json";
-})(MediaTypes = exports.MediaTypes || (exports.MediaTypes = {}));
-/**
- * Returns the proxy URL, depending upon the supplied url and proxy environment variables.
- * @param serverUrl  The server URL where the request will be sent. For example, https://api.github.com
- */
-function getProxyUrl(serverUrl) {
-    const proxyUrl = pm.getProxyUrl(new URL(serverUrl));
-    return proxyUrl ? proxyUrl.href : '';
-}
-exports.getProxyUrl = getProxyUrl;
-const HttpRedirectCodes = [
-    HttpCodes.MovedPermanently,
-    HttpCodes.ResourceMoved,
-    HttpCodes.SeeOther,
-    HttpCodes.TemporaryRedirect,
-    HttpCodes.PermanentRedirect
-];
-const HttpResponseRetryCodes = [
-    HttpCodes.BadGateway,
-    HttpCodes.ServiceUnavailable,
-    HttpCodes.GatewayTimeout
-];
-const RetryableHttpVerbs = ['OPTIONS', 'GET', 'DELETE', 'HEAD'];
-const ExponentialBackoffCeiling = 10;
-const ExponentialBackoffTimeSlice = 5;
-class HttpClientError extends Error {
-    constructor(message, statusCode) {
-        super(message);
-        this.name = 'HttpClientError';
-        this.statusCode = statusCode;
-        Object.setPrototypeOf(this, HttpClientError.prototype);
-    }
-}
-exports.HttpClientError = HttpClientError;
-class HttpClientResponse {
-    constructor(message) {
-        this.message = message;
-    }
-    readBody() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return new Promise((resolve) => __awaiter(this, void 0, void 0, function* () {
-                let output = Buffer.alloc(0);
-                this.message.on('data', (chunk) => {
-                    output = Buffer.concat([output, chunk]);
-                });
-                this.message.on('end', () => {
-                    resolve(output.toString());
-                });
-            }));
-        });
-    }
-}
-exports.HttpClientResponse = HttpClientResponse;
-function isHttps(requestUrl) {
-    const parsedUrl = new URL(requestUrl);
-    return parsedUrl.protocol === 'https:';
-}
-exports.isHttps = isHttps;
-class HttpClient {
-    constructor(userAgent, handlers, requestOptions) {
-        this._ignoreSslError = false;
-        this._allowRedirects = true;
-        this._allowRedirectDowngrade = false;
-        this._maxRedirects = 50;
-        this._allowRetries = false;
-        this._maxRetries = 1;
-        this._keepAlive = false;
-        this._disposed = false;
-        this.userAgent = userAgent;
-        this.handlers = handlers || [];
-        this.requestOptions = requestOptions;
-        if (requestOptions) {
-            if (requestOptions.ignoreSslError != null) {
-                this._ignoreSslError = requestOptions.ignoreSslError;
-            }
-            this._socketTimeout = requestOptions.socketTimeout;
-            if (requestOptions.allowRedirects != null) {
-                this._allowRedirects = requestOptions.allowRedirects;
-            }
-            if (requestOptions.allowRedirectDowngrade != null) {
-                this._allowRedirectDowngrade = requestOptions.allowRedirectDowngrade;
-            }
-            if (requestOptions.maxRedirects != null) {
-                this._maxRedirects = Math.max(requestOptions.maxRedirects, 0);
-            }
-            if (requestOptions.keepAlive != null) {
-                this._keepAlive = requestOptions.keepAlive;
-            }
-            if (requestOptions.allowRetries != null) {
-                this._allowRetries = requestOptions.allowRetries;
-            }
-            if (requestOptions.maxRetries != null) {
-                this._maxRetries = requestOptions.maxRetries;
-            }
-        }
-    }
-    options(requestUrl, additionalHeaders) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.request('OPTIONS', requestUrl, null, additionalHeaders || {});
-        });
-    }
-    get(requestUrl, additionalHeaders) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.request('GET', requestUrl, null, additionalHeaders || {});
-        });
-    }
-    del(requestUrl, additionalHeaders) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.request('DELETE', requestUrl, null, additionalHeaders || {});
-        });
-    }
-    post(requestUrl, data, additionalHeaders) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.request('POST', requestUrl, data, additionalHeaders || {});
-        });
-    }
-    patch(requestUrl, data, additionalHeaders) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.request('PATCH', requestUrl, data, additionalHeaders || {});
-        });
-    }
-    put(requestUrl, data, additionalHeaders) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.request('PUT', requestUrl, data, additionalHeaders || {});
-        });
-    }
-    head(requestUrl, additionalHeaders) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.request('HEAD', requestUrl, null, additionalHeaders || {});
-        });
-    }
-    sendStream(verb, requestUrl, stream, additionalHeaders) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.request(verb, requestUrl, stream, additionalHeaders);
-        });
-    }
-    /**
-     * Gets a typed object from an endpoint
-     * Be aware that not found returns a null.  Other errors (4xx, 5xx) reject the promise
-     */
-    getJson(requestUrl, additionalHeaders = {}) {
-        return __awaiter(this, void 0, void 0, function* () {
-            additionalHeaders[Headers.Accept] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.Accept, MediaTypes.ApplicationJson);
-            const res = yield this.get(requestUrl, additionalHeaders);
-            return this._processResponse(res, this.requestOptions);
-        });
-    }
-    postJson(requestUrl, obj, additionalHeaders = {}) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const data = JSON.stringify(obj, null, 2);
-            additionalHeaders[Headers.Accept] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.Accept, MediaTypes.ApplicationJson);
-            additionalHeaders[Headers.ContentType] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.ContentType, MediaTypes.ApplicationJson);
-            const res = yield this.post(requestUrl, data, additionalHeaders);
-            return this._processResponse(res, this.requestOptions);
-        });
-    }
-    putJson(requestUrl, obj, additionalHeaders = {}) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const data = JSON.stringify(obj, null, 2);
-            additionalHeaders[Headers.Accept] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.Accept, MediaTypes.ApplicationJson);
-            additionalHeaders[Headers.ContentType] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.ContentType, MediaTypes.ApplicationJson);
-            const res = yield this.put(requestUrl, data, additionalHeaders);
-            return this._processResponse(res, this.requestOptions);
-        });
-    }
-    patchJson(requestUrl, obj, additionalHeaders = {}) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const data = JSON.stringify(obj, null, 2);
-            additionalHeaders[Headers.Accept] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.Accept, MediaTypes.ApplicationJson);
-            additionalHeaders[Headers.ContentType] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.ContentType, MediaTypes.ApplicationJson);
-            const res = yield this.patch(requestUrl, data, additionalHeaders);
-            return this._processResponse(res, this.requestOptions);
-        });
-    }
-    /**
-     * Makes a raw http request.
-     * All other methods such as get, post, patch, and request ultimately call this.
-     * Prefer get, del, post and patch
-     */
-    request(verb, requestUrl, data, headers) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (this._disposed) {
-                throw new Error('Client has already been disposed.');
-            }
-            const parsedUrl = new URL(requestUrl);
-            let info = this._prepareRequest(verb, parsedUrl, headers);
-            // Only perform retries on reads since writes may not be idempotent.
-            const maxTries = this._allowRetries && RetryableHttpVerbs.includes(verb)
-                ? this._maxRetries + 1
-                : 1;
-            let numTries = 0;
-            let response;
-            do {
-                response = yield this.requestRaw(info, data);
-                // Check if it's an authentication challenge
-                if (response &&
-                    response.message &&
-                    response.message.statusCode === HttpCodes.Unauthorized) {
-                    let authenticationHandler;
-                    for (const handler of this.handlers) {
-                        if (handler.canHandleAuthentication(response)) {
-                            authenticationHandler = handler;
-                            break;
-                        }
-                    }
-                    if (authenticationHandler) {
-                        return authenticationHandler.handleAuthentication(this, info, data);
-                    }
-                    else {
-                        // We have received an unauthorized response but have no handlers to handle it.
-                        // Let the response return to the caller.
-                        return response;
-                    }
-                }
-                let redirectsRemaining = this._maxRedirects;
-                while (response.message.statusCode &&
-                    HttpRedirectCodes.includes(response.message.statusCode) &&
-                    this._allowRedirects &&
-                    redirectsRemaining > 0) {
-                    const redirectUrl = response.message.headers['location'];
-                    if (!redirectUrl) {
-                        // if there's no location to redirect to, we won't
-                        break;
-                    }
-                    const parsedRedirectUrl = new URL(redirectUrl);
-                    if (parsedUrl.protocol === 'https:' &&
-                        parsedUrl.protocol !== parsedRedirectUrl.protocol &&
-                        !this._allowRedirectDowngrade) {
-                        throw new Error('Redirect from HTTPS to HTTP protocol. This downgrade is not allowed for security reasons. If you want to allow this behavior, set the allowRedirectDowngrade option to true.');
-                    }
-                    // we need to finish reading the response before reassigning response
-                    // which will leak the open socket.
-                    yield response.readBody();
-                    // strip authorization header if redirected to a different hostname
-                    if (parsedRedirectUrl.hostname !== parsedUrl.hostname) {
-                        for (const header in headers) {
-                            // header names are case insensitive
-                            if (header.toLowerCase() === 'authorization') {
-                                delete headers[header];
-                            }
-                        }
-                    }
-                    // let's make the request with the new redirectUrl
-                    info = this._prepareRequest(verb, parsedRedirectUrl, headers);
-                    response = yield this.requestRaw(info, data);
-                    redirectsRemaining--;
-                }
-                if (!response.message.statusCode ||
-                    !HttpResponseRetryCodes.includes(response.message.statusCode)) {
-                    // If not a retry code, return immediately instead of retrying
-                    return response;
-                }
-                numTries += 1;
-                if (numTries < maxTries) {
-                    yield response.readBody();
-                    yield this._performExponentialBackoff(numTries);
-                }
-            } while (numTries < maxTries);
-            return response;
-        });
-    }
-    /**
-     * Needs to be called if keepAlive is set to true in request options.
-     */
-    dispose() {
-        if (this._agent) {
-            this._agent.destroy();
-        }
-        this._disposed = true;
-    }
-    /**
-     * Raw request.
-     * @param info
-     * @param data
-     */
-    requestRaw(info, data) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return new Promise((resolve, reject) => {
-                function callbackForResult(err, res) {
-                    if (err) {
-                        reject(err);
-                    }
-                    else if (!res) {
-                        // If `err` is not passed, then `res` must be passed.
-                        reject(new Error('Unknown error'));
-                    }
-                    else {
-                        resolve(res);
-                    }
-                }
-                this.requestRawWithCallback(info, data, callbackForResult);
-            });
-        });
-    }
-    /**
-     * Raw request with callback.
-     * @param info
-     * @param data
-     * @param onResult
-     */
-    requestRawWithCallback(info, data, onResult) {
-        if (typeof data === 'string') {
-            if (!info.options.headers) {
-                info.options.headers = {};
-            }
-            info.options.headers['Content-Length'] = Buffer.byteLength(data, 'utf8');
-        }
-        let callbackCalled = false;
-        function handleResult(err, res) {
-            if (!callbackCalled) {
-                callbackCalled = true;
-                onResult(err, res);
-            }
-        }
-        const req = info.httpModule.request(info.options, (msg) => {
-            const res = new HttpClientResponse(msg);
-            handleResult(undefined, res);
-        });
-        let socket;
-        req.on('socket', sock => {
-            socket = sock;
-        });
-        // If we ever get disconnected, we want the socket to timeout eventually
-        req.setTimeout(this._socketTimeout || 3 * 60000, () => {
-            if (socket) {
-                socket.end();
-            }
-            handleResult(new Error(`Request timeout: ${info.options.path}`));
-        });
-        req.on('error', function (err) {
-            // err has statusCode property
-            // res should have headers
-            handleResult(err);
-        });
-        if (data && typeof data === 'string') {
-            req.write(data, 'utf8');
-        }
-        if (data && typeof data !== 'string') {
-            data.on('close', function () {
-                req.end();
-            });
-            data.pipe(req);
-        }
-        else {
-            req.end();
-        }
-    }
-    /**
-     * Gets an http agent. This function is useful when you need an http agent that handles
-     * routing through a proxy server - depending upon the url and proxy environment variables.
-     * @param serverUrl  The server URL where the request will be sent. For example, https://api.github.com
-     */
-    getAgent(serverUrl) {
-        const parsedUrl = new URL(serverUrl);
-        return this._getAgent(parsedUrl);
-    }
-    _prepareRequest(method, requestUrl, headers) {
-        const info = {};
-        info.parsedUrl = requestUrl;
-        const usingSsl = info.parsedUrl.protocol === 'https:';
-        info.httpModule = usingSsl ? https : http;
-        const defaultPort = usingSsl ? 443 : 80;
-        info.options = {};
-        info.options.host = info.parsedUrl.hostname;
-        info.options.port = info.parsedUrl.port
-            ? parseInt(info.parsedUrl.port)
-            : defaultPort;
-        info.options.path =
-            (info.parsedUrl.pathname || '') + (info.parsedUrl.search || '');
-        info.options.method = method;
-        info.options.headers = this._mergeHeaders(headers);
-        if (this.userAgent != null) {
-            info.options.headers['user-agent'] = this.userAgent;
-        }
-        info.options.agent = this._getAgent(info.parsedUrl);
-        // gives handlers an opportunity to participate
-        if (this.handlers) {
-            for (const handler of this.handlers) {
-                handler.prepareRequest(info.options);
-            }
-        }
-        return info;
-    }
-    _mergeHeaders(headers) {
-        if (this.requestOptions && this.requestOptions.headers) {
-            return Object.assign({}, lowercaseKeys(this.requestOptions.headers), lowercaseKeys(headers || {}));
-        }
-        return lowercaseKeys(headers || {});
-    }
-    _getExistingOrDefaultHeader(additionalHeaders, header, _default) {
-        let clientHeader;
-        if (this.requestOptions && this.requestOptions.headers) {
-            clientHeader = lowercaseKeys(this.requestOptions.headers)[header];
-        }
-        return additionalHeaders[header] || clientHeader || _default;
-    }
-    _getAgent(parsedUrl) {
-        let agent;
-        const proxyUrl = pm.getProxyUrl(parsedUrl);
-        const useProxy = proxyUrl && proxyUrl.hostname;
-        if (this._keepAlive && useProxy) {
-            agent = this._proxyAgent;
-        }
-        if (this._keepAlive && !useProxy) {
-            agent = this._agent;
-        }
-        // if agent is already assigned use that agent.
-        if (agent) {
-            return agent;
-        }
-        const usingSsl = parsedUrl.protocol === 'https:';
-        let maxSockets = 100;
-        if (this.requestOptions) {
-            maxSockets = this.requestOptions.maxSockets || http.globalAgent.maxSockets;
-        }
-        // This is `useProxy` again, but we need to check `proxyURl` directly for TypeScripts's flow analysis.
-        if (proxyUrl && proxyUrl.hostname) {
-            const agentOptions = {
-                maxSockets,
-                keepAlive: this._keepAlive,
-                proxy: Object.assign(Object.assign({}, ((proxyUrl.username || proxyUrl.password) && {
-                    proxyAuth: `${proxyUrl.username}:${proxyUrl.password}`
-                })), { host: proxyUrl.hostname, port: proxyUrl.port })
-            };
-            let tunnelAgent;
-            const overHttps = proxyUrl.protocol === 'https:';
-            if (usingSsl) {
-                tunnelAgent = overHttps ? tunnel.httpsOverHttps : tunnel.httpsOverHttp;
-            }
-            else {
-                tunnelAgent = overHttps ? tunnel.httpOverHttps : tunnel.httpOverHttp;
-            }
-            agent = tunnelAgent(agentOptions);
-            this._proxyAgent = agent;
-        }
-        // if reusing agent across request and tunneling agent isn't assigned create a new agent
-        if (this._keepAlive && !agent) {
-            const options = { keepAlive: this._keepAlive, maxSockets };
-            agent = usingSsl ? new https.Agent(options) : new http.Agent(options);
-            this._agent = agent;
-        }
-        // if not using private agent and tunnel agent isn't setup then use global agent
-        if (!agent) {
-            agent = usingSsl ? https.globalAgent : http.globalAgent;
-        }
-        if (usingSsl && this._ignoreSslError) {
-            // we don't want to set NODE_TLS_REJECT_UNAUTHORIZED=0 since that will affect request for entire process
-            // http.RequestOptions doesn't expose a way to modify RequestOptions.agent.options
-            // we have to cast it to any and change it directly
-            agent.options = Object.assign(agent.options || {}, {
-                rejectUnauthorized: false
-            });
-        }
-        return agent;
-    }
-    _performExponentialBackoff(retryNumber) {
-        return __awaiter(this, void 0, void 0, function* () {
-            retryNumber = Math.min(ExponentialBackoffCeiling, retryNumber);
-            const ms = ExponentialBackoffTimeSlice * Math.pow(2, retryNumber);
-            return new Promise(resolve => setTimeout(() => resolve(), ms));
-        });
-    }
-    _processResponse(res, options) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-                const statusCode = res.message.statusCode || 0;
-                const response = {
-                    statusCode,
-                    result: null,
-                    headers: {}
-                };
-                // not found leads to null obj returned
-                if (statusCode === HttpCodes.NotFound) {
-                    resolve(response);
-                }
-                // get the result from the body
-                function dateTimeDeserializer(key, value) {
-                    if (typeof value === 'string') {
-                        const a = new Date(value);
-                        if (!isNaN(a.valueOf())) {
-                            return a;
-                        }
-                    }
-                    return value;
-                }
-                let obj;
-                let contents;
-                try {
-                    contents = yield res.readBody();
-                    if (contents && contents.length > 0) {
-                        if (options && options.deserializeDates) {
-                            obj = JSON.parse(contents, dateTimeDeserializer);
-                        }
-                        else {
-                            obj = JSON.parse(contents);
-                        }
-                        response.result = obj;
-                    }
-                    response.headers = res.message.headers;
-                }
-                catch (err) {
-                    // Invalid resource (contents not json);  leaving result obj null
-                }
-                // note that 3xx redirects are handled by the http layer.
-                if (statusCode > 299) {
-                    let msg;
-                    // if exception/error in body, attempt to get better error
-                    if (obj && obj.message) {
-                        msg = obj.message;
-                    }
-                    else if (contents && contents.length > 0) {
-                        // it may be the case that the exception is in the body message as string
-                        msg = contents;
-                    }
-                    else {
-                        msg = `Failed request: (${statusCode})`;
-                    }
-                    const err = new HttpClientError(msg, statusCode);
-                    err.result = response.result;
-                    reject(err);
-                }
-                else {
-                    resolve(response);
-                }
-            }));
-        });
-    }
-}
-exports.HttpClient = HttpClient;
-const lowercaseKeys = (obj) => Object.keys(obj).reduce((c, k) => ((c[k.toLowerCase()] = obj[k]), c), {});
-//# sourceMappingURL=index.js.map
+eval("\n/* eslint-disable @typescript-eslint/no-explicit-any */\nvar __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {\n    if (k2 === undefined) k2 = k;\n    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });\n}) : (function(o, m, k, k2) {\n    if (k2 === undefined) k2 = k;\n    o[k2] = m[k];\n}));\nvar __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {\n    Object.defineProperty(o, \"default\", { enumerable: true, value: v });\n}) : function(o, v) {\n    o[\"default\"] = v;\n});\nvar __importStar = (this && this.__importStar) || function (mod) {\n    if (mod && mod.__esModule) return mod;\n    var result = {};\n    if (mod != null) for (var k in mod) if (k !== \"default\" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);\n    __setModuleDefault(result, mod);\n    return result;\n};\nvar __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {\n    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }\n    return new (P || (P = Promise))(function (resolve, reject) {\n        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }\n        function rejected(value) { try { step(generator[\"throw\"](value)); } catch (e) { reject(e); } }\n        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }\n        step((generator = generator.apply(thisArg, _arguments || [])).next());\n    });\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexports.HttpClient = exports.isHttps = exports.HttpClientResponse = exports.HttpClientError = exports.getProxyUrl = exports.MediaTypes = exports.Headers = exports.HttpCodes = void 0;\nconst http = __importStar(__webpack_require__(/*! http */ \"http\"));\nconst https = __importStar(__webpack_require__(/*! https */ \"https\"));\nconst pm = __importStar(__webpack_require__(/*! ./proxy */ \"./node_modules/@actions/http-client/lib/proxy.js\"));\nconst tunnel = __importStar(__webpack_require__(/*! tunnel */ \"./node_modules/tunnel/index.js\"));\nvar HttpCodes;\n(function (HttpCodes) {\n    HttpCodes[HttpCodes[\"OK\"] = 200] = \"OK\";\n    HttpCodes[HttpCodes[\"MultipleChoices\"] = 300] = \"MultipleChoices\";\n    HttpCodes[HttpCodes[\"MovedPermanently\"] = 301] = \"MovedPermanently\";\n    HttpCodes[HttpCodes[\"ResourceMoved\"] = 302] = \"ResourceMoved\";\n    HttpCodes[HttpCodes[\"SeeOther\"] = 303] = \"SeeOther\";\n    HttpCodes[HttpCodes[\"NotModified\"] = 304] = \"NotModified\";\n    HttpCodes[HttpCodes[\"UseProxy\"] = 305] = \"UseProxy\";\n    HttpCodes[HttpCodes[\"SwitchProxy\"] = 306] = \"SwitchProxy\";\n    HttpCodes[HttpCodes[\"TemporaryRedirect\"] = 307] = \"TemporaryRedirect\";\n    HttpCodes[HttpCodes[\"PermanentRedirect\"] = 308] = \"PermanentRedirect\";\n    HttpCodes[HttpCodes[\"BadRequest\"] = 400] = \"BadRequest\";\n    HttpCodes[HttpCodes[\"Unauthorized\"] = 401] = \"Unauthorized\";\n    HttpCodes[HttpCodes[\"PaymentRequired\"] = 402] = \"PaymentRequired\";\n    HttpCodes[HttpCodes[\"Forbidden\"] = 403] = \"Forbidden\";\n    HttpCodes[HttpCodes[\"NotFound\"] = 404] = \"NotFound\";\n    HttpCodes[HttpCodes[\"MethodNotAllowed\"] = 405] = \"MethodNotAllowed\";\n    HttpCodes[HttpCodes[\"NotAcceptable\"] = 406] = \"NotAcceptable\";\n    HttpCodes[HttpCodes[\"ProxyAuthenticationRequired\"] = 407] = \"ProxyAuthenticationRequired\";\n    HttpCodes[HttpCodes[\"RequestTimeout\"] = 408] = \"RequestTimeout\";\n    HttpCodes[HttpCodes[\"Conflict\"] = 409] = \"Conflict\";\n    HttpCodes[HttpCodes[\"Gone\"] = 410] = \"Gone\";\n    HttpCodes[HttpCodes[\"TooManyRequests\"] = 429] = \"TooManyRequests\";\n    HttpCodes[HttpCodes[\"InternalServerError\"] = 500] = \"InternalServerError\";\n    HttpCodes[HttpCodes[\"NotImplemented\"] = 501] = \"NotImplemented\";\n    HttpCodes[HttpCodes[\"BadGateway\"] = 502] = \"BadGateway\";\n    HttpCodes[HttpCodes[\"ServiceUnavailable\"] = 503] = \"ServiceUnavailable\";\n    HttpCodes[HttpCodes[\"GatewayTimeout\"] = 504] = \"GatewayTimeout\";\n})(HttpCodes = exports.HttpCodes || (exports.HttpCodes = {}));\nvar Headers;\n(function (Headers) {\n    Headers[\"Accept\"] = \"accept\";\n    Headers[\"ContentType\"] = \"content-type\";\n})(Headers = exports.Headers || (exports.Headers = {}));\nvar MediaTypes;\n(function (MediaTypes) {\n    MediaTypes[\"ApplicationJson\"] = \"application/json\";\n})(MediaTypes = exports.MediaTypes || (exports.MediaTypes = {}));\n/**\n * Returns the proxy URL, depending upon the supplied url and proxy environment variables.\n * @param serverUrl  The server URL where the request will be sent. For example, https://api.github.com\n */\nfunction getProxyUrl(serverUrl) {\n    const proxyUrl = pm.getProxyUrl(new URL(serverUrl));\n    return proxyUrl ? proxyUrl.href : '';\n}\nexports.getProxyUrl = getProxyUrl;\nconst HttpRedirectCodes = [\n    HttpCodes.MovedPermanently,\n    HttpCodes.ResourceMoved,\n    HttpCodes.SeeOther,\n    HttpCodes.TemporaryRedirect,\n    HttpCodes.PermanentRedirect\n];\nconst HttpResponseRetryCodes = [\n    HttpCodes.BadGateway,\n    HttpCodes.ServiceUnavailable,\n    HttpCodes.GatewayTimeout\n];\nconst RetryableHttpVerbs = ['OPTIONS', 'GET', 'DELETE', 'HEAD'];\nconst ExponentialBackoffCeiling = 10;\nconst ExponentialBackoffTimeSlice = 5;\nclass HttpClientError extends Error {\n    constructor(message, statusCode) {\n        super(message);\n        this.name = 'HttpClientError';\n        this.statusCode = statusCode;\n        Object.setPrototypeOf(this, HttpClientError.prototype);\n    }\n}\nexports.HttpClientError = HttpClientError;\nclass HttpClientResponse {\n    constructor(message) {\n        this.message = message;\n    }\n    readBody() {\n        return __awaiter(this, void 0, void 0, function* () {\n            return new Promise((resolve) => __awaiter(this, void 0, void 0, function* () {\n                let output = Buffer.alloc(0);\n                this.message.on('data', (chunk) => {\n                    output = Buffer.concat([output, chunk]);\n                });\n                this.message.on('end', () => {\n                    resolve(output.toString());\n                });\n            }));\n        });\n    }\n}\nexports.HttpClientResponse = HttpClientResponse;\nfunction isHttps(requestUrl) {\n    const parsedUrl = new URL(requestUrl);\n    return parsedUrl.protocol === 'https:';\n}\nexports.isHttps = isHttps;\nclass HttpClient {\n    constructor(userAgent, handlers, requestOptions) {\n        this._ignoreSslError = false;\n        this._allowRedirects = true;\n        this._allowRedirectDowngrade = false;\n        this._maxRedirects = 50;\n        this._allowRetries = false;\n        this._maxRetries = 1;\n        this._keepAlive = false;\n        this._disposed = false;\n        this.userAgent = userAgent;\n        this.handlers = handlers || [];\n        this.requestOptions = requestOptions;\n        if (requestOptions) {\n            if (requestOptions.ignoreSslError != null) {\n                this._ignoreSslError = requestOptions.ignoreSslError;\n            }\n            this._socketTimeout = requestOptions.socketTimeout;\n            if (requestOptions.allowRedirects != null) {\n                this._allowRedirects = requestOptions.allowRedirects;\n            }\n            if (requestOptions.allowRedirectDowngrade != null) {\n                this._allowRedirectDowngrade = requestOptions.allowRedirectDowngrade;\n            }\n            if (requestOptions.maxRedirects != null) {\n                this._maxRedirects = Math.max(requestOptions.maxRedirects, 0);\n            }\n            if (requestOptions.keepAlive != null) {\n                this._keepAlive = requestOptions.keepAlive;\n            }\n            if (requestOptions.allowRetries != null) {\n                this._allowRetries = requestOptions.allowRetries;\n            }\n            if (requestOptions.maxRetries != null) {\n                this._maxRetries = requestOptions.maxRetries;\n            }\n        }\n    }\n    options(requestUrl, additionalHeaders) {\n        return __awaiter(this, void 0, void 0, function* () {\n            return this.request('OPTIONS', requestUrl, null, additionalHeaders || {});\n        });\n    }\n    get(requestUrl, additionalHeaders) {\n        return __awaiter(this, void 0, void 0, function* () {\n            return this.request('GET', requestUrl, null, additionalHeaders || {});\n        });\n    }\n    del(requestUrl, additionalHeaders) {\n        return __awaiter(this, void 0, void 0, function* () {\n            return this.request('DELETE', requestUrl, null, additionalHeaders || {});\n        });\n    }\n    post(requestUrl, data, additionalHeaders) {\n        return __awaiter(this, void 0, void 0, function* () {\n            return this.request('POST', requestUrl, data, additionalHeaders || {});\n        });\n    }\n    patch(requestUrl, data, additionalHeaders) {\n        return __awaiter(this, void 0, void 0, function* () {\n            return this.request('PATCH', requestUrl, data, additionalHeaders || {});\n        });\n    }\n    put(requestUrl, data, additionalHeaders) {\n        return __awaiter(this, void 0, void 0, function* () {\n            return this.request('PUT', requestUrl, data, additionalHeaders || {});\n        });\n    }\n    head(requestUrl, additionalHeaders) {\n        return __awaiter(this, void 0, void 0, function* () {\n            return this.request('HEAD', requestUrl, null, additionalHeaders || {});\n        });\n    }\n    sendStream(verb, requestUrl, stream, additionalHeaders) {\n        return __awaiter(this, void 0, void 0, function* () {\n            return this.request(verb, requestUrl, stream, additionalHeaders);\n        });\n    }\n    /**\n     * Gets a typed object from an endpoint\n     * Be aware that not found returns a null.  Other errors (4xx, 5xx) reject the promise\n     */\n    getJson(requestUrl, additionalHeaders = {}) {\n        return __awaiter(this, void 0, void 0, function* () {\n            additionalHeaders[Headers.Accept] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.Accept, MediaTypes.ApplicationJson);\n            const res = yield this.get(requestUrl, additionalHeaders);\n            return this._processResponse(res, this.requestOptions);\n        });\n    }\n    postJson(requestUrl, obj, additionalHeaders = {}) {\n        return __awaiter(this, void 0, void 0, function* () {\n            const data = JSON.stringify(obj, null, 2);\n            additionalHeaders[Headers.Accept] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.Accept, MediaTypes.ApplicationJson);\n            additionalHeaders[Headers.ContentType] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.ContentType, MediaTypes.ApplicationJson);\n            const res = yield this.post(requestUrl, data, additionalHeaders);\n            return this._processResponse(res, this.requestOptions);\n        });\n    }\n    putJson(requestUrl, obj, additionalHeaders = {}) {\n        return __awaiter(this, void 0, void 0, function* () {\n            const data = JSON.stringify(obj, null, 2);\n            additionalHeaders[Headers.Accept] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.Accept, MediaTypes.ApplicationJson);\n            additionalHeaders[Headers.ContentType] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.ContentType, MediaTypes.ApplicationJson);\n            const res = yield this.put(requestUrl, data, additionalHeaders);\n            return this._processResponse(res, this.requestOptions);\n        });\n    }\n    patchJson(requestUrl, obj, additionalHeaders = {}) {\n        return __awaiter(this, void 0, void 0, function* () {\n            const data = JSON.stringify(obj, null, 2);\n            additionalHeaders[Headers.Accept] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.Accept, MediaTypes.ApplicationJson);\n            additionalHeaders[Headers.ContentType] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.ContentType, MediaTypes.ApplicationJson);\n            const res = yield this.patch(requestUrl, data, additionalHeaders);\n            return this._processResponse(res, this.requestOptions);\n        });\n    }\n    /**\n     * Makes a raw http request.\n     * All other methods such as get, post, patch, and request ultimately call this.\n     * Prefer get, del, post and patch\n     */\n    request(verb, requestUrl, data, headers) {\n        return __awaiter(this, void 0, void 0, function* () {\n            if (this._disposed) {\n                throw new Error('Client has already been disposed.');\n            }\n            const parsedUrl = new URL(requestUrl);\n            let info = this._prepareRequest(verb, parsedUrl, headers);\n            // Only perform retries on reads since writes may not be idempotent.\n            const maxTries = this._allowRetries && RetryableHttpVerbs.includes(verb)\n                ? this._maxRetries + 1\n                : 1;\n            let numTries = 0;\n            let response;\n            do {\n                response = yield this.requestRaw(info, data);\n                // Check if it's an authentication challenge\n                if (response &&\n                    response.message &&\n                    response.message.statusCode === HttpCodes.Unauthorized) {\n                    let authenticationHandler;\n                    for (const handler of this.handlers) {\n                        if (handler.canHandleAuthentication(response)) {\n                            authenticationHandler = handler;\n                            break;\n                        }\n                    }\n                    if (authenticationHandler) {\n                        return authenticationHandler.handleAuthentication(this, info, data);\n                    }\n                    else {\n                        // We have received an unauthorized response but have no handlers to handle it.\n                        // Let the response return to the caller.\n                        return response;\n                    }\n                }\n                let redirectsRemaining = this._maxRedirects;\n                while (response.message.statusCode &&\n                    HttpRedirectCodes.includes(response.message.statusCode) &&\n                    this._allowRedirects &&\n                    redirectsRemaining > 0) {\n                    const redirectUrl = response.message.headers['location'];\n                    if (!redirectUrl) {\n                        // if there's no location to redirect to, we won't\n                        break;\n                    }\n                    const parsedRedirectUrl = new URL(redirectUrl);\n                    if (parsedUrl.protocol === 'https:' &&\n                        parsedUrl.protocol !== parsedRedirectUrl.protocol &&\n                        !this._allowRedirectDowngrade) {\n                        throw new Error('Redirect from HTTPS to HTTP protocol. This downgrade is not allowed for security reasons. If you want to allow this behavior, set the allowRedirectDowngrade option to true.');\n                    }\n                    // we need to finish reading the response before reassigning response\n                    // which will leak the open socket.\n                    yield response.readBody();\n                    // strip authorization header if redirected to a different hostname\n                    if (parsedRedirectUrl.hostname !== parsedUrl.hostname) {\n                        for (const header in headers) {\n                            // header names are case insensitive\n                            if (header.toLowerCase() === 'authorization') {\n                                delete headers[header];\n                            }\n                        }\n                    }\n                    // let's make the request with the new redirectUrl\n                    info = this._prepareRequest(verb, parsedRedirectUrl, headers);\n                    response = yield this.requestRaw(info, data);\n                    redirectsRemaining--;\n                }\n                if (!response.message.statusCode ||\n                    !HttpResponseRetryCodes.includes(response.message.statusCode)) {\n                    // If not a retry code, return immediately instead of retrying\n                    return response;\n                }\n                numTries += 1;\n                if (numTries < maxTries) {\n                    yield response.readBody();\n                    yield this._performExponentialBackoff(numTries);\n                }\n            } while (numTries < maxTries);\n            return response;\n        });\n    }\n    /**\n     * Needs to be called if keepAlive is set to true in request options.\n     */\n    dispose() {\n        if (this._agent) {\n            this._agent.destroy();\n        }\n        this._disposed = true;\n    }\n    /**\n     * Raw request.\n     * @param info\n     * @param data\n     */\n    requestRaw(info, data) {\n        return __awaiter(this, void 0, void 0, function* () {\n            return new Promise((resolve, reject) => {\n                function callbackForResult(err, res) {\n                    if (err) {\n                        reject(err);\n                    }\n                    else if (!res) {\n                        // If `err` is not passed, then `res` must be passed.\n                        reject(new Error('Unknown error'));\n                    }\n                    else {\n                        resolve(res);\n                    }\n                }\n                this.requestRawWithCallback(info, data, callbackForResult);\n            });\n        });\n    }\n    /**\n     * Raw request with callback.\n     * @param info\n     * @param data\n     * @param onResult\n     */\n    requestRawWithCallback(info, data, onResult) {\n        if (typeof data === 'string') {\n            if (!info.options.headers) {\n                info.options.headers = {};\n            }\n            info.options.headers['Content-Length'] = Buffer.byteLength(data, 'utf8');\n        }\n        let callbackCalled = false;\n        function handleResult(err, res) {\n            if (!callbackCalled) {\n                callbackCalled = true;\n                onResult(err, res);\n            }\n        }\n        const req = info.httpModule.request(info.options, (msg) => {\n            const res = new HttpClientResponse(msg);\n            handleResult(undefined, res);\n        });\n        let socket;\n        req.on('socket', sock => {\n            socket = sock;\n        });\n        // If we ever get disconnected, we want the socket to timeout eventually\n        req.setTimeout(this._socketTimeout || 3 * 60000, () => {\n            if (socket) {\n                socket.end();\n            }\n            handleResult(new Error(`Request timeout: ${info.options.path}`));\n        });\n        req.on('error', function (err) {\n            // err has statusCode property\n            // res should have headers\n            handleResult(err);\n        });\n        if (data && typeof data === 'string') {\n            req.write(data, 'utf8');\n        }\n        if (data && typeof data !== 'string') {\n            data.on('close', function () {\n                req.end();\n            });\n            data.pipe(req);\n        }\n        else {\n            req.end();\n        }\n    }\n    /**\n     * Gets an http agent. This function is useful when you need an http agent that handles\n     * routing through a proxy server - depending upon the url and proxy environment variables.\n     * @param serverUrl  The server URL where the request will be sent. For example, https://api.github.com\n     */\n    getAgent(serverUrl) {\n        const parsedUrl = new URL(serverUrl);\n        return this._getAgent(parsedUrl);\n    }\n    _prepareRequest(method, requestUrl, headers) {\n        const info = {};\n        info.parsedUrl = requestUrl;\n        const usingSsl = info.parsedUrl.protocol === 'https:';\n        info.httpModule = usingSsl ? https : http;\n        const defaultPort = usingSsl ? 443 : 80;\n        info.options = {};\n        info.options.host = info.parsedUrl.hostname;\n        info.options.port = info.parsedUrl.port\n            ? parseInt(info.parsedUrl.port)\n            : defaultPort;\n        info.options.path =\n            (info.parsedUrl.pathname || '') + (info.parsedUrl.search || '');\n        info.options.method = method;\n        info.options.headers = this._mergeHeaders(headers);\n        if (this.userAgent != null) {\n            info.options.headers['user-agent'] = this.userAgent;\n        }\n        info.options.agent = this._getAgent(info.parsedUrl);\n        // gives handlers an opportunity to participate\n        if (this.handlers) {\n            for (const handler of this.handlers) {\n                handler.prepareRequest(info.options);\n            }\n        }\n        return info;\n    }\n    _mergeHeaders(headers) {\n        if (this.requestOptions && this.requestOptions.headers) {\n            return Object.assign({}, lowercaseKeys(this.requestOptions.headers), lowercaseKeys(headers || {}));\n        }\n        return lowercaseKeys(headers || {});\n    }\n    _getExistingOrDefaultHeader(additionalHeaders, header, _default) {\n        let clientHeader;\n        if (this.requestOptions && this.requestOptions.headers) {\n            clientHeader = lowercaseKeys(this.requestOptions.headers)[header];\n        }\n        return additionalHeaders[header] || clientHeader || _default;\n    }\n    _getAgent(parsedUrl) {\n        let agent;\n        const proxyUrl = pm.getProxyUrl(parsedUrl);\n        const useProxy = proxyUrl && proxyUrl.hostname;\n        if (this._keepAlive && useProxy) {\n            agent = this._proxyAgent;\n        }\n        if (this._keepAlive && !useProxy) {\n            agent = this._agent;\n        }\n        // if agent is already assigned use that agent.\n        if (agent) {\n            return agent;\n        }\n        const usingSsl = parsedUrl.protocol === 'https:';\n        let maxSockets = 100;\n        if (this.requestOptions) {\n            maxSockets = this.requestOptions.maxSockets || http.globalAgent.maxSockets;\n        }\n        // This is `useProxy` again, but we need to check `proxyURl` directly for TypeScripts's flow analysis.\n        if (proxyUrl && proxyUrl.hostname) {\n            const agentOptions = {\n                maxSockets,\n                keepAlive: this._keepAlive,\n                proxy: Object.assign(Object.assign({}, ((proxyUrl.username || proxyUrl.password) && {\n                    proxyAuth: `${proxyUrl.username}:${proxyUrl.password}`\n                })), { host: proxyUrl.hostname, port: proxyUrl.port })\n            };\n            let tunnelAgent;\n            const overHttps = proxyUrl.protocol === 'https:';\n            if (usingSsl) {\n                tunnelAgent = overHttps ? tunnel.httpsOverHttps : tunnel.httpsOverHttp;\n            }\n            else {\n                tunnelAgent = overHttps ? tunnel.httpOverHttps : tunnel.httpOverHttp;\n            }\n            agent = tunnelAgent(agentOptions);\n            this._proxyAgent = agent;\n        }\n        // if reusing agent across request and tunneling agent isn't assigned create a new agent\n        if (this._keepAlive && !agent) {\n            const options = { keepAlive: this._keepAlive, maxSockets };\n            agent = usingSsl ? new https.Agent(options) : new http.Agent(options);\n            this._agent = agent;\n        }\n        // if not using private agent and tunnel agent isn't setup then use global agent\n        if (!agent) {\n            agent = usingSsl ? https.globalAgent : http.globalAgent;\n        }\n        if (usingSsl && this._ignoreSslError) {\n            // we don't want to set NODE_TLS_REJECT_UNAUTHORIZED=0 since that will affect request for entire process\n            // http.RequestOptions doesn't expose a way to modify RequestOptions.agent.options\n            // we have to cast it to any and change it directly\n            agent.options = Object.assign(agent.options || {}, {\n                rejectUnauthorized: false\n            });\n        }\n        return agent;\n    }\n    _performExponentialBackoff(retryNumber) {\n        return __awaiter(this, void 0, void 0, function* () {\n            retryNumber = Math.min(ExponentialBackoffCeiling, retryNumber);\n            const ms = ExponentialBackoffTimeSlice * Math.pow(2, retryNumber);\n            return new Promise(resolve => setTimeout(() => resolve(), ms));\n        });\n    }\n    _processResponse(res, options) {\n        return __awaiter(this, void 0, void 0, function* () {\n            return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {\n                const statusCode = res.message.statusCode || 0;\n                const response = {\n                    statusCode,\n                    result: null,\n                    headers: {}\n                };\n                // not found leads to null obj returned\n                if (statusCode === HttpCodes.NotFound) {\n                    resolve(response);\n                }\n                // get the result from the body\n                function dateTimeDeserializer(key, value) {\n                    if (typeof value === 'string') {\n                        const a = new Date(value);\n                        if (!isNaN(a.valueOf())) {\n                            return a;\n                        }\n                    }\n                    return value;\n                }\n                let obj;\n                let contents;\n                try {\n                    contents = yield res.readBody();\n                    if (contents && contents.length > 0) {\n                        if (options && options.deserializeDates) {\n                            obj = JSON.parse(contents, dateTimeDeserializer);\n                        }\n                        else {\n                            obj = JSON.parse(contents);\n                        }\n                        response.result = obj;\n                    }\n                    response.headers = res.message.headers;\n                }\n                catch (err) {\n                    // Invalid resource (contents not json);  leaving result obj null\n                }\n                // note that 3xx redirects are handled by the http layer.\n                if (statusCode > 299) {\n                    let msg;\n                    // if exception/error in body, attempt to get better error\n                    if (obj && obj.message) {\n                        msg = obj.message;\n                    }\n                    else if (contents && contents.length > 0) {\n                        // it may be the case that the exception is in the body message as string\n                        msg = contents;\n                    }\n                    else {\n                        msg = `Failed request: (${statusCode})`;\n                    }\n                    const err = new HttpClientError(msg, statusCode);\n                    err.result = response.result;\n                    reject(err);\n                }\n                else {\n                    resolve(response);\n                }\n            }));\n        });\n    }\n}\nexports.HttpClient = HttpClient;\nconst lowercaseKeys = (obj) => Object.keys(obj).reduce((c, k) => ((c[k.toLowerCase()] = obj[k]), c), {});\n//# sourceMappingURL=index.js.map\n\n//# sourceURL=webpack://toml-editor/./node_modules/@actions/http-client/lib/index.js?");
 
 /***/ }),
 
-/***/ 5804:
+/***/ "./node_modules/@actions/http-client/lib/proxy.js":
+/*!********************************************************!*\
+  !*** ./node_modules/@actions/http-client/lib/proxy.js ***!
+  \********************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.checkBypass = exports.getProxyUrl = void 0;
-function getProxyUrl(reqUrl) {
-    const usingSsl = reqUrl.protocol === 'https:';
-    if (checkBypass(reqUrl)) {
-        return undefined;
-    }
-    const proxyVar = (() => {
-        if (usingSsl) {
-            return process.env['https_proxy'] || process.env['HTTPS_PROXY'];
-        }
-        else {
-            return process.env['http_proxy'] || process.env['HTTP_PROXY'];
-        }
-    })();
-    if (proxyVar) {
-        return new URL(proxyVar);
-    }
-    else {
-        return undefined;
-    }
-}
-exports.getProxyUrl = getProxyUrl;
-function checkBypass(reqUrl) {
-    if (!reqUrl.hostname) {
-        return false;
-    }
-    const noProxy = process.env['no_proxy'] || process.env['NO_PROXY'] || '';
-    if (!noProxy) {
-        return false;
-    }
-    // Determine the request port
-    let reqPort;
-    if (reqUrl.port) {
-        reqPort = Number(reqUrl.port);
-    }
-    else if (reqUrl.protocol === 'http:') {
-        reqPort = 80;
-    }
-    else if (reqUrl.protocol === 'https:') {
-        reqPort = 443;
-    }
-    // Format the request hostname and hostname with port
-    const upperReqHosts = [reqUrl.hostname.toUpperCase()];
-    if (typeof reqPort === 'number') {
-        upperReqHosts.push(`${upperReqHosts[0]}:${reqPort}`);
-    }
-    // Compare request host against noproxy
-    for (const upperNoProxyItem of noProxy
-        .split(',')
-        .map(x => x.trim().toUpperCase())
-        .filter(x => x)) {
-        if (upperReqHosts.some(x => x === upperNoProxyItem)) {
-            return true;
-        }
-    }
-    return false;
-}
-exports.checkBypass = checkBypass;
-//# sourceMappingURL=proxy.js.map
+eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexports.checkBypass = exports.getProxyUrl = void 0;\nfunction getProxyUrl(reqUrl) {\n    const usingSsl = reqUrl.protocol === 'https:';\n    if (checkBypass(reqUrl)) {\n        return undefined;\n    }\n    const proxyVar = (() => {\n        if (usingSsl) {\n            return process.env['https_proxy'] || process.env['HTTPS_PROXY'];\n        }\n        else {\n            return process.env['http_proxy'] || process.env['HTTP_PROXY'];\n        }\n    })();\n    if (proxyVar) {\n        return new URL(proxyVar);\n    }\n    else {\n        return undefined;\n    }\n}\nexports.getProxyUrl = getProxyUrl;\nfunction checkBypass(reqUrl) {\n    if (!reqUrl.hostname) {\n        return false;\n    }\n    const noProxy = process.env['no_proxy'] || process.env['NO_PROXY'] || '';\n    if (!noProxy) {\n        return false;\n    }\n    // Determine the request port\n    let reqPort;\n    if (reqUrl.port) {\n        reqPort = Number(reqUrl.port);\n    }\n    else if (reqUrl.protocol === 'http:') {\n        reqPort = 80;\n    }\n    else if (reqUrl.protocol === 'https:') {\n        reqPort = 443;\n    }\n    // Format the request hostname and hostname with port\n    const upperReqHosts = [reqUrl.hostname.toUpperCase()];\n    if (typeof reqPort === 'number') {\n        upperReqHosts.push(`${upperReqHosts[0]}:${reqPort}`);\n    }\n    // Compare request host against noproxy\n    for (const upperNoProxyItem of noProxy\n        .split(',')\n        .map(x => x.trim().toUpperCase())\n        .filter(x => x)) {\n        if (upperReqHosts.some(x => x === upperNoProxyItem)) {\n            return true;\n        }\n    }\n    return false;\n}\nexports.checkBypass = checkBypass;\n//# sourceMappingURL=proxy.js.map\n\n//# sourceURL=webpack://toml-editor/./node_modules/@actions/http-client/lib/proxy.js?");
 
 /***/ }),
 
-/***/ 4421:
-/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+/***/ "./node_modules/@iarna/toml/lib/create-date.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/@iarna/toml/lib/create-date.js ***!
+  \*****************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
-
-const f = __nccwpck_require__(6922)
-const DateTime = global.Date
-
-class Date extends DateTime {
-  constructor (value) {
-    super(value)
-    this.isDate = true
-  }
-  toISOString () {
-    return `${this.getUTCFullYear()}-${f(2, this.getUTCMonth() + 1)}-${f(2, this.getUTCDate())}`
-  }
-}
-
-module.exports = value => {
-  const date = new Date(value)
-  /* istanbul ignore if */
-  if (isNaN(date)) {
-    throw new TypeError('Invalid Datetime')
-  } else {
-    return date
-  }
-}
-
+eval("\nconst f = __webpack_require__(/*! ./format-num.js */ \"./node_modules/@iarna/toml/lib/format-num.js\")\nconst DateTime = global.Date\n\nclass Date extends DateTime {\n  constructor (value) {\n    super(value)\n    this.isDate = true\n  }\n  toISOString () {\n    return `${this.getUTCFullYear()}-${f(2, this.getUTCMonth() + 1)}-${f(2, this.getUTCDate())}`\n  }\n}\n\nmodule.exports = value => {\n  const date = new Date(value)\n  /* istanbul ignore if */\n  if (isNaN(date)) {\n    throw new TypeError('Invalid Datetime')\n  } else {\n    return date\n  }\n}\n\n\n//# sourceURL=webpack://toml-editor/./node_modules/@iarna/toml/lib/create-date.js?");
 
 /***/ }),
 
-/***/ 6046:
-/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+/***/ "./node_modules/@iarna/toml/lib/create-datetime-float.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/@iarna/toml/lib/create-datetime-float.js ***!
+  \***************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
-
-const f = __nccwpck_require__(6922)
-
-class FloatingDateTime extends Date {
-  constructor (value) {
-    super(value + 'Z')
-    this.isFloating = true
-  }
-  toISOString () {
-    const date = `${this.getUTCFullYear()}-${f(2, this.getUTCMonth() + 1)}-${f(2, this.getUTCDate())}`
-    const time = `${f(2, this.getUTCHours())}:${f(2, this.getUTCMinutes())}:${f(2, this.getUTCSeconds())}.${f(3, this.getUTCMilliseconds())}`
-    return `${date}T${time}`
-  }
-}
-
-module.exports = value => {
-  const date = new FloatingDateTime(value)
-  /* istanbul ignore if */
-  if (isNaN(date)) {
-    throw new TypeError('Invalid Datetime')
-  } else {
-    return date
-  }
-}
-
+eval("\nconst f = __webpack_require__(/*! ./format-num.js */ \"./node_modules/@iarna/toml/lib/format-num.js\")\n\nclass FloatingDateTime extends Date {\n  constructor (value) {\n    super(value + 'Z')\n    this.isFloating = true\n  }\n  toISOString () {\n    const date = `${this.getUTCFullYear()}-${f(2, this.getUTCMonth() + 1)}-${f(2, this.getUTCDate())}`\n    const time = `${f(2, this.getUTCHours())}:${f(2, this.getUTCMinutes())}:${f(2, this.getUTCSeconds())}.${f(3, this.getUTCMilliseconds())}`\n    return `${date}T${time}`\n  }\n}\n\nmodule.exports = value => {\n  const date = new FloatingDateTime(value)\n  /* istanbul ignore if */\n  if (isNaN(date)) {\n    throw new TypeError('Invalid Datetime')\n  } else {\n    return date\n  }\n}\n\n\n//# sourceURL=webpack://toml-editor/./node_modules/@iarna/toml/lib/create-datetime-float.js?");
 
 /***/ }),
 
-/***/ 905:
+/***/ "./node_modules/@iarna/toml/lib/create-datetime.js":
+/*!*********************************************************!*\
+  !*** ./node_modules/@iarna/toml/lib/create-datetime.js ***!
+  \*********************************************************/
 /***/ ((module) => {
 
 "use strict";
-
-module.exports = value => {
-  const date = new Date(value)
-  /* istanbul ignore if */
-  if (isNaN(date)) {
-    throw new TypeError('Invalid Datetime')
-  } else {
-    return date
-  }
-}
-
+eval("\nmodule.exports = value => {\n  const date = new Date(value)\n  /* istanbul ignore if */\n  if (isNaN(date)) {\n    throw new TypeError('Invalid Datetime')\n  } else {\n    return date\n  }\n}\n\n\n//# sourceURL=webpack://toml-editor/./node_modules/@iarna/toml/lib/create-datetime.js?");
 
 /***/ }),
 
-/***/ 5584:
-/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+/***/ "./node_modules/@iarna/toml/lib/create-time.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/@iarna/toml/lib/create-time.js ***!
+  \*****************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
-
-const f = __nccwpck_require__(6922)
-
-class Time extends Date {
-  constructor (value) {
-    super(`0000-01-01T${value}Z`)
-    this.isTime = true
-  }
-  toISOString () {
-    return `${f(2, this.getUTCHours())}:${f(2, this.getUTCMinutes())}:${f(2, this.getUTCSeconds())}.${f(3, this.getUTCMilliseconds())}`
-  }
-}
-
-module.exports = value => {
-  const date = new Time(value)
-  /* istanbul ignore if */
-  if (isNaN(date)) {
-    throw new TypeError('Invalid Datetime')
-  } else {
-    return date
-  }
-}
-
+eval("\nconst f = __webpack_require__(/*! ./format-num.js */ \"./node_modules/@iarna/toml/lib/format-num.js\")\n\nclass Time extends Date {\n  constructor (value) {\n    super(`0000-01-01T${value}Z`)\n    this.isTime = true\n  }\n  toISOString () {\n    return `${f(2, this.getUTCHours())}:${f(2, this.getUTCMinutes())}:${f(2, this.getUTCSeconds())}.${f(3, this.getUTCMilliseconds())}`\n  }\n}\n\nmodule.exports = value => {\n  const date = new Time(value)\n  /* istanbul ignore if */\n  if (isNaN(date)) {\n    throw new TypeError('Invalid Datetime')\n  } else {\n    return date\n  }\n}\n\n\n//# sourceURL=webpack://toml-editor/./node_modules/@iarna/toml/lib/create-time.js?");
 
 /***/ }),
 
-/***/ 6922:
+/***/ "./node_modules/@iarna/toml/lib/format-num.js":
+/*!****************************************************!*\
+  !*** ./node_modules/@iarna/toml/lib/format-num.js ***!
+  \****************************************************/
 /***/ ((module) => {
 
 "use strict";
-
-module.exports = (d, num) => {
-  num = String(num)
-  while (num.length < d) num = '0' + num
-  return num
-}
-
+eval("\nmodule.exports = (d, num) => {\n  num = String(num)\n  while (num.length < d) num = '0' + num\n  return num\n}\n\n\n//# sourceURL=webpack://toml-editor/./node_modules/@iarna/toml/lib/format-num.js?");
 
 /***/ }),
 
-/***/ 7305:
+/***/ "./node_modules/@iarna/toml/lib/parser.js":
+/*!************************************************!*\
+  !*** ./node_modules/@iarna/toml/lib/parser.js ***!
+  \************************************************/
 /***/ ((module) => {
 
 "use strict";
-
-const ParserEND = 0x110000
-class ParserError extends Error {
-  /* istanbul ignore next */
-  constructor (msg, filename, linenumber) {
-    super('[ParserError] ' + msg, filename, linenumber)
-    this.name = 'ParserError'
-    this.code = 'ParserError'
-    if (Error.captureStackTrace) Error.captureStackTrace(this, ParserError)
-  }
-}
-class State {
-  constructor (parser) {
-    this.parser = parser
-    this.buf = ''
-    this.returned = null
-    this.result = null
-    this.resultTable = null
-    this.resultArr = null
-  }
-}
-class Parser {
-  constructor () {
-    this.pos = 0
-    this.col = 0
-    this.line = 0
-    this.obj = {}
-    this.ctx = this.obj
-    this.stack = []
-    this._buf = ''
-    this.char = null
-    this.ii = 0
-    this.state = new State(this.parseStart)
-  }
-
-  parse (str) {
-    /* istanbul ignore next */
-    if (str.length === 0 || str.length == null) return
-
-    this._buf = String(str)
-    this.ii = -1
-    this.char = -1
-    let getNext
-    while (getNext === false || this.nextChar()) {
-      getNext = this.runOne()
-    }
-    this._buf = null
-  }
-  nextChar () {
-    if (this.char === 0x0A) {
-      ++this.line
-      this.col = -1
-    }
-    ++this.ii
-    this.char = this._buf.codePointAt(this.ii)
-    ++this.pos
-    ++this.col
-    return this.haveBuffer()
-  }
-  haveBuffer () {
-    return this.ii < this._buf.length
-  }
-  runOne () {
-    return this.state.parser.call(this, this.state.returned)
-  }
-  finish () {
-    this.char = ParserEND
-    let last
-    do {
-      last = this.state.parser
-      this.runOne()
-    } while (this.state.parser !== last)
-
-    this.ctx = null
-    this.state = null
-    this._buf = null
-
-    return this.obj
-  }
-  next (fn) {
-    /* istanbul ignore next */
-    if (typeof fn !== 'function') throw new ParserError('Tried to set state to non-existent state: ' + JSON.stringify(fn))
-    this.state.parser = fn
-  }
-  goto (fn) {
-    this.next(fn)
-    return this.runOne()
-  }
-  call (fn, returnWith) {
-    if (returnWith) this.next(returnWith)
-    this.stack.push(this.state)
-    this.state = new State(fn)
-  }
-  callNow (fn, returnWith) {
-    this.call(fn, returnWith)
-    return this.runOne()
-  }
-  return (value) {
-    /* istanbul ignore next */
-    if (this.stack.length === 0) throw this.error(new ParserError('Stack underflow'))
-    if (value === undefined) value = this.state.buf
-    this.state = this.stack.pop()
-    this.state.returned = value
-  }
-  returnNow (value) {
-    this.return(value)
-    return this.runOne()
-  }
-  consume () {
-    /* istanbul ignore next */
-    if (this.char === ParserEND) throw this.error(new ParserError('Unexpected end-of-buffer'))
-    this.state.buf += this._buf[this.ii]
-  }
-  error (err) {
-    err.line = this.line
-    err.col = this.col
-    err.pos = this.pos
-    return err
-  }
-  /* istanbul ignore next */
-  parseStart () {
-    throw new ParserError('Must declare a parseStart method')
-  }
-}
-Parser.END = ParserEND
-Parser.Error = ParserError
-module.exports = Parser
-
+eval("\nconst ParserEND = 0x110000\nclass ParserError extends Error {\n  /* istanbul ignore next */\n  constructor (msg, filename, linenumber) {\n    super('[ParserError] ' + msg, filename, linenumber)\n    this.name = 'ParserError'\n    this.code = 'ParserError'\n    if (Error.captureStackTrace) Error.captureStackTrace(this, ParserError)\n  }\n}\nclass State {\n  constructor (parser) {\n    this.parser = parser\n    this.buf = ''\n    this.returned = null\n    this.result = null\n    this.resultTable = null\n    this.resultArr = null\n  }\n}\nclass Parser {\n  constructor () {\n    this.pos = 0\n    this.col = 0\n    this.line = 0\n    this.obj = {}\n    this.ctx = this.obj\n    this.stack = []\n    this._buf = ''\n    this.char = null\n    this.ii = 0\n    this.state = new State(this.parseStart)\n  }\n\n  parse (str) {\n    /* istanbul ignore next */\n    if (str.length === 0 || str.length == null) return\n\n    this._buf = String(str)\n    this.ii = -1\n    this.char = -1\n    let getNext\n    while (getNext === false || this.nextChar()) {\n      getNext = this.runOne()\n    }\n    this._buf = null\n  }\n  nextChar () {\n    if (this.char === 0x0A) {\n      ++this.line\n      this.col = -1\n    }\n    ++this.ii\n    this.char = this._buf.codePointAt(this.ii)\n    ++this.pos\n    ++this.col\n    return this.haveBuffer()\n  }\n  haveBuffer () {\n    return this.ii < this._buf.length\n  }\n  runOne () {\n    return this.state.parser.call(this, this.state.returned)\n  }\n  finish () {\n    this.char = ParserEND\n    let last\n    do {\n      last = this.state.parser\n      this.runOne()\n    } while (this.state.parser !== last)\n\n    this.ctx = null\n    this.state = null\n    this._buf = null\n\n    return this.obj\n  }\n  next (fn) {\n    /* istanbul ignore next */\n    if (typeof fn !== 'function') throw new ParserError('Tried to set state to non-existent state: ' + JSON.stringify(fn))\n    this.state.parser = fn\n  }\n  goto (fn) {\n    this.next(fn)\n    return this.runOne()\n  }\n  call (fn, returnWith) {\n    if (returnWith) this.next(returnWith)\n    this.stack.push(this.state)\n    this.state = new State(fn)\n  }\n  callNow (fn, returnWith) {\n    this.call(fn, returnWith)\n    return this.runOne()\n  }\n  return (value) {\n    /* istanbul ignore next */\n    if (this.stack.length === 0) throw this.error(new ParserError('Stack underflow'))\n    if (value === undefined) value = this.state.buf\n    this.state = this.stack.pop()\n    this.state.returned = value\n  }\n  returnNow (value) {\n    this.return(value)\n    return this.runOne()\n  }\n  consume () {\n    /* istanbul ignore next */\n    if (this.char === ParserEND) throw this.error(new ParserError('Unexpected end-of-buffer'))\n    this.state.buf += this._buf[this.ii]\n  }\n  error (err) {\n    err.line = this.line\n    err.col = this.col\n    err.pos = this.pos\n    return err\n  }\n  /* istanbul ignore next */\n  parseStart () {\n    throw new ParserError('Must declare a parseStart method')\n  }\n}\nParser.END = ParserEND\nParser.Error = ParserError\nmodule.exports = Parser\n\n\n//# sourceURL=webpack://toml-editor/./node_modules/@iarna/toml/lib/parser.js?");
 
 /***/ }),
 
-/***/ 7861:
-/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+/***/ "./node_modules/@iarna/toml/lib/toml-parser.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/@iarna/toml/lib/toml-parser.js ***!
+  \*****************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
-
-/* eslint-disable no-new-wrappers, no-eval, camelcase, operator-linebreak */
-module.exports = makeParserClass(__nccwpck_require__(7305))
-module.exports.makeParserClass = makeParserClass
-
-class TomlError extends Error {
-  constructor (msg) {
-    super(msg)
-    this.name = 'TomlError'
-    /* istanbul ignore next */
-    if (Error.captureStackTrace) Error.captureStackTrace(this, TomlError)
-    this.fromTOML = true
-    this.wrapped = null
-  }
-}
-TomlError.wrap = err => {
-  const terr = new TomlError(err.message)
-  terr.code = err.code
-  terr.wrapped = err
-  return terr
-}
-module.exports.TomlError = TomlError
-
-const createDateTime = __nccwpck_require__(905)
-const createDateTimeFloat = __nccwpck_require__(6046)
-const createDate = __nccwpck_require__(4421)
-const createTime = __nccwpck_require__(5584)
-
-const CTRL_I = 0x09
-const CTRL_J = 0x0A
-const CTRL_M = 0x0D
-const CTRL_CHAR_BOUNDARY = 0x1F // the last non-character in the latin1 region of unicode, except DEL
-const CHAR_SP = 0x20
-const CHAR_QUOT = 0x22
-const CHAR_NUM = 0x23
-const CHAR_APOS = 0x27
-const CHAR_PLUS = 0x2B
-const CHAR_COMMA = 0x2C
-const CHAR_HYPHEN = 0x2D
-const CHAR_PERIOD = 0x2E
-const CHAR_0 = 0x30
-const CHAR_1 = 0x31
-const CHAR_7 = 0x37
-const CHAR_9 = 0x39
-const CHAR_COLON = 0x3A
-const CHAR_EQUALS = 0x3D
-const CHAR_A = 0x41
-const CHAR_E = 0x45
-const CHAR_F = 0x46
-const CHAR_T = 0x54
-const CHAR_U = 0x55
-const CHAR_Z = 0x5A
-const CHAR_LOWBAR = 0x5F
-const CHAR_a = 0x61
-const CHAR_b = 0x62
-const CHAR_e = 0x65
-const CHAR_f = 0x66
-const CHAR_i = 0x69
-const CHAR_l = 0x6C
-const CHAR_n = 0x6E
-const CHAR_o = 0x6F
-const CHAR_r = 0x72
-const CHAR_s = 0x73
-const CHAR_t = 0x74
-const CHAR_u = 0x75
-const CHAR_x = 0x78
-const CHAR_z = 0x7A
-const CHAR_LCUB = 0x7B
-const CHAR_RCUB = 0x7D
-const CHAR_LSQB = 0x5B
-const CHAR_BSOL = 0x5C
-const CHAR_RSQB = 0x5D
-const CHAR_DEL = 0x7F
-const SURROGATE_FIRST = 0xD800
-const SURROGATE_LAST = 0xDFFF
-
-const escapes = {
-  [CHAR_b]: '\u0008',
-  [CHAR_t]: '\u0009',
-  [CHAR_n]: '\u000A',
-  [CHAR_f]: '\u000C',
-  [CHAR_r]: '\u000D',
-  [CHAR_QUOT]: '\u0022',
-  [CHAR_BSOL]: '\u005C'
-}
-
-function isDigit (cp) {
-  return cp >= CHAR_0 && cp <= CHAR_9
-}
-function isHexit (cp) {
-  return (cp >= CHAR_A && cp <= CHAR_F) || (cp >= CHAR_a && cp <= CHAR_f) || (cp >= CHAR_0 && cp <= CHAR_9)
-}
-function isBit (cp) {
-  return cp === CHAR_1 || cp === CHAR_0
-}
-function isOctit (cp) {
-  return (cp >= CHAR_0 && cp <= CHAR_7)
-}
-function isAlphaNumQuoteHyphen (cp) {
-  return (cp >= CHAR_A && cp <= CHAR_Z)
-      || (cp >= CHAR_a && cp <= CHAR_z)
-      || (cp >= CHAR_0 && cp <= CHAR_9)
-      || cp === CHAR_APOS
-      || cp === CHAR_QUOT
-      || cp === CHAR_LOWBAR
-      || cp === CHAR_HYPHEN
-}
-function isAlphaNumHyphen (cp) {
-  return (cp >= CHAR_A && cp <= CHAR_Z)
-      || (cp >= CHAR_a && cp <= CHAR_z)
-      || (cp >= CHAR_0 && cp <= CHAR_9)
-      || cp === CHAR_LOWBAR
-      || cp === CHAR_HYPHEN
-}
-const _type = Symbol('type')
-const _declared = Symbol('declared')
-
-const hasOwnProperty = Object.prototype.hasOwnProperty
-const defineProperty = Object.defineProperty
-const descriptor = {configurable: true, enumerable: true, writable: true, value: undefined}
-
-function hasKey (obj, key) {
-  if (hasOwnProperty.call(obj, key)) return true
-  if (key === '__proto__') defineProperty(obj, '__proto__', descriptor)
-  return false
-}
-
-const INLINE_TABLE = Symbol('inline-table')
-function InlineTable () {
-  return Object.defineProperties({}, {
-    [_type]: {value: INLINE_TABLE}
-  })
-}
-function isInlineTable (obj) {
-  if (obj === null || typeof (obj) !== 'object') return false
-  return obj[_type] === INLINE_TABLE
-}
-
-const TABLE = Symbol('table')
-function Table () {
-  return Object.defineProperties({}, {
-    [_type]: {value: TABLE},
-    [_declared]: {value: false, writable: true}
-  })
-}
-function isTable (obj) {
-  if (obj === null || typeof (obj) !== 'object') return false
-  return obj[_type] === TABLE
-}
-
-const _contentType = Symbol('content-type')
-const INLINE_LIST = Symbol('inline-list')
-function InlineList (type) {
-  return Object.defineProperties([], {
-    [_type]: {value: INLINE_LIST},
-    [_contentType]: {value: type}
-  })
-}
-function isInlineList (obj) {
-  if (obj === null || typeof (obj) !== 'object') return false
-  return obj[_type] === INLINE_LIST
-}
-
-const LIST = Symbol('list')
-function List () {
-  return Object.defineProperties([], {
-    [_type]: {value: LIST}
-  })
-}
-function isList (obj) {
-  if (obj === null || typeof (obj) !== 'object') return false
-  return obj[_type] === LIST
-}
-
-// in an eval, to let bundlers not slurp in a util proxy
-let _custom
-try {
-  const utilInspect = eval("require('util').inspect")
-  _custom = utilInspect.custom
-} catch (_) {
-  /* eval require not available in transpiled bundle */
-}
-/* istanbul ignore next */
-const _inspect = _custom || 'inspect'
-
-class BoxedBigInt {
-  constructor (value) {
-    try {
-      this.value = global.BigInt.asIntN(64, value)
-    } catch (_) {
-      /* istanbul ignore next */
-      this.value = null
-    }
-    Object.defineProperty(this, _type, {value: INTEGER})
-  }
-  isNaN () {
-    return this.value === null
-  }
-  /* istanbul ignore next */
-  toString () {
-    return String(this.value)
-  }
-  /* istanbul ignore next */
-  [_inspect] () {
-    return `[BigInt: ${this.toString()}]}`
-  }
-  valueOf () {
-    return this.value
-  }
-}
-
-const INTEGER = Symbol('integer')
-function Integer (value) {
-  let num = Number(value)
-  // -0 is a float thing, not an int thing
-  if (Object.is(num, -0)) num = 0
-  /* istanbul ignore else */
-  if (global.BigInt && !Number.isSafeInteger(num)) {
-    return new BoxedBigInt(value)
-  } else {
-    /* istanbul ignore next */
-    return Object.defineProperties(new Number(num), {
-      isNaN: {value: function () { return isNaN(this) }},
-      [_type]: {value: INTEGER},
-      [_inspect]: {value: () => `[Integer: ${value}]`}
-    })
-  }
-}
-function isInteger (obj) {
-  if (obj === null || typeof (obj) !== 'object') return false
-  return obj[_type] === INTEGER
-}
-
-const FLOAT = Symbol('float')
-function Float (value) {
-  /* istanbul ignore next */
-  return Object.defineProperties(new Number(value), {
-    [_type]: {value: FLOAT},
-    [_inspect]: {value: () => `[Float: ${value}]`}
-  })
-}
-function isFloat (obj) {
-  if (obj === null || typeof (obj) !== 'object') return false
-  return obj[_type] === FLOAT
-}
-
-function tomlType (value) {
-  const type = typeof value
-  if (type === 'object') {
-    /* istanbul ignore if */
-    if (value === null) return 'null'
-    if (value instanceof Date) return 'datetime'
-    /* istanbul ignore else */
-    if (_type in value) {
-      switch (value[_type]) {
-        case INLINE_TABLE: return 'inline-table'
-        case INLINE_LIST: return 'inline-list'
-        /* istanbul ignore next */
-        case TABLE: return 'table'
-        /* istanbul ignore next */
-        case LIST: return 'list'
-        case FLOAT: return 'float'
-        case INTEGER: return 'integer'
-      }
-    }
-  }
-  return type
-}
-
-function makeParserClass (Parser) {
-  class TOMLParser extends Parser {
-    constructor () {
-      super()
-      this.ctx = this.obj = Table()
-    }
-
-    /* MATCH HELPER */
-    atEndOfWord () {
-      return this.char === CHAR_NUM || this.char === CTRL_I || this.char === CHAR_SP || this.atEndOfLine()
-    }
-    atEndOfLine () {
-      return this.char === Parser.END || this.char === CTRL_J || this.char === CTRL_M
-    }
-
-    parseStart () {
-      if (this.char === Parser.END) {
-        return null
-      } else if (this.char === CHAR_LSQB) {
-        return this.call(this.parseTableOrList)
-      } else if (this.char === CHAR_NUM) {
-        return this.call(this.parseComment)
-      } else if (this.char === CTRL_J || this.char === CHAR_SP || this.char === CTRL_I || this.char === CTRL_M) {
-        return null
-      } else if (isAlphaNumQuoteHyphen(this.char)) {
-        return this.callNow(this.parseAssignStatement)
-      } else {
-        throw this.error(new TomlError(`Unknown character "${this.char}"`))
-      }
-    }
-
-    // HELPER, this strips any whitespace and comments to the end of the line
-    // then RETURNS. Last state in a production.
-    parseWhitespaceToEOL () {
-      if (this.char === CHAR_SP || this.char === CTRL_I || this.char === CTRL_M) {
-        return null
-      } else if (this.char === CHAR_NUM) {
-        return this.goto(this.parseComment)
-      } else if (this.char === Parser.END || this.char === CTRL_J) {
-        return this.return()
-      } else {
-        throw this.error(new TomlError('Unexpected character, expected only whitespace or comments till end of line'))
-      }
-    }
-
-    /* ASSIGNMENT: key = value */
-    parseAssignStatement () {
-      return this.callNow(this.parseAssign, this.recordAssignStatement)
-    }
-    recordAssignStatement (kv) {
-      let target = this.ctx
-      let finalKey = kv.key.pop()
-      for (let kw of kv.key) {
-        if (hasKey(target, kw) && (!isTable(target[kw]) || target[kw][_declared])) {
-          throw this.error(new TomlError("Can't redefine existing key"))
-        }
-        target = target[kw] = target[kw] || Table()
-      }
-      if (hasKey(target, finalKey)) {
-        throw this.error(new TomlError("Can't redefine existing key"))
-      }
-      // unbox our numbers
-      if (isInteger(kv.value) || isFloat(kv.value)) {
-        target[finalKey] = kv.value.valueOf()
-      } else {
-        target[finalKey] = kv.value
-      }
-      return this.goto(this.parseWhitespaceToEOL)
-    }
-
-    /* ASSSIGNMENT expression, key = value possibly inside an inline table */
-    parseAssign () {
-      return this.callNow(this.parseKeyword, this.recordAssignKeyword)
-    }
-    recordAssignKeyword (key) {
-      if (this.state.resultTable) {
-        this.state.resultTable.push(key)
-      } else {
-        this.state.resultTable = [key]
-      }
-      return this.goto(this.parseAssignKeywordPreDot)
-    }
-    parseAssignKeywordPreDot () {
-      if (this.char === CHAR_PERIOD) {
-        return this.next(this.parseAssignKeywordPostDot)
-      } else if (this.char !== CHAR_SP && this.char !== CTRL_I) {
-        return this.goto(this.parseAssignEqual)
-      }
-    }
-    parseAssignKeywordPostDot () {
-      if (this.char !== CHAR_SP && this.char !== CTRL_I) {
-        return this.callNow(this.parseKeyword, this.recordAssignKeyword)
-      }
-    }
-
-    parseAssignEqual () {
-      if (this.char === CHAR_EQUALS) {
-        return this.next(this.parseAssignPreValue)
-      } else {
-        throw this.error(new TomlError('Invalid character, expected "="'))
-      }
-    }
-    parseAssignPreValue () {
-      if (this.char === CHAR_SP || this.char === CTRL_I) {
-        return null
-      } else {
-        return this.callNow(this.parseValue, this.recordAssignValue)
-      }
-    }
-    recordAssignValue (value) {
-      return this.returnNow({key: this.state.resultTable, value: value})
-    }
-
-    /* COMMENTS: #...eol */
-    parseComment () {
-      do {
-        if (this.char === Parser.END || this.char === CTRL_J) {
-          return this.return()
-        }
-      } while (this.nextChar())
-    }
-
-    /* TABLES AND LISTS, [foo] and [[foo]] */
-    parseTableOrList () {
-      if (this.char === CHAR_LSQB) {
-        this.next(this.parseList)
-      } else {
-        return this.goto(this.parseTable)
-      }
-    }
-
-    /* TABLE [foo.bar.baz] */
-    parseTable () {
-      this.ctx = this.obj
-      return this.goto(this.parseTableNext)
-    }
-    parseTableNext () {
-      if (this.char === CHAR_SP || this.char === CTRL_I) {
-        return null
-      } else {
-        return this.callNow(this.parseKeyword, this.parseTableMore)
-      }
-    }
-    parseTableMore (keyword) {
-      if (this.char === CHAR_SP || this.char === CTRL_I) {
-        return null
-      } else if (this.char === CHAR_RSQB) {
-        if (hasKey(this.ctx, keyword) && (!isTable(this.ctx[keyword]) || this.ctx[keyword][_declared])) {
-          throw this.error(new TomlError("Can't redefine existing key"))
-        } else {
-          this.ctx = this.ctx[keyword] = this.ctx[keyword] || Table()
-          this.ctx[_declared] = true
-        }
-        return this.next(this.parseWhitespaceToEOL)
-      } else if (this.char === CHAR_PERIOD) {
-        if (!hasKey(this.ctx, keyword)) {
-          this.ctx = this.ctx[keyword] = Table()
-        } else if (isTable(this.ctx[keyword])) {
-          this.ctx = this.ctx[keyword]
-        } else if (isList(this.ctx[keyword])) {
-          this.ctx = this.ctx[keyword][this.ctx[keyword].length - 1]
-        } else {
-          throw this.error(new TomlError("Can't redefine existing key"))
-        }
-        return this.next(this.parseTableNext)
-      } else {
-        throw this.error(new TomlError('Unexpected character, expected whitespace, . or ]'))
-      }
-    }
-
-    /* LIST [[a.b.c]] */
-    parseList () {
-      this.ctx = this.obj
-      return this.goto(this.parseListNext)
-    }
-    parseListNext () {
-      if (this.char === CHAR_SP || this.char === CTRL_I) {
-        return null
-      } else {
-        return this.callNow(this.parseKeyword, this.parseListMore)
-      }
-    }
-    parseListMore (keyword) {
-      if (this.char === CHAR_SP || this.char === CTRL_I) {
-        return null
-      } else if (this.char === CHAR_RSQB) {
-        if (!hasKey(this.ctx, keyword)) {
-          this.ctx[keyword] = List()
-        }
-        if (isInlineList(this.ctx[keyword])) {
-          throw this.error(new TomlError("Can't extend an inline array"))
-        } else if (isList(this.ctx[keyword])) {
-          const next = Table()
-          this.ctx[keyword].push(next)
-          this.ctx = next
-        } else {
-          throw this.error(new TomlError("Can't redefine an existing key"))
-        }
-        return this.next(this.parseListEnd)
-      } else if (this.char === CHAR_PERIOD) {
-        if (!hasKey(this.ctx, keyword)) {
-          this.ctx = this.ctx[keyword] = Table()
-        } else if (isInlineList(this.ctx[keyword])) {
-          throw this.error(new TomlError("Can't extend an inline array"))
-        } else if (isInlineTable(this.ctx[keyword])) {
-          throw this.error(new TomlError("Can't extend an inline table"))
-        } else if (isList(this.ctx[keyword])) {
-          this.ctx = this.ctx[keyword][this.ctx[keyword].length - 1]
-        } else if (isTable(this.ctx[keyword])) {
-          this.ctx = this.ctx[keyword]
-        } else {
-          throw this.error(new TomlError("Can't redefine an existing key"))
-        }
-        return this.next(this.parseListNext)
-      } else {
-        throw this.error(new TomlError('Unexpected character, expected whitespace, . or ]'))
-      }
-    }
-    parseListEnd (keyword) {
-      if (this.char === CHAR_RSQB) {
-        return this.next(this.parseWhitespaceToEOL)
-      } else {
-        throw this.error(new TomlError('Unexpected character, expected whitespace, . or ]'))
-      }
-    }
-
-    /* VALUE string, number, boolean, inline list, inline object */
-    parseValue () {
-      if (this.char === Parser.END) {
-        throw this.error(new TomlError('Key without value'))
-      } else if (this.char === CHAR_QUOT) {
-        return this.next(this.parseDoubleString)
-      } if (this.char === CHAR_APOS) {
-        return this.next(this.parseSingleString)
-      } else if (this.char === CHAR_HYPHEN || this.char === CHAR_PLUS) {
-        return this.goto(this.parseNumberSign)
-      } else if (this.char === CHAR_i) {
-        return this.next(this.parseInf)
-      } else if (this.char === CHAR_n) {
-        return this.next(this.parseNan)
-      } else if (isDigit(this.char)) {
-        return this.goto(this.parseNumberOrDateTime)
-      } else if (this.char === CHAR_t || this.char === CHAR_f) {
-        return this.goto(this.parseBoolean)
-      } else if (this.char === CHAR_LSQB) {
-        return this.call(this.parseInlineList, this.recordValue)
-      } else if (this.char === CHAR_LCUB) {
-        return this.call(this.parseInlineTable, this.recordValue)
-      } else {
-        throw this.error(new TomlError('Unexpected character, expecting string, number, datetime, boolean, inline array or inline table'))
-      }
-    }
-    recordValue (value) {
-      return this.returnNow(value)
-    }
-
-    parseInf () {
-      if (this.char === CHAR_n) {
-        return this.next(this.parseInf2)
-      } else {
-        throw this.error(new TomlError('Unexpected character, expected "inf", "+inf" or "-inf"'))
-      }
-    }
-    parseInf2 () {
-      if (this.char === CHAR_f) {
-        if (this.state.buf === '-') {
-          return this.return(-Infinity)
-        } else {
-          return this.return(Infinity)
-        }
-      } else {
-        throw this.error(new TomlError('Unexpected character, expected "inf", "+inf" or "-inf"'))
-      }
-    }
-
-    parseNan () {
-      if (this.char === CHAR_a) {
-        return this.next(this.parseNan2)
-      } else {
-        throw this.error(new TomlError('Unexpected character, expected "nan"'))
-      }
-    }
-    parseNan2 () {
-      if (this.char === CHAR_n) {
-        return this.return(NaN)
-      } else {
-        throw this.error(new TomlError('Unexpected character, expected "nan"'))
-      }
-    }
-
-    /* KEYS, barewords or basic, literal, or dotted */
-    parseKeyword () {
-      if (this.char === CHAR_QUOT) {
-        return this.next(this.parseBasicString)
-      } else if (this.char === CHAR_APOS) {
-        return this.next(this.parseLiteralString)
-      } else {
-        return this.goto(this.parseBareKey)
-      }
-    }
-
-    /* KEYS: barewords */
-    parseBareKey () {
-      do {
-        if (this.char === Parser.END) {
-          throw this.error(new TomlError('Key ended without value'))
-        } else if (isAlphaNumHyphen(this.char)) {
-          this.consume()
-        } else if (this.state.buf.length === 0) {
-          throw this.error(new TomlError('Empty bare keys are not allowed'))
-        } else {
-          return this.returnNow()
-        }
-      } while (this.nextChar())
-    }
-
-    /* STRINGS, single quoted (literal) */
-    parseSingleString () {
-      if (this.char === CHAR_APOS) {
-        return this.next(this.parseLiteralMultiStringMaybe)
-      } else {
-        return this.goto(this.parseLiteralString)
-      }
-    }
-    parseLiteralString () {
-      do {
-        if (this.char === CHAR_APOS) {
-          return this.return()
-        } else if (this.atEndOfLine()) {
-          throw this.error(new TomlError('Unterminated string'))
-        } else if (this.char === CHAR_DEL || (this.char <= CTRL_CHAR_BOUNDARY && this.char !== CTRL_I)) {
-          throw this.errorControlCharInString()
-        } else {
-          this.consume()
-        }
-      } while (this.nextChar())
-    }
-    parseLiteralMultiStringMaybe () {
-      if (this.char === CHAR_APOS) {
-        return this.next(this.parseLiteralMultiString)
-      } else {
-        return this.returnNow()
-      }
-    }
-    parseLiteralMultiString () {
-      if (this.char === CTRL_M) {
-        return null
-      } else if (this.char === CTRL_J) {
-        return this.next(this.parseLiteralMultiStringContent)
-      } else {
-        return this.goto(this.parseLiteralMultiStringContent)
-      }
-    }
-    parseLiteralMultiStringContent () {
-      do {
-        if (this.char === CHAR_APOS) {
-          return this.next(this.parseLiteralMultiEnd)
-        } else if (this.char === Parser.END) {
-          throw this.error(new TomlError('Unterminated multi-line string'))
-        } else if (this.char === CHAR_DEL || (this.char <= CTRL_CHAR_BOUNDARY && this.char !== CTRL_I && this.char !== CTRL_J && this.char !== CTRL_M)) {
-          throw this.errorControlCharInString()
-        } else {
-          this.consume()
-        }
-      } while (this.nextChar())
-    }
-    parseLiteralMultiEnd () {
-      if (this.char === CHAR_APOS) {
-        return this.next(this.parseLiteralMultiEnd2)
-      } else {
-        this.state.buf += "'"
-        return this.goto(this.parseLiteralMultiStringContent)
-      }
-    }
-    parseLiteralMultiEnd2 () {
-      if (this.char === CHAR_APOS) {
-        return this.return()
-      } else {
-        this.state.buf += "''"
-        return this.goto(this.parseLiteralMultiStringContent)
-      }
-    }
-
-    /* STRINGS double quoted */
-    parseDoubleString () {
-      if (this.char === CHAR_QUOT) {
-        return this.next(this.parseMultiStringMaybe)
-      } else {
-        return this.goto(this.parseBasicString)
-      }
-    }
-    parseBasicString () {
-      do {
-        if (this.char === CHAR_BSOL) {
-          return this.call(this.parseEscape, this.recordEscapeReplacement)
-        } else if (this.char === CHAR_QUOT) {
-          return this.return()
-        } else if (this.atEndOfLine()) {
-          throw this.error(new TomlError('Unterminated string'))
-        } else if (this.char === CHAR_DEL || (this.char <= CTRL_CHAR_BOUNDARY && this.char !== CTRL_I)) {
-          throw this.errorControlCharInString()
-        } else {
-          this.consume()
-        }
-      } while (this.nextChar())
-    }
-    recordEscapeReplacement (replacement) {
-      this.state.buf += replacement
-      return this.goto(this.parseBasicString)
-    }
-    parseMultiStringMaybe () {
-      if (this.char === CHAR_QUOT) {
-        return this.next(this.parseMultiString)
-      } else {
-        return this.returnNow()
-      }
-    }
-    parseMultiString () {
-      if (this.char === CTRL_M) {
-        return null
-      } else if (this.char === CTRL_J) {
-        return this.next(this.parseMultiStringContent)
-      } else {
-        return this.goto(this.parseMultiStringContent)
-      }
-    }
-    parseMultiStringContent () {
-      do {
-        if (this.char === CHAR_BSOL) {
-          return this.call(this.parseMultiEscape, this.recordMultiEscapeReplacement)
-        } else if (this.char === CHAR_QUOT) {
-          return this.next(this.parseMultiEnd)
-        } else if (this.char === Parser.END) {
-          throw this.error(new TomlError('Unterminated multi-line string'))
-        } else if (this.char === CHAR_DEL || (this.char <= CTRL_CHAR_BOUNDARY && this.char !== CTRL_I && this.char !== CTRL_J && this.char !== CTRL_M)) {
-          throw this.errorControlCharInString()
-        } else {
-          this.consume()
-        }
-      } while (this.nextChar())
-    }
-    errorControlCharInString () {
-      let displayCode = '\\u00'
-      if (this.char < 16) {
-        displayCode += '0'
-      }
-      displayCode += this.char.toString(16)
-
-      return this.error(new TomlError(`Control characters (codes < 0x1f and 0x7f) are not allowed in strings, use ${displayCode} instead`))
-    }
-    recordMultiEscapeReplacement (replacement) {
-      this.state.buf += replacement
-      return this.goto(this.parseMultiStringContent)
-    }
-    parseMultiEnd () {
-      if (this.char === CHAR_QUOT) {
-        return this.next(this.parseMultiEnd2)
-      } else {
-        this.state.buf += '"'
-        return this.goto(this.parseMultiStringContent)
-      }
-    }
-    parseMultiEnd2 () {
-      if (this.char === CHAR_QUOT) {
-        return this.return()
-      } else {
-        this.state.buf += '""'
-        return this.goto(this.parseMultiStringContent)
-      }
-    }
-    parseMultiEscape () {
-      if (this.char === CTRL_M || this.char === CTRL_J) {
-        return this.next(this.parseMultiTrim)
-      } else if (this.char === CHAR_SP || this.char === CTRL_I) {
-        return this.next(this.parsePreMultiTrim)
-      } else {
-        return this.goto(this.parseEscape)
-      }
-    }
-    parsePreMultiTrim () {
-      if (this.char === CHAR_SP || this.char === CTRL_I) {
-        return null
-      } else if (this.char === CTRL_M || this.char === CTRL_J) {
-        return this.next(this.parseMultiTrim)
-      } else {
-        throw this.error(new TomlError("Can't escape whitespace"))
-      }
-    }
-    parseMultiTrim () {
-      // explicitly whitespace here, END should follow the same path as chars
-      if (this.char === CTRL_J || this.char === CHAR_SP || this.char === CTRL_I || this.char === CTRL_M) {
-        return null
-      } else {
-        return this.returnNow()
-      }
-    }
-    parseEscape () {
-      if (this.char in escapes) {
-        return this.return(escapes[this.char])
-      } else if (this.char === CHAR_u) {
-        return this.call(this.parseSmallUnicode, this.parseUnicodeReturn)
-      } else if (this.char === CHAR_U) {
-        return this.call(this.parseLargeUnicode, this.parseUnicodeReturn)
-      } else {
-        throw this.error(new TomlError('Unknown escape character: ' + this.char))
-      }
-    }
-    parseUnicodeReturn (char) {
-      try {
-        const codePoint = parseInt(char, 16)
-        if (codePoint >= SURROGATE_FIRST && codePoint <= SURROGATE_LAST) {
-          throw this.error(new TomlError('Invalid unicode, character in range 0xD800 - 0xDFFF is reserved'))
-        }
-        return this.returnNow(String.fromCodePoint(codePoint))
-      } catch (err) {
-        throw this.error(TomlError.wrap(err))
-      }
-    }
-    parseSmallUnicode () {
-      if (!isHexit(this.char)) {
-        throw this.error(new TomlError('Invalid character in unicode sequence, expected hex'))
-      } else {
-        this.consume()
-        if (this.state.buf.length >= 4) return this.return()
-      }
-    }
-    parseLargeUnicode () {
-      if (!isHexit(this.char)) {
-        throw this.error(new TomlError('Invalid character in unicode sequence, expected hex'))
-      } else {
-        this.consume()
-        if (this.state.buf.length >= 8) return this.return()
-      }
-    }
-
-    /* NUMBERS */
-    parseNumberSign () {
-      this.consume()
-      return this.next(this.parseMaybeSignedInfOrNan)
-    }
-    parseMaybeSignedInfOrNan () {
-      if (this.char === CHAR_i) {
-        return this.next(this.parseInf)
-      } else if (this.char === CHAR_n) {
-        return this.next(this.parseNan)
-      } else {
-        return this.callNow(this.parseNoUnder, this.parseNumberIntegerStart)
-      }
-    }
-    parseNumberIntegerStart () {
-      if (this.char === CHAR_0) {
-        this.consume()
-        return this.next(this.parseNumberIntegerExponentOrDecimal)
-      } else {
-        return this.goto(this.parseNumberInteger)
-      }
-    }
-    parseNumberIntegerExponentOrDecimal () {
-      if (this.char === CHAR_PERIOD) {
-        this.consume()
-        return this.call(this.parseNoUnder, this.parseNumberFloat)
-      } else if (this.char === CHAR_E || this.char === CHAR_e) {
-        this.consume()
-        return this.next(this.parseNumberExponentSign)
-      } else {
-        return this.returnNow(Integer(this.state.buf))
-      }
-    }
-    parseNumberInteger () {
-      if (isDigit(this.char)) {
-        this.consume()
-      } else if (this.char === CHAR_LOWBAR) {
-        return this.call(this.parseNoUnder)
-      } else if (this.char === CHAR_E || this.char === CHAR_e) {
-        this.consume()
-        return this.next(this.parseNumberExponentSign)
-      } else if (this.char === CHAR_PERIOD) {
-        this.consume()
-        return this.call(this.parseNoUnder, this.parseNumberFloat)
-      } else {
-        const result = Integer(this.state.buf)
-        /* istanbul ignore if */
-        if (result.isNaN()) {
-          throw this.error(new TomlError('Invalid number'))
-        } else {
-          return this.returnNow(result)
-        }
-      }
-    }
-    parseNoUnder () {
-      if (this.char === CHAR_LOWBAR || this.char === CHAR_PERIOD || this.char === CHAR_E || this.char === CHAR_e) {
-        throw this.error(new TomlError('Unexpected character, expected digit'))
-      } else if (this.atEndOfWord()) {
-        throw this.error(new TomlError('Incomplete number'))
-      }
-      return this.returnNow()
-    }
-    parseNoUnderHexOctBinLiteral () {
-      if (this.char === CHAR_LOWBAR || this.char === CHAR_PERIOD) {
-        throw this.error(new TomlError('Unexpected character, expected digit'))
-      } else if (this.atEndOfWord()) {
-        throw this.error(new TomlError('Incomplete number'))
-      }
-      return this.returnNow()
-    }
-    parseNumberFloat () {
-      if (this.char === CHAR_LOWBAR) {
-        return this.call(this.parseNoUnder, this.parseNumberFloat)
-      } else if (isDigit(this.char)) {
-        this.consume()
-      } else if (this.char === CHAR_E || this.char === CHAR_e) {
-        this.consume()
-        return this.next(this.parseNumberExponentSign)
-      } else {
-        return this.returnNow(Float(this.state.buf))
-      }
-    }
-    parseNumberExponentSign () {
-      if (isDigit(this.char)) {
-        return this.goto(this.parseNumberExponent)
-      } else if (this.char === CHAR_HYPHEN || this.char === CHAR_PLUS) {
-        this.consume()
-        this.call(this.parseNoUnder, this.parseNumberExponent)
-      } else {
-        throw this.error(new TomlError('Unexpected character, expected -, + or digit'))
-      }
-    }
-    parseNumberExponent () {
-      if (isDigit(this.char)) {
-        this.consume()
-      } else if (this.char === CHAR_LOWBAR) {
-        return this.call(this.parseNoUnder)
-      } else {
-        return this.returnNow(Float(this.state.buf))
-      }
-    }
-
-    /* NUMBERS or DATETIMES  */
-    parseNumberOrDateTime () {
-      if (this.char === CHAR_0) {
-        this.consume()
-        return this.next(this.parseNumberBaseOrDateTime)
-      } else {
-        return this.goto(this.parseNumberOrDateTimeOnly)
-      }
-    }
-    parseNumberOrDateTimeOnly () {
-      // note, if two zeros are in a row then it MUST be a date
-      if (this.char === CHAR_LOWBAR) {
-        return this.call(this.parseNoUnder, this.parseNumberInteger)
-      } else if (isDigit(this.char)) {
-        this.consume()
-        if (this.state.buf.length > 4) this.next(this.parseNumberInteger)
-      } else if (this.char === CHAR_E || this.char === CHAR_e) {
-        this.consume()
-        return this.next(this.parseNumberExponentSign)
-      } else if (this.char === CHAR_PERIOD) {
-        this.consume()
-        return this.call(this.parseNoUnder, this.parseNumberFloat)
-      } else if (this.char === CHAR_HYPHEN) {
-        return this.goto(this.parseDateTime)
-      } else if (this.char === CHAR_COLON) {
-        return this.goto(this.parseOnlyTimeHour)
-      } else {
-        return this.returnNow(Integer(this.state.buf))
-      }
-    }
-    parseDateTimeOnly () {
-      if (this.state.buf.length < 4) {
-        if (isDigit(this.char)) {
-          return this.consume()
-        } else if (this.char === CHAR_COLON) {
-          return this.goto(this.parseOnlyTimeHour)
-        } else {
-          throw this.error(new TomlError('Expected digit while parsing year part of a date'))
-        }
-      } else {
-        if (this.char === CHAR_HYPHEN) {
-          return this.goto(this.parseDateTime)
-        } else {
-          throw this.error(new TomlError('Expected hyphen (-) while parsing year part of date'))
-        }
-      }
-    }
-    parseNumberBaseOrDateTime () {
-      if (this.char === CHAR_b) {
-        this.consume()
-        return this.call(this.parseNoUnderHexOctBinLiteral, this.parseIntegerBin)
-      } else if (this.char === CHAR_o) {
-        this.consume()
-        return this.call(this.parseNoUnderHexOctBinLiteral, this.parseIntegerOct)
-      } else if (this.char === CHAR_x) {
-        this.consume()
-        return this.call(this.parseNoUnderHexOctBinLiteral, this.parseIntegerHex)
-      } else if (this.char === CHAR_PERIOD) {
-        return this.goto(this.parseNumberInteger)
-      } else if (isDigit(this.char)) {
-        return this.goto(this.parseDateTimeOnly)
-      } else {
-        return this.returnNow(Integer(this.state.buf))
-      }
-    }
-    parseIntegerHex () {
-      if (isHexit(this.char)) {
-        this.consume()
-      } else if (this.char === CHAR_LOWBAR) {
-        return this.call(this.parseNoUnderHexOctBinLiteral)
-      } else {
-        const result = Integer(this.state.buf)
-        /* istanbul ignore if */
-        if (result.isNaN()) {
-          throw this.error(new TomlError('Invalid number'))
-        } else {
-          return this.returnNow(result)
-        }
-      }
-    }
-    parseIntegerOct () {
-      if (isOctit(this.char)) {
-        this.consume()
-      } else if (this.char === CHAR_LOWBAR) {
-        return this.call(this.parseNoUnderHexOctBinLiteral)
-      } else {
-        const result = Integer(this.state.buf)
-        /* istanbul ignore if */
-        if (result.isNaN()) {
-          throw this.error(new TomlError('Invalid number'))
-        } else {
-          return this.returnNow(result)
-        }
-      }
-    }
-    parseIntegerBin () {
-      if (isBit(this.char)) {
-        this.consume()
-      } else if (this.char === CHAR_LOWBAR) {
-        return this.call(this.parseNoUnderHexOctBinLiteral)
-      } else {
-        const result = Integer(this.state.buf)
-        /* istanbul ignore if */
-        if (result.isNaN()) {
-          throw this.error(new TomlError('Invalid number'))
-        } else {
-          return this.returnNow(result)
-        }
-      }
-    }
-
-    /* DATETIME */
-    parseDateTime () {
-      // we enter here having just consumed the year and about to consume the hyphen
-      if (this.state.buf.length < 4) {
-        throw this.error(new TomlError('Years less than 1000 must be zero padded to four characters'))
-      }
-      this.state.result = this.state.buf
-      this.state.buf = ''
-      return this.next(this.parseDateMonth)
-    }
-    parseDateMonth () {
-      if (this.char === CHAR_HYPHEN) {
-        if (this.state.buf.length < 2) {
-          throw this.error(new TomlError('Months less than 10 must be zero padded to two characters'))
-        }
-        this.state.result += '-' + this.state.buf
-        this.state.buf = ''
-        return this.next(this.parseDateDay)
-      } else if (isDigit(this.char)) {
-        this.consume()
-      } else {
-        throw this.error(new TomlError('Incomplete datetime'))
-      }
-    }
-    parseDateDay () {
-      if (this.char === CHAR_T || this.char === CHAR_SP) {
-        if (this.state.buf.length < 2) {
-          throw this.error(new TomlError('Days less than 10 must be zero padded to two characters'))
-        }
-        this.state.result += '-' + this.state.buf
-        this.state.buf = ''
-        return this.next(this.parseStartTimeHour)
-      } else if (this.atEndOfWord()) {
-        return this.returnNow(createDate(this.state.result + '-' + this.state.buf))
-      } else if (isDigit(this.char)) {
-        this.consume()
-      } else {
-        throw this.error(new TomlError('Incomplete datetime'))
-      }
-    }
-    parseStartTimeHour () {
-      if (this.atEndOfWord()) {
-        return this.returnNow(createDate(this.state.result))
-      } else {
-        return this.goto(this.parseTimeHour)
-      }
-    }
-    parseTimeHour () {
-      if (this.char === CHAR_COLON) {
-        if (this.state.buf.length < 2) {
-          throw this.error(new TomlError('Hours less than 10 must be zero padded to two characters'))
-        }
-        this.state.result += 'T' + this.state.buf
-        this.state.buf = ''
-        return this.next(this.parseTimeMin)
-      } else if (isDigit(this.char)) {
-        this.consume()
-      } else {
-        throw this.error(new TomlError('Incomplete datetime'))
-      }
-    }
-    parseTimeMin () {
-      if (this.state.buf.length < 2 && isDigit(this.char)) {
-        this.consume()
-      } else if (this.state.buf.length === 2 && this.char === CHAR_COLON) {
-        this.state.result += ':' + this.state.buf
-        this.state.buf = ''
-        return this.next(this.parseTimeSec)
-      } else {
-        throw this.error(new TomlError('Incomplete datetime'))
-      }
-    }
-    parseTimeSec () {
-      if (isDigit(this.char)) {
-        this.consume()
-        if (this.state.buf.length === 2) {
-          this.state.result += ':' + this.state.buf
-          this.state.buf = ''
-          return this.next(this.parseTimeZoneOrFraction)
-        }
-      } else {
-        throw this.error(new TomlError('Incomplete datetime'))
-      }
-    }
-
-    parseOnlyTimeHour () {
-      /* istanbul ignore else */
-      if (this.char === CHAR_COLON) {
-        if (this.state.buf.length < 2) {
-          throw this.error(new TomlError('Hours less than 10 must be zero padded to two characters'))
-        }
-        this.state.result = this.state.buf
-        this.state.buf = ''
-        return this.next(this.parseOnlyTimeMin)
-      } else {
-        throw this.error(new TomlError('Incomplete time'))
-      }
-    }
-    parseOnlyTimeMin () {
-      if (this.state.buf.length < 2 && isDigit(this.char)) {
-        this.consume()
-      } else if (this.state.buf.length === 2 && this.char === CHAR_COLON) {
-        this.state.result += ':' + this.state.buf
-        this.state.buf = ''
-        return this.next(this.parseOnlyTimeSec)
-      } else {
-        throw this.error(new TomlError('Incomplete time'))
-      }
-    }
-    parseOnlyTimeSec () {
-      if (isDigit(this.char)) {
-        this.consume()
-        if (this.state.buf.length === 2) {
-          return this.next(this.parseOnlyTimeFractionMaybe)
-        }
-      } else {
-        throw this.error(new TomlError('Incomplete time'))
-      }
-    }
-    parseOnlyTimeFractionMaybe () {
-      this.state.result += ':' + this.state.buf
-      if (this.char === CHAR_PERIOD) {
-        this.state.buf = ''
-        this.next(this.parseOnlyTimeFraction)
-      } else {
-        return this.return(createTime(this.state.result))
-      }
-    }
-    parseOnlyTimeFraction () {
-      if (isDigit(this.char)) {
-        this.consume()
-      } else if (this.atEndOfWord()) {
-        if (this.state.buf.length === 0) throw this.error(new TomlError('Expected digit in milliseconds'))
-        return this.returnNow(createTime(this.state.result + '.' + this.state.buf))
-      } else {
-        throw this.error(new TomlError('Unexpected character in datetime, expected period (.), minus (-), plus (+) or Z'))
-      }
-    }
-
-    parseTimeZoneOrFraction () {
-      if (this.char === CHAR_PERIOD) {
-        this.consume()
-        this.next(this.parseDateTimeFraction)
-      } else if (this.char === CHAR_HYPHEN || this.char === CHAR_PLUS) {
-        this.consume()
-        this.next(this.parseTimeZoneHour)
-      } else if (this.char === CHAR_Z) {
-        this.consume()
-        return this.return(createDateTime(this.state.result + this.state.buf))
-      } else if (this.atEndOfWord()) {
-        return this.returnNow(createDateTimeFloat(this.state.result + this.state.buf))
-      } else {
-        throw this.error(new TomlError('Unexpected character in datetime, expected period (.), minus (-), plus (+) or Z'))
-      }
-    }
-    parseDateTimeFraction () {
-      if (isDigit(this.char)) {
-        this.consume()
-      } else if (this.state.buf.length === 1) {
-        throw this.error(new TomlError('Expected digit in milliseconds'))
-      } else if (this.char === CHAR_HYPHEN || this.char === CHAR_PLUS) {
-        this.consume()
-        this.next(this.parseTimeZoneHour)
-      } else if (this.char === CHAR_Z) {
-        this.consume()
-        return this.return(createDateTime(this.state.result + this.state.buf))
-      } else if (this.atEndOfWord()) {
-        return this.returnNow(createDateTimeFloat(this.state.result + this.state.buf))
-      } else {
-        throw this.error(new TomlError('Unexpected character in datetime, expected period (.), minus (-), plus (+) or Z'))
-      }
-    }
-    parseTimeZoneHour () {
-      if (isDigit(this.char)) {
-        this.consume()
-        // FIXME: No more regexps
-        if (/\d\d$/.test(this.state.buf)) return this.next(this.parseTimeZoneSep)
-      } else {
-        throw this.error(new TomlError('Unexpected character in datetime, expected digit'))
-      }
-    }
-    parseTimeZoneSep () {
-      if (this.char === CHAR_COLON) {
-        this.consume()
-        this.next(this.parseTimeZoneMin)
-      } else {
-        throw this.error(new TomlError('Unexpected character in datetime, expected colon'))
-      }
-    }
-    parseTimeZoneMin () {
-      if (isDigit(this.char)) {
-        this.consume()
-        if (/\d\d$/.test(this.state.buf)) return this.return(createDateTime(this.state.result + this.state.buf))
-      } else {
-        throw this.error(new TomlError('Unexpected character in datetime, expected digit'))
-      }
-    }
-
-    /* BOOLEAN */
-    parseBoolean () {
-      /* istanbul ignore else */
-      if (this.char === CHAR_t) {
-        this.consume()
-        return this.next(this.parseTrue_r)
-      } else if (this.char === CHAR_f) {
-        this.consume()
-        return this.next(this.parseFalse_a)
-      }
-    }
-    parseTrue_r () {
-      if (this.char === CHAR_r) {
-        this.consume()
-        return this.next(this.parseTrue_u)
-      } else {
-        throw this.error(new TomlError('Invalid boolean, expected true or false'))
-      }
-    }
-    parseTrue_u () {
-      if (this.char === CHAR_u) {
-        this.consume()
-        return this.next(this.parseTrue_e)
-      } else {
-        throw this.error(new TomlError('Invalid boolean, expected true or false'))
-      }
-    }
-    parseTrue_e () {
-      if (this.char === CHAR_e) {
-        return this.return(true)
-      } else {
-        throw this.error(new TomlError('Invalid boolean, expected true or false'))
-      }
-    }
-
-    parseFalse_a () {
-      if (this.char === CHAR_a) {
-        this.consume()
-        return this.next(this.parseFalse_l)
-      } else {
-        throw this.error(new TomlError('Invalid boolean, expected true or false'))
-      }
-    }
-
-    parseFalse_l () {
-      if (this.char === CHAR_l) {
-        this.consume()
-        return this.next(this.parseFalse_s)
-      } else {
-        throw this.error(new TomlError('Invalid boolean, expected true or false'))
-      }
-    }
-
-    parseFalse_s () {
-      if (this.char === CHAR_s) {
-        this.consume()
-        return this.next(this.parseFalse_e)
-      } else {
-        throw this.error(new TomlError('Invalid boolean, expected true or false'))
-      }
-    }
-
-    parseFalse_e () {
-      if (this.char === CHAR_e) {
-        return this.return(false)
-      } else {
-        throw this.error(new TomlError('Invalid boolean, expected true or false'))
-      }
-    }
-
-    /* INLINE LISTS */
-    parseInlineList () {
-      if (this.char === CHAR_SP || this.char === CTRL_I || this.char === CTRL_M || this.char === CTRL_J) {
-        return null
-      } else if (this.char === Parser.END) {
-        throw this.error(new TomlError('Unterminated inline array'))
-      } else if (this.char === CHAR_NUM) {
-        return this.call(this.parseComment)
-      } else if (this.char === CHAR_RSQB) {
-        return this.return(this.state.resultArr || InlineList())
-      } else {
-        return this.callNow(this.parseValue, this.recordInlineListValue)
-      }
-    }
-    recordInlineListValue (value) {
-      if (this.state.resultArr) {
-        const listType = this.state.resultArr[_contentType]
-        const valueType = tomlType(value)
-        if (listType !== valueType) {
-          throw this.error(new TomlError(`Inline lists must be a single type, not a mix of ${listType} and ${valueType}`))
-        }
-      } else {
-        this.state.resultArr = InlineList(tomlType(value))
-      }
-      if (isFloat(value) || isInteger(value)) {
-        // unbox now that we've verified they're ok
-        this.state.resultArr.push(value.valueOf())
-      } else {
-        this.state.resultArr.push(value)
-      }
-      return this.goto(this.parseInlineListNext)
-    }
-    parseInlineListNext () {
-      if (this.char === CHAR_SP || this.char === CTRL_I || this.char === CTRL_M || this.char === CTRL_J) {
-        return null
-      } else if (this.char === CHAR_NUM) {
-        return this.call(this.parseComment)
-      } else if (this.char === CHAR_COMMA) {
-        return this.next(this.parseInlineList)
-      } else if (this.char === CHAR_RSQB) {
-        return this.goto(this.parseInlineList)
-      } else {
-        throw this.error(new TomlError('Invalid character, expected whitespace, comma (,) or close bracket (])'))
-      }
-    }
-
-    /* INLINE TABLE */
-    parseInlineTable () {
-      if (this.char === CHAR_SP || this.char === CTRL_I) {
-        return null
-      } else if (this.char === Parser.END || this.char === CHAR_NUM || this.char === CTRL_J || this.char === CTRL_M) {
-        throw this.error(new TomlError('Unterminated inline array'))
-      } else if (this.char === CHAR_RCUB) {
-        return this.return(this.state.resultTable || InlineTable())
-      } else {
-        if (!this.state.resultTable) this.state.resultTable = InlineTable()
-        return this.callNow(this.parseAssign, this.recordInlineTableValue)
-      }
-    }
-    recordInlineTableValue (kv) {
-      let target = this.state.resultTable
-      let finalKey = kv.key.pop()
-      for (let kw of kv.key) {
-        if (hasKey(target, kw) && (!isTable(target[kw]) || target[kw][_declared])) {
-          throw this.error(new TomlError("Can't redefine existing key"))
-        }
-        target = target[kw] = target[kw] || Table()
-      }
-      if (hasKey(target, finalKey)) {
-        throw this.error(new TomlError("Can't redefine existing key"))
-      }
-      if (isInteger(kv.value) || isFloat(kv.value)) {
-        target[finalKey] = kv.value.valueOf()
-      } else {
-        target[finalKey] = kv.value
-      }
-      return this.goto(this.parseInlineTableNext)
-    }
-    parseInlineTableNext () {
-      if (this.char === CHAR_SP || this.char === CTRL_I) {
-        return null
-      } else if (this.char === Parser.END || this.char === CHAR_NUM || this.char === CTRL_J || this.char === CTRL_M) {
-        throw this.error(new TomlError('Unterminated inline array'))
-      } else if (this.char === CHAR_COMMA) {
-        return this.next(this.parseInlineTable)
-      } else if (this.char === CHAR_RCUB) {
-        return this.goto(this.parseInlineTable)
-      } else {
-        throw this.error(new TomlError('Invalid character, expected whitespace, comma (,) or close bracket (])'))
-      }
-    }
-  }
-  return TOMLParser
-}
-
+eval("\n/* eslint-disable no-new-wrappers, no-eval, camelcase, operator-linebreak */\nmodule.exports = makeParserClass(__webpack_require__(/*! ./parser.js */ \"./node_modules/@iarna/toml/lib/parser.js\"))\nmodule.exports.makeParserClass = makeParserClass\n\nclass TomlError extends Error {\n  constructor (msg) {\n    super(msg)\n    this.name = 'TomlError'\n    /* istanbul ignore next */\n    if (Error.captureStackTrace) Error.captureStackTrace(this, TomlError)\n    this.fromTOML = true\n    this.wrapped = null\n  }\n}\nTomlError.wrap = err => {\n  const terr = new TomlError(err.message)\n  terr.code = err.code\n  terr.wrapped = err\n  return terr\n}\nmodule.exports.TomlError = TomlError\n\nconst createDateTime = __webpack_require__(/*! ./create-datetime.js */ \"./node_modules/@iarna/toml/lib/create-datetime.js\")\nconst createDateTimeFloat = __webpack_require__(/*! ./create-datetime-float.js */ \"./node_modules/@iarna/toml/lib/create-datetime-float.js\")\nconst createDate = __webpack_require__(/*! ./create-date.js */ \"./node_modules/@iarna/toml/lib/create-date.js\")\nconst createTime = __webpack_require__(/*! ./create-time.js */ \"./node_modules/@iarna/toml/lib/create-time.js\")\n\nconst CTRL_I = 0x09\nconst CTRL_J = 0x0A\nconst CTRL_M = 0x0D\nconst CTRL_CHAR_BOUNDARY = 0x1F // the last non-character in the latin1 region of unicode, except DEL\nconst CHAR_SP = 0x20\nconst CHAR_QUOT = 0x22\nconst CHAR_NUM = 0x23\nconst CHAR_APOS = 0x27\nconst CHAR_PLUS = 0x2B\nconst CHAR_COMMA = 0x2C\nconst CHAR_HYPHEN = 0x2D\nconst CHAR_PERIOD = 0x2E\nconst CHAR_0 = 0x30\nconst CHAR_1 = 0x31\nconst CHAR_7 = 0x37\nconst CHAR_9 = 0x39\nconst CHAR_COLON = 0x3A\nconst CHAR_EQUALS = 0x3D\nconst CHAR_A = 0x41\nconst CHAR_E = 0x45\nconst CHAR_F = 0x46\nconst CHAR_T = 0x54\nconst CHAR_U = 0x55\nconst CHAR_Z = 0x5A\nconst CHAR_LOWBAR = 0x5F\nconst CHAR_a = 0x61\nconst CHAR_b = 0x62\nconst CHAR_e = 0x65\nconst CHAR_f = 0x66\nconst CHAR_i = 0x69\nconst CHAR_l = 0x6C\nconst CHAR_n = 0x6E\nconst CHAR_o = 0x6F\nconst CHAR_r = 0x72\nconst CHAR_s = 0x73\nconst CHAR_t = 0x74\nconst CHAR_u = 0x75\nconst CHAR_x = 0x78\nconst CHAR_z = 0x7A\nconst CHAR_LCUB = 0x7B\nconst CHAR_RCUB = 0x7D\nconst CHAR_LSQB = 0x5B\nconst CHAR_BSOL = 0x5C\nconst CHAR_RSQB = 0x5D\nconst CHAR_DEL = 0x7F\nconst SURROGATE_FIRST = 0xD800\nconst SURROGATE_LAST = 0xDFFF\n\nconst escapes = {\n  [CHAR_b]: '\\u0008',\n  [CHAR_t]: '\\u0009',\n  [CHAR_n]: '\\u000A',\n  [CHAR_f]: '\\u000C',\n  [CHAR_r]: '\\u000D',\n  [CHAR_QUOT]: '\\u0022',\n  [CHAR_BSOL]: '\\u005C'\n}\n\nfunction isDigit (cp) {\n  return cp >= CHAR_0 && cp <= CHAR_9\n}\nfunction isHexit (cp) {\n  return (cp >= CHAR_A && cp <= CHAR_F) || (cp >= CHAR_a && cp <= CHAR_f) || (cp >= CHAR_0 && cp <= CHAR_9)\n}\nfunction isBit (cp) {\n  return cp === CHAR_1 || cp === CHAR_0\n}\nfunction isOctit (cp) {\n  return (cp >= CHAR_0 && cp <= CHAR_7)\n}\nfunction isAlphaNumQuoteHyphen (cp) {\n  return (cp >= CHAR_A && cp <= CHAR_Z)\n      || (cp >= CHAR_a && cp <= CHAR_z)\n      || (cp >= CHAR_0 && cp <= CHAR_9)\n      || cp === CHAR_APOS\n      || cp === CHAR_QUOT\n      || cp === CHAR_LOWBAR\n      || cp === CHAR_HYPHEN\n}\nfunction isAlphaNumHyphen (cp) {\n  return (cp >= CHAR_A && cp <= CHAR_Z)\n      || (cp >= CHAR_a && cp <= CHAR_z)\n      || (cp >= CHAR_0 && cp <= CHAR_9)\n      || cp === CHAR_LOWBAR\n      || cp === CHAR_HYPHEN\n}\nconst _type = Symbol('type')\nconst _declared = Symbol('declared')\n\nconst hasOwnProperty = Object.prototype.hasOwnProperty\nconst defineProperty = Object.defineProperty\nconst descriptor = {configurable: true, enumerable: true, writable: true, value: undefined}\n\nfunction hasKey (obj, key) {\n  if (hasOwnProperty.call(obj, key)) return true\n  if (key === '__proto__') defineProperty(obj, '__proto__', descriptor)\n  return false\n}\n\nconst INLINE_TABLE = Symbol('inline-table')\nfunction InlineTable () {\n  return Object.defineProperties({}, {\n    [_type]: {value: INLINE_TABLE}\n  })\n}\nfunction isInlineTable (obj) {\n  if (obj === null || typeof (obj) !== 'object') return false\n  return obj[_type] === INLINE_TABLE\n}\n\nconst TABLE = Symbol('table')\nfunction Table () {\n  return Object.defineProperties({}, {\n    [_type]: {value: TABLE},\n    [_declared]: {value: false, writable: true}\n  })\n}\nfunction isTable (obj) {\n  if (obj === null || typeof (obj) !== 'object') return false\n  return obj[_type] === TABLE\n}\n\nconst _contentType = Symbol('content-type')\nconst INLINE_LIST = Symbol('inline-list')\nfunction InlineList (type) {\n  return Object.defineProperties([], {\n    [_type]: {value: INLINE_LIST},\n    [_contentType]: {value: type}\n  })\n}\nfunction isInlineList (obj) {\n  if (obj === null || typeof (obj) !== 'object') return false\n  return obj[_type] === INLINE_LIST\n}\n\nconst LIST = Symbol('list')\nfunction List () {\n  return Object.defineProperties([], {\n    [_type]: {value: LIST}\n  })\n}\nfunction isList (obj) {\n  if (obj === null || typeof (obj) !== 'object') return false\n  return obj[_type] === LIST\n}\n\n// in an eval, to let bundlers not slurp in a util proxy\nlet _custom\ntry {\n  const utilInspect = eval(\"require('util').inspect\")\n  _custom = utilInspect.custom\n} catch (_) {\n  /* eval require not available in transpiled bundle */\n}\n/* istanbul ignore next */\nconst _inspect = _custom || 'inspect'\n\nclass BoxedBigInt {\n  constructor (value) {\n    try {\n      this.value = global.BigInt.asIntN(64, value)\n    } catch (_) {\n      /* istanbul ignore next */\n      this.value = null\n    }\n    Object.defineProperty(this, _type, {value: INTEGER})\n  }\n  isNaN () {\n    return this.value === null\n  }\n  /* istanbul ignore next */\n  toString () {\n    return String(this.value)\n  }\n  /* istanbul ignore next */\n  [_inspect] () {\n    return `[BigInt: ${this.toString()}]}`\n  }\n  valueOf () {\n    return this.value\n  }\n}\n\nconst INTEGER = Symbol('integer')\nfunction Integer (value) {\n  let num = Number(value)\n  // -0 is a float thing, not an int thing\n  if (Object.is(num, -0)) num = 0\n  /* istanbul ignore else */\n  if (global.BigInt && !Number.isSafeInteger(num)) {\n    return new BoxedBigInt(value)\n  } else {\n    /* istanbul ignore next */\n    return Object.defineProperties(new Number(num), {\n      isNaN: {value: function () { return isNaN(this) }},\n      [_type]: {value: INTEGER},\n      [_inspect]: {value: () => `[Integer: ${value}]`}\n    })\n  }\n}\nfunction isInteger (obj) {\n  if (obj === null || typeof (obj) !== 'object') return false\n  return obj[_type] === INTEGER\n}\n\nconst FLOAT = Symbol('float')\nfunction Float (value) {\n  /* istanbul ignore next */\n  return Object.defineProperties(new Number(value), {\n    [_type]: {value: FLOAT},\n    [_inspect]: {value: () => `[Float: ${value}]`}\n  })\n}\nfunction isFloat (obj) {\n  if (obj === null || typeof (obj) !== 'object') return false\n  return obj[_type] === FLOAT\n}\n\nfunction tomlType (value) {\n  const type = typeof value\n  if (type === 'object') {\n    /* istanbul ignore if */\n    if (value === null) return 'null'\n    if (value instanceof Date) return 'datetime'\n    /* istanbul ignore else */\n    if (_type in value) {\n      switch (value[_type]) {\n        case INLINE_TABLE: return 'inline-table'\n        case INLINE_LIST: return 'inline-list'\n        /* istanbul ignore next */\n        case TABLE: return 'table'\n        /* istanbul ignore next */\n        case LIST: return 'list'\n        case FLOAT: return 'float'\n        case INTEGER: return 'integer'\n      }\n    }\n  }\n  return type\n}\n\nfunction makeParserClass (Parser) {\n  class TOMLParser extends Parser {\n    constructor () {\n      super()\n      this.ctx = this.obj = Table()\n    }\n\n    /* MATCH HELPER */\n    atEndOfWord () {\n      return this.char === CHAR_NUM || this.char === CTRL_I || this.char === CHAR_SP || this.atEndOfLine()\n    }\n    atEndOfLine () {\n      return this.char === Parser.END || this.char === CTRL_J || this.char === CTRL_M\n    }\n\n    parseStart () {\n      if (this.char === Parser.END) {\n        return null\n      } else if (this.char === CHAR_LSQB) {\n        return this.call(this.parseTableOrList)\n      } else if (this.char === CHAR_NUM) {\n        return this.call(this.parseComment)\n      } else if (this.char === CTRL_J || this.char === CHAR_SP || this.char === CTRL_I || this.char === CTRL_M) {\n        return null\n      } else if (isAlphaNumQuoteHyphen(this.char)) {\n        return this.callNow(this.parseAssignStatement)\n      } else {\n        throw this.error(new TomlError(`Unknown character \"${this.char}\"`))\n      }\n    }\n\n    // HELPER, this strips any whitespace and comments to the end of the line\n    // then RETURNS. Last state in a production.\n    parseWhitespaceToEOL () {\n      if (this.char === CHAR_SP || this.char === CTRL_I || this.char === CTRL_M) {\n        return null\n      } else if (this.char === CHAR_NUM) {\n        return this.goto(this.parseComment)\n      } else if (this.char === Parser.END || this.char === CTRL_J) {\n        return this.return()\n      } else {\n        throw this.error(new TomlError('Unexpected character, expected only whitespace or comments till end of line'))\n      }\n    }\n\n    /* ASSIGNMENT: key = value */\n    parseAssignStatement () {\n      return this.callNow(this.parseAssign, this.recordAssignStatement)\n    }\n    recordAssignStatement (kv) {\n      let target = this.ctx\n      let finalKey = kv.key.pop()\n      for (let kw of kv.key) {\n        if (hasKey(target, kw) && (!isTable(target[kw]) || target[kw][_declared])) {\n          throw this.error(new TomlError(\"Can't redefine existing key\"))\n        }\n        target = target[kw] = target[kw] || Table()\n      }\n      if (hasKey(target, finalKey)) {\n        throw this.error(new TomlError(\"Can't redefine existing key\"))\n      }\n      // unbox our numbers\n      if (isInteger(kv.value) || isFloat(kv.value)) {\n        target[finalKey] = kv.value.valueOf()\n      } else {\n        target[finalKey] = kv.value\n      }\n      return this.goto(this.parseWhitespaceToEOL)\n    }\n\n    /* ASSSIGNMENT expression, key = value possibly inside an inline table */\n    parseAssign () {\n      return this.callNow(this.parseKeyword, this.recordAssignKeyword)\n    }\n    recordAssignKeyword (key) {\n      if (this.state.resultTable) {\n        this.state.resultTable.push(key)\n      } else {\n        this.state.resultTable = [key]\n      }\n      return this.goto(this.parseAssignKeywordPreDot)\n    }\n    parseAssignKeywordPreDot () {\n      if (this.char === CHAR_PERIOD) {\n        return this.next(this.parseAssignKeywordPostDot)\n      } else if (this.char !== CHAR_SP && this.char !== CTRL_I) {\n        return this.goto(this.parseAssignEqual)\n      }\n    }\n    parseAssignKeywordPostDot () {\n      if (this.char !== CHAR_SP && this.char !== CTRL_I) {\n        return this.callNow(this.parseKeyword, this.recordAssignKeyword)\n      }\n    }\n\n    parseAssignEqual () {\n      if (this.char === CHAR_EQUALS) {\n        return this.next(this.parseAssignPreValue)\n      } else {\n        throw this.error(new TomlError('Invalid character, expected \"=\"'))\n      }\n    }\n    parseAssignPreValue () {\n      if (this.char === CHAR_SP || this.char === CTRL_I) {\n        return null\n      } else {\n        return this.callNow(this.parseValue, this.recordAssignValue)\n      }\n    }\n    recordAssignValue (value) {\n      return this.returnNow({key: this.state.resultTable, value: value})\n    }\n\n    /* COMMENTS: #...eol */\n    parseComment () {\n      do {\n        if (this.char === Parser.END || this.char === CTRL_J) {\n          return this.return()\n        }\n      } while (this.nextChar())\n    }\n\n    /* TABLES AND LISTS, [foo] and [[foo]] */\n    parseTableOrList () {\n      if (this.char === CHAR_LSQB) {\n        this.next(this.parseList)\n      } else {\n        return this.goto(this.parseTable)\n      }\n    }\n\n    /* TABLE [foo.bar.baz] */\n    parseTable () {\n      this.ctx = this.obj\n      return this.goto(this.parseTableNext)\n    }\n    parseTableNext () {\n      if (this.char === CHAR_SP || this.char === CTRL_I) {\n        return null\n      } else {\n        return this.callNow(this.parseKeyword, this.parseTableMore)\n      }\n    }\n    parseTableMore (keyword) {\n      if (this.char === CHAR_SP || this.char === CTRL_I) {\n        return null\n      } else if (this.char === CHAR_RSQB) {\n        if (hasKey(this.ctx, keyword) && (!isTable(this.ctx[keyword]) || this.ctx[keyword][_declared])) {\n          throw this.error(new TomlError(\"Can't redefine existing key\"))\n        } else {\n          this.ctx = this.ctx[keyword] = this.ctx[keyword] || Table()\n          this.ctx[_declared] = true\n        }\n        return this.next(this.parseWhitespaceToEOL)\n      } else if (this.char === CHAR_PERIOD) {\n        if (!hasKey(this.ctx, keyword)) {\n          this.ctx = this.ctx[keyword] = Table()\n        } else if (isTable(this.ctx[keyword])) {\n          this.ctx = this.ctx[keyword]\n        } else if (isList(this.ctx[keyword])) {\n          this.ctx = this.ctx[keyword][this.ctx[keyword].length - 1]\n        } else {\n          throw this.error(new TomlError(\"Can't redefine existing key\"))\n        }\n        return this.next(this.parseTableNext)\n      } else {\n        throw this.error(new TomlError('Unexpected character, expected whitespace, . or ]'))\n      }\n    }\n\n    /* LIST [[a.b.c]] */\n    parseList () {\n      this.ctx = this.obj\n      return this.goto(this.parseListNext)\n    }\n    parseListNext () {\n      if (this.char === CHAR_SP || this.char === CTRL_I) {\n        return null\n      } else {\n        return this.callNow(this.parseKeyword, this.parseListMore)\n      }\n    }\n    parseListMore (keyword) {\n      if (this.char === CHAR_SP || this.char === CTRL_I) {\n        return null\n      } else if (this.char === CHAR_RSQB) {\n        if (!hasKey(this.ctx, keyword)) {\n          this.ctx[keyword] = List()\n        }\n        if (isInlineList(this.ctx[keyword])) {\n          throw this.error(new TomlError(\"Can't extend an inline array\"))\n        } else if (isList(this.ctx[keyword])) {\n          const next = Table()\n          this.ctx[keyword].push(next)\n          this.ctx = next\n        } else {\n          throw this.error(new TomlError(\"Can't redefine an existing key\"))\n        }\n        return this.next(this.parseListEnd)\n      } else if (this.char === CHAR_PERIOD) {\n        if (!hasKey(this.ctx, keyword)) {\n          this.ctx = this.ctx[keyword] = Table()\n        } else if (isInlineList(this.ctx[keyword])) {\n          throw this.error(new TomlError(\"Can't extend an inline array\"))\n        } else if (isInlineTable(this.ctx[keyword])) {\n          throw this.error(new TomlError(\"Can't extend an inline table\"))\n        } else if (isList(this.ctx[keyword])) {\n          this.ctx = this.ctx[keyword][this.ctx[keyword].length - 1]\n        } else if (isTable(this.ctx[keyword])) {\n          this.ctx = this.ctx[keyword]\n        } else {\n          throw this.error(new TomlError(\"Can't redefine an existing key\"))\n        }\n        return this.next(this.parseListNext)\n      } else {\n        throw this.error(new TomlError('Unexpected character, expected whitespace, . or ]'))\n      }\n    }\n    parseListEnd (keyword) {\n      if (this.char === CHAR_RSQB) {\n        return this.next(this.parseWhitespaceToEOL)\n      } else {\n        throw this.error(new TomlError('Unexpected character, expected whitespace, . or ]'))\n      }\n    }\n\n    /* VALUE string, number, boolean, inline list, inline object */\n    parseValue () {\n      if (this.char === Parser.END) {\n        throw this.error(new TomlError('Key without value'))\n      } else if (this.char === CHAR_QUOT) {\n        return this.next(this.parseDoubleString)\n      } if (this.char === CHAR_APOS) {\n        return this.next(this.parseSingleString)\n      } else if (this.char === CHAR_HYPHEN || this.char === CHAR_PLUS) {\n        return this.goto(this.parseNumberSign)\n      } else if (this.char === CHAR_i) {\n        return this.next(this.parseInf)\n      } else if (this.char === CHAR_n) {\n        return this.next(this.parseNan)\n      } else if (isDigit(this.char)) {\n        return this.goto(this.parseNumberOrDateTime)\n      } else if (this.char === CHAR_t || this.char === CHAR_f) {\n        return this.goto(this.parseBoolean)\n      } else if (this.char === CHAR_LSQB) {\n        return this.call(this.parseInlineList, this.recordValue)\n      } else if (this.char === CHAR_LCUB) {\n        return this.call(this.parseInlineTable, this.recordValue)\n      } else {\n        throw this.error(new TomlError('Unexpected character, expecting string, number, datetime, boolean, inline array or inline table'))\n      }\n    }\n    recordValue (value) {\n      return this.returnNow(value)\n    }\n\n    parseInf () {\n      if (this.char === CHAR_n) {\n        return this.next(this.parseInf2)\n      } else {\n        throw this.error(new TomlError('Unexpected character, expected \"inf\", \"+inf\" or \"-inf\"'))\n      }\n    }\n    parseInf2 () {\n      if (this.char === CHAR_f) {\n        if (this.state.buf === '-') {\n          return this.return(-Infinity)\n        } else {\n          return this.return(Infinity)\n        }\n      } else {\n        throw this.error(new TomlError('Unexpected character, expected \"inf\", \"+inf\" or \"-inf\"'))\n      }\n    }\n\n    parseNan () {\n      if (this.char === CHAR_a) {\n        return this.next(this.parseNan2)\n      } else {\n        throw this.error(new TomlError('Unexpected character, expected \"nan\"'))\n      }\n    }\n    parseNan2 () {\n      if (this.char === CHAR_n) {\n        return this.return(NaN)\n      } else {\n        throw this.error(new TomlError('Unexpected character, expected \"nan\"'))\n      }\n    }\n\n    /* KEYS, barewords or basic, literal, or dotted */\n    parseKeyword () {\n      if (this.char === CHAR_QUOT) {\n        return this.next(this.parseBasicString)\n      } else if (this.char === CHAR_APOS) {\n        return this.next(this.parseLiteralString)\n      } else {\n        return this.goto(this.parseBareKey)\n      }\n    }\n\n    /* KEYS: barewords */\n    parseBareKey () {\n      do {\n        if (this.char === Parser.END) {\n          throw this.error(new TomlError('Key ended without value'))\n        } else if (isAlphaNumHyphen(this.char)) {\n          this.consume()\n        } else if (this.state.buf.length === 0) {\n          throw this.error(new TomlError('Empty bare keys are not allowed'))\n        } else {\n          return this.returnNow()\n        }\n      } while (this.nextChar())\n    }\n\n    /* STRINGS, single quoted (literal) */\n    parseSingleString () {\n      if (this.char === CHAR_APOS) {\n        return this.next(this.parseLiteralMultiStringMaybe)\n      } else {\n        return this.goto(this.parseLiteralString)\n      }\n    }\n    parseLiteralString () {\n      do {\n        if (this.char === CHAR_APOS) {\n          return this.return()\n        } else if (this.atEndOfLine()) {\n          throw this.error(new TomlError('Unterminated string'))\n        } else if (this.char === CHAR_DEL || (this.char <= CTRL_CHAR_BOUNDARY && this.char !== CTRL_I)) {\n          throw this.errorControlCharInString()\n        } else {\n          this.consume()\n        }\n      } while (this.nextChar())\n    }\n    parseLiteralMultiStringMaybe () {\n      if (this.char === CHAR_APOS) {\n        return this.next(this.parseLiteralMultiString)\n      } else {\n        return this.returnNow()\n      }\n    }\n    parseLiteralMultiString () {\n      if (this.char === CTRL_M) {\n        return null\n      } else if (this.char === CTRL_J) {\n        return this.next(this.parseLiteralMultiStringContent)\n      } else {\n        return this.goto(this.parseLiteralMultiStringContent)\n      }\n    }\n    parseLiteralMultiStringContent () {\n      do {\n        if (this.char === CHAR_APOS) {\n          return this.next(this.parseLiteralMultiEnd)\n        } else if (this.char === Parser.END) {\n          throw this.error(new TomlError('Unterminated multi-line string'))\n        } else if (this.char === CHAR_DEL || (this.char <= CTRL_CHAR_BOUNDARY && this.char !== CTRL_I && this.char !== CTRL_J && this.char !== CTRL_M)) {\n          throw this.errorControlCharInString()\n        } else {\n          this.consume()\n        }\n      } while (this.nextChar())\n    }\n    parseLiteralMultiEnd () {\n      if (this.char === CHAR_APOS) {\n        return this.next(this.parseLiteralMultiEnd2)\n      } else {\n        this.state.buf += \"'\"\n        return this.goto(this.parseLiteralMultiStringContent)\n      }\n    }\n    parseLiteralMultiEnd2 () {\n      if (this.char === CHAR_APOS) {\n        return this.return()\n      } else {\n        this.state.buf += \"''\"\n        return this.goto(this.parseLiteralMultiStringContent)\n      }\n    }\n\n    /* STRINGS double quoted */\n    parseDoubleString () {\n      if (this.char === CHAR_QUOT) {\n        return this.next(this.parseMultiStringMaybe)\n      } else {\n        return this.goto(this.parseBasicString)\n      }\n    }\n    parseBasicString () {\n      do {\n        if (this.char === CHAR_BSOL) {\n          return this.call(this.parseEscape, this.recordEscapeReplacement)\n        } else if (this.char === CHAR_QUOT) {\n          return this.return()\n        } else if (this.atEndOfLine()) {\n          throw this.error(new TomlError('Unterminated string'))\n        } else if (this.char === CHAR_DEL || (this.char <= CTRL_CHAR_BOUNDARY && this.char !== CTRL_I)) {\n          throw this.errorControlCharInString()\n        } else {\n          this.consume()\n        }\n      } while (this.nextChar())\n    }\n    recordEscapeReplacement (replacement) {\n      this.state.buf += replacement\n      return this.goto(this.parseBasicString)\n    }\n    parseMultiStringMaybe () {\n      if (this.char === CHAR_QUOT) {\n        return this.next(this.parseMultiString)\n      } else {\n        return this.returnNow()\n      }\n    }\n    parseMultiString () {\n      if (this.char === CTRL_M) {\n        return null\n      } else if (this.char === CTRL_J) {\n        return this.next(this.parseMultiStringContent)\n      } else {\n        return this.goto(this.parseMultiStringContent)\n      }\n    }\n    parseMultiStringContent () {\n      do {\n        if (this.char === CHAR_BSOL) {\n          return this.call(this.parseMultiEscape, this.recordMultiEscapeReplacement)\n        } else if (this.char === CHAR_QUOT) {\n          return this.next(this.parseMultiEnd)\n        } else if (this.char === Parser.END) {\n          throw this.error(new TomlError('Unterminated multi-line string'))\n        } else if (this.char === CHAR_DEL || (this.char <= CTRL_CHAR_BOUNDARY && this.char !== CTRL_I && this.char !== CTRL_J && this.char !== CTRL_M)) {\n          throw this.errorControlCharInString()\n        } else {\n          this.consume()\n        }\n      } while (this.nextChar())\n    }\n    errorControlCharInString () {\n      let displayCode = '\\\\u00'\n      if (this.char < 16) {\n        displayCode += '0'\n      }\n      displayCode += this.char.toString(16)\n\n      return this.error(new TomlError(`Control characters (codes < 0x1f and 0x7f) are not allowed in strings, use ${displayCode} instead`))\n    }\n    recordMultiEscapeReplacement (replacement) {\n      this.state.buf += replacement\n      return this.goto(this.parseMultiStringContent)\n    }\n    parseMultiEnd () {\n      if (this.char === CHAR_QUOT) {\n        return this.next(this.parseMultiEnd2)\n      } else {\n        this.state.buf += '\"'\n        return this.goto(this.parseMultiStringContent)\n      }\n    }\n    parseMultiEnd2 () {\n      if (this.char === CHAR_QUOT) {\n        return this.return()\n      } else {\n        this.state.buf += '\"\"'\n        return this.goto(this.parseMultiStringContent)\n      }\n    }\n    parseMultiEscape () {\n      if (this.char === CTRL_M || this.char === CTRL_J) {\n        return this.next(this.parseMultiTrim)\n      } else if (this.char === CHAR_SP || this.char === CTRL_I) {\n        return this.next(this.parsePreMultiTrim)\n      } else {\n        return this.goto(this.parseEscape)\n      }\n    }\n    parsePreMultiTrim () {\n      if (this.char === CHAR_SP || this.char === CTRL_I) {\n        return null\n      } else if (this.char === CTRL_M || this.char === CTRL_J) {\n        return this.next(this.parseMultiTrim)\n      } else {\n        throw this.error(new TomlError(\"Can't escape whitespace\"))\n      }\n    }\n    parseMultiTrim () {\n      // explicitly whitespace here, END should follow the same path as chars\n      if (this.char === CTRL_J || this.char === CHAR_SP || this.char === CTRL_I || this.char === CTRL_M) {\n        return null\n      } else {\n        return this.returnNow()\n      }\n    }\n    parseEscape () {\n      if (this.char in escapes) {\n        return this.return(escapes[this.char])\n      } else if (this.char === CHAR_u) {\n        return this.call(this.parseSmallUnicode, this.parseUnicodeReturn)\n      } else if (this.char === CHAR_U) {\n        return this.call(this.parseLargeUnicode, this.parseUnicodeReturn)\n      } else {\n        throw this.error(new TomlError('Unknown escape character: ' + this.char))\n      }\n    }\n    parseUnicodeReturn (char) {\n      try {\n        const codePoint = parseInt(char, 16)\n        if (codePoint >= SURROGATE_FIRST && codePoint <= SURROGATE_LAST) {\n          throw this.error(new TomlError('Invalid unicode, character in range 0xD800 - 0xDFFF is reserved'))\n        }\n        return this.returnNow(String.fromCodePoint(codePoint))\n      } catch (err) {\n        throw this.error(TomlError.wrap(err))\n      }\n    }\n    parseSmallUnicode () {\n      if (!isHexit(this.char)) {\n        throw this.error(new TomlError('Invalid character in unicode sequence, expected hex'))\n      } else {\n        this.consume()\n        if (this.state.buf.length >= 4) return this.return()\n      }\n    }\n    parseLargeUnicode () {\n      if (!isHexit(this.char)) {\n        throw this.error(new TomlError('Invalid character in unicode sequence, expected hex'))\n      } else {\n        this.consume()\n        if (this.state.buf.length >= 8) return this.return()\n      }\n    }\n\n    /* NUMBERS */\n    parseNumberSign () {\n      this.consume()\n      return this.next(this.parseMaybeSignedInfOrNan)\n    }\n    parseMaybeSignedInfOrNan () {\n      if (this.char === CHAR_i) {\n        return this.next(this.parseInf)\n      } else if (this.char === CHAR_n) {\n        return this.next(this.parseNan)\n      } else {\n        return this.callNow(this.parseNoUnder, this.parseNumberIntegerStart)\n      }\n    }\n    parseNumberIntegerStart () {\n      if (this.char === CHAR_0) {\n        this.consume()\n        return this.next(this.parseNumberIntegerExponentOrDecimal)\n      } else {\n        return this.goto(this.parseNumberInteger)\n      }\n    }\n    parseNumberIntegerExponentOrDecimal () {\n      if (this.char === CHAR_PERIOD) {\n        this.consume()\n        return this.call(this.parseNoUnder, this.parseNumberFloat)\n      } else if (this.char === CHAR_E || this.char === CHAR_e) {\n        this.consume()\n        return this.next(this.parseNumberExponentSign)\n      } else {\n        return this.returnNow(Integer(this.state.buf))\n      }\n    }\n    parseNumberInteger () {\n      if (isDigit(this.char)) {\n        this.consume()\n      } else if (this.char === CHAR_LOWBAR) {\n        return this.call(this.parseNoUnder)\n      } else if (this.char === CHAR_E || this.char === CHAR_e) {\n        this.consume()\n        return this.next(this.parseNumberExponentSign)\n      } else if (this.char === CHAR_PERIOD) {\n        this.consume()\n        return this.call(this.parseNoUnder, this.parseNumberFloat)\n      } else {\n        const result = Integer(this.state.buf)\n        /* istanbul ignore if */\n        if (result.isNaN()) {\n          throw this.error(new TomlError('Invalid number'))\n        } else {\n          return this.returnNow(result)\n        }\n      }\n    }\n    parseNoUnder () {\n      if (this.char === CHAR_LOWBAR || this.char === CHAR_PERIOD || this.char === CHAR_E || this.char === CHAR_e) {\n        throw this.error(new TomlError('Unexpected character, expected digit'))\n      } else if (this.atEndOfWord()) {\n        throw this.error(new TomlError('Incomplete number'))\n      }\n      return this.returnNow()\n    }\n    parseNoUnderHexOctBinLiteral () {\n      if (this.char === CHAR_LOWBAR || this.char === CHAR_PERIOD) {\n        throw this.error(new TomlError('Unexpected character, expected digit'))\n      } else if (this.atEndOfWord()) {\n        throw this.error(new TomlError('Incomplete number'))\n      }\n      return this.returnNow()\n    }\n    parseNumberFloat () {\n      if (this.char === CHAR_LOWBAR) {\n        return this.call(this.parseNoUnder, this.parseNumberFloat)\n      } else if (isDigit(this.char)) {\n        this.consume()\n      } else if (this.char === CHAR_E || this.char === CHAR_e) {\n        this.consume()\n        return this.next(this.parseNumberExponentSign)\n      } else {\n        return this.returnNow(Float(this.state.buf))\n      }\n    }\n    parseNumberExponentSign () {\n      if (isDigit(this.char)) {\n        return this.goto(this.parseNumberExponent)\n      } else if (this.char === CHAR_HYPHEN || this.char === CHAR_PLUS) {\n        this.consume()\n        this.call(this.parseNoUnder, this.parseNumberExponent)\n      } else {\n        throw this.error(new TomlError('Unexpected character, expected -, + or digit'))\n      }\n    }\n    parseNumberExponent () {\n      if (isDigit(this.char)) {\n        this.consume()\n      } else if (this.char === CHAR_LOWBAR) {\n        return this.call(this.parseNoUnder)\n      } else {\n        return this.returnNow(Float(this.state.buf))\n      }\n    }\n\n    /* NUMBERS or DATETIMES  */\n    parseNumberOrDateTime () {\n      if (this.char === CHAR_0) {\n        this.consume()\n        return this.next(this.parseNumberBaseOrDateTime)\n      } else {\n        return this.goto(this.parseNumberOrDateTimeOnly)\n      }\n    }\n    parseNumberOrDateTimeOnly () {\n      // note, if two zeros are in a row then it MUST be a date\n      if (this.char === CHAR_LOWBAR) {\n        return this.call(this.parseNoUnder, this.parseNumberInteger)\n      } else if (isDigit(this.char)) {\n        this.consume()\n        if (this.state.buf.length > 4) this.next(this.parseNumberInteger)\n      } else if (this.char === CHAR_E || this.char === CHAR_e) {\n        this.consume()\n        return this.next(this.parseNumberExponentSign)\n      } else if (this.char === CHAR_PERIOD) {\n        this.consume()\n        return this.call(this.parseNoUnder, this.parseNumberFloat)\n      } else if (this.char === CHAR_HYPHEN) {\n        return this.goto(this.parseDateTime)\n      } else if (this.char === CHAR_COLON) {\n        return this.goto(this.parseOnlyTimeHour)\n      } else {\n        return this.returnNow(Integer(this.state.buf))\n      }\n    }\n    parseDateTimeOnly () {\n      if (this.state.buf.length < 4) {\n        if (isDigit(this.char)) {\n          return this.consume()\n        } else if (this.char === CHAR_COLON) {\n          return this.goto(this.parseOnlyTimeHour)\n        } else {\n          throw this.error(new TomlError('Expected digit while parsing year part of a date'))\n        }\n      } else {\n        if (this.char === CHAR_HYPHEN) {\n          return this.goto(this.parseDateTime)\n        } else {\n          throw this.error(new TomlError('Expected hyphen (-) while parsing year part of date'))\n        }\n      }\n    }\n    parseNumberBaseOrDateTime () {\n      if (this.char === CHAR_b) {\n        this.consume()\n        return this.call(this.parseNoUnderHexOctBinLiteral, this.parseIntegerBin)\n      } else if (this.char === CHAR_o) {\n        this.consume()\n        return this.call(this.parseNoUnderHexOctBinLiteral, this.parseIntegerOct)\n      } else if (this.char === CHAR_x) {\n        this.consume()\n        return this.call(this.parseNoUnderHexOctBinLiteral, this.parseIntegerHex)\n      } else if (this.char === CHAR_PERIOD) {\n        return this.goto(this.parseNumberInteger)\n      } else if (isDigit(this.char)) {\n        return this.goto(this.parseDateTimeOnly)\n      } else {\n        return this.returnNow(Integer(this.state.buf))\n      }\n    }\n    parseIntegerHex () {\n      if (isHexit(this.char)) {\n        this.consume()\n      } else if (this.char === CHAR_LOWBAR) {\n        return this.call(this.parseNoUnderHexOctBinLiteral)\n      } else {\n        const result = Integer(this.state.buf)\n        /* istanbul ignore if */\n        if (result.isNaN()) {\n          throw this.error(new TomlError('Invalid number'))\n        } else {\n          return this.returnNow(result)\n        }\n      }\n    }\n    parseIntegerOct () {\n      if (isOctit(this.char)) {\n        this.consume()\n      } else if (this.char === CHAR_LOWBAR) {\n        return this.call(this.parseNoUnderHexOctBinLiteral)\n      } else {\n        const result = Integer(this.state.buf)\n        /* istanbul ignore if */\n        if (result.isNaN()) {\n          throw this.error(new TomlError('Invalid number'))\n        } else {\n          return this.returnNow(result)\n        }\n      }\n    }\n    parseIntegerBin () {\n      if (isBit(this.char)) {\n        this.consume()\n      } else if (this.char === CHAR_LOWBAR) {\n        return this.call(this.parseNoUnderHexOctBinLiteral)\n      } else {\n        const result = Integer(this.state.buf)\n        /* istanbul ignore if */\n        if (result.isNaN()) {\n          throw this.error(new TomlError('Invalid number'))\n        } else {\n          return this.returnNow(result)\n        }\n      }\n    }\n\n    /* DATETIME */\n    parseDateTime () {\n      // we enter here having just consumed the year and about to consume the hyphen\n      if (this.state.buf.length < 4) {\n        throw this.error(new TomlError('Years less than 1000 must be zero padded to four characters'))\n      }\n      this.state.result = this.state.buf\n      this.state.buf = ''\n      return this.next(this.parseDateMonth)\n    }\n    parseDateMonth () {\n      if (this.char === CHAR_HYPHEN) {\n        if (this.state.buf.length < 2) {\n          throw this.error(new TomlError('Months less than 10 must be zero padded to two characters'))\n        }\n        this.state.result += '-' + this.state.buf\n        this.state.buf = ''\n        return this.next(this.parseDateDay)\n      } else if (isDigit(this.char)) {\n        this.consume()\n      } else {\n        throw this.error(new TomlError('Incomplete datetime'))\n      }\n    }\n    parseDateDay () {\n      if (this.char === CHAR_T || this.char === CHAR_SP) {\n        if (this.state.buf.length < 2) {\n          throw this.error(new TomlError('Days less than 10 must be zero padded to two characters'))\n        }\n        this.state.result += '-' + this.state.buf\n        this.state.buf = ''\n        return this.next(this.parseStartTimeHour)\n      } else if (this.atEndOfWord()) {\n        return this.returnNow(createDate(this.state.result + '-' + this.state.buf))\n      } else if (isDigit(this.char)) {\n        this.consume()\n      } else {\n        throw this.error(new TomlError('Incomplete datetime'))\n      }\n    }\n    parseStartTimeHour () {\n      if (this.atEndOfWord()) {\n        return this.returnNow(createDate(this.state.result))\n      } else {\n        return this.goto(this.parseTimeHour)\n      }\n    }\n    parseTimeHour () {\n      if (this.char === CHAR_COLON) {\n        if (this.state.buf.length < 2) {\n          throw this.error(new TomlError('Hours less than 10 must be zero padded to two characters'))\n        }\n        this.state.result += 'T' + this.state.buf\n        this.state.buf = ''\n        return this.next(this.parseTimeMin)\n      } else if (isDigit(this.char)) {\n        this.consume()\n      } else {\n        throw this.error(new TomlError('Incomplete datetime'))\n      }\n    }\n    parseTimeMin () {\n      if (this.state.buf.length < 2 && isDigit(this.char)) {\n        this.consume()\n      } else if (this.state.buf.length === 2 && this.char === CHAR_COLON) {\n        this.state.result += ':' + this.state.buf\n        this.state.buf = ''\n        return this.next(this.parseTimeSec)\n      } else {\n        throw this.error(new TomlError('Incomplete datetime'))\n      }\n    }\n    parseTimeSec () {\n      if (isDigit(this.char)) {\n        this.consume()\n        if (this.state.buf.length === 2) {\n          this.state.result += ':' + this.state.buf\n          this.state.buf = ''\n          return this.next(this.parseTimeZoneOrFraction)\n        }\n      } else {\n        throw this.error(new TomlError('Incomplete datetime'))\n      }\n    }\n\n    parseOnlyTimeHour () {\n      /* istanbul ignore else */\n      if (this.char === CHAR_COLON) {\n        if (this.state.buf.length < 2) {\n          throw this.error(new TomlError('Hours less than 10 must be zero padded to two characters'))\n        }\n        this.state.result = this.state.buf\n        this.state.buf = ''\n        return this.next(this.parseOnlyTimeMin)\n      } else {\n        throw this.error(new TomlError('Incomplete time'))\n      }\n    }\n    parseOnlyTimeMin () {\n      if (this.state.buf.length < 2 && isDigit(this.char)) {\n        this.consume()\n      } else if (this.state.buf.length === 2 && this.char === CHAR_COLON) {\n        this.state.result += ':' + this.state.buf\n        this.state.buf = ''\n        return this.next(this.parseOnlyTimeSec)\n      } else {\n        throw this.error(new TomlError('Incomplete time'))\n      }\n    }\n    parseOnlyTimeSec () {\n      if (isDigit(this.char)) {\n        this.consume()\n        if (this.state.buf.length === 2) {\n          return this.next(this.parseOnlyTimeFractionMaybe)\n        }\n      } else {\n        throw this.error(new TomlError('Incomplete time'))\n      }\n    }\n    parseOnlyTimeFractionMaybe () {\n      this.state.result += ':' + this.state.buf\n      if (this.char === CHAR_PERIOD) {\n        this.state.buf = ''\n        this.next(this.parseOnlyTimeFraction)\n      } else {\n        return this.return(createTime(this.state.result))\n      }\n    }\n    parseOnlyTimeFraction () {\n      if (isDigit(this.char)) {\n        this.consume()\n      } else if (this.atEndOfWord()) {\n        if (this.state.buf.length === 0) throw this.error(new TomlError('Expected digit in milliseconds'))\n        return this.returnNow(createTime(this.state.result + '.' + this.state.buf))\n      } else {\n        throw this.error(new TomlError('Unexpected character in datetime, expected period (.), minus (-), plus (+) or Z'))\n      }\n    }\n\n    parseTimeZoneOrFraction () {\n      if (this.char === CHAR_PERIOD) {\n        this.consume()\n        this.next(this.parseDateTimeFraction)\n      } else if (this.char === CHAR_HYPHEN || this.char === CHAR_PLUS) {\n        this.consume()\n        this.next(this.parseTimeZoneHour)\n      } else if (this.char === CHAR_Z) {\n        this.consume()\n        return this.return(createDateTime(this.state.result + this.state.buf))\n      } else if (this.atEndOfWord()) {\n        return this.returnNow(createDateTimeFloat(this.state.result + this.state.buf))\n      } else {\n        throw this.error(new TomlError('Unexpected character in datetime, expected period (.), minus (-), plus (+) or Z'))\n      }\n    }\n    parseDateTimeFraction () {\n      if (isDigit(this.char)) {\n        this.consume()\n      } else if (this.state.buf.length === 1) {\n        throw this.error(new TomlError('Expected digit in milliseconds'))\n      } else if (this.char === CHAR_HYPHEN || this.char === CHAR_PLUS) {\n        this.consume()\n        this.next(this.parseTimeZoneHour)\n      } else if (this.char === CHAR_Z) {\n        this.consume()\n        return this.return(createDateTime(this.state.result + this.state.buf))\n      } else if (this.atEndOfWord()) {\n        return this.returnNow(createDateTimeFloat(this.state.result + this.state.buf))\n      } else {\n        throw this.error(new TomlError('Unexpected character in datetime, expected period (.), minus (-), plus (+) or Z'))\n      }\n    }\n    parseTimeZoneHour () {\n      if (isDigit(this.char)) {\n        this.consume()\n        // FIXME: No more regexps\n        if (/\\d\\d$/.test(this.state.buf)) return this.next(this.parseTimeZoneSep)\n      } else {\n        throw this.error(new TomlError('Unexpected character in datetime, expected digit'))\n      }\n    }\n    parseTimeZoneSep () {\n      if (this.char === CHAR_COLON) {\n        this.consume()\n        this.next(this.parseTimeZoneMin)\n      } else {\n        throw this.error(new TomlError('Unexpected character in datetime, expected colon'))\n      }\n    }\n    parseTimeZoneMin () {\n      if (isDigit(this.char)) {\n        this.consume()\n        if (/\\d\\d$/.test(this.state.buf)) return this.return(createDateTime(this.state.result + this.state.buf))\n      } else {\n        throw this.error(new TomlError('Unexpected character in datetime, expected digit'))\n      }\n    }\n\n    /* BOOLEAN */\n    parseBoolean () {\n      /* istanbul ignore else */\n      if (this.char === CHAR_t) {\n        this.consume()\n        return this.next(this.parseTrue_r)\n      } else if (this.char === CHAR_f) {\n        this.consume()\n        return this.next(this.parseFalse_a)\n      }\n    }\n    parseTrue_r () {\n      if (this.char === CHAR_r) {\n        this.consume()\n        return this.next(this.parseTrue_u)\n      } else {\n        throw this.error(new TomlError('Invalid boolean, expected true or false'))\n      }\n    }\n    parseTrue_u () {\n      if (this.char === CHAR_u) {\n        this.consume()\n        return this.next(this.parseTrue_e)\n      } else {\n        throw this.error(new TomlError('Invalid boolean, expected true or false'))\n      }\n    }\n    parseTrue_e () {\n      if (this.char === CHAR_e) {\n        return this.return(true)\n      } else {\n        throw this.error(new TomlError('Invalid boolean, expected true or false'))\n      }\n    }\n\n    parseFalse_a () {\n      if (this.char === CHAR_a) {\n        this.consume()\n        return this.next(this.parseFalse_l)\n      } else {\n        throw this.error(new TomlError('Invalid boolean, expected true or false'))\n      }\n    }\n\n    parseFalse_l () {\n      if (this.char === CHAR_l) {\n        this.consume()\n        return this.next(this.parseFalse_s)\n      } else {\n        throw this.error(new TomlError('Invalid boolean, expected true or false'))\n      }\n    }\n\n    parseFalse_s () {\n      if (this.char === CHAR_s) {\n        this.consume()\n        return this.next(this.parseFalse_e)\n      } else {\n        throw this.error(new TomlError('Invalid boolean, expected true or false'))\n      }\n    }\n\n    parseFalse_e () {\n      if (this.char === CHAR_e) {\n        return this.return(false)\n      } else {\n        throw this.error(new TomlError('Invalid boolean, expected true or false'))\n      }\n    }\n\n    /* INLINE LISTS */\n    parseInlineList () {\n      if (this.char === CHAR_SP || this.char === CTRL_I || this.char === CTRL_M || this.char === CTRL_J) {\n        return null\n      } else if (this.char === Parser.END) {\n        throw this.error(new TomlError('Unterminated inline array'))\n      } else if (this.char === CHAR_NUM) {\n        return this.call(this.parseComment)\n      } else if (this.char === CHAR_RSQB) {\n        return this.return(this.state.resultArr || InlineList())\n      } else {\n        return this.callNow(this.parseValue, this.recordInlineListValue)\n      }\n    }\n    recordInlineListValue (value) {\n      if (this.state.resultArr) {\n        const listType = this.state.resultArr[_contentType]\n        const valueType = tomlType(value)\n        if (listType !== valueType) {\n          throw this.error(new TomlError(`Inline lists must be a single type, not a mix of ${listType} and ${valueType}`))\n        }\n      } else {\n        this.state.resultArr = InlineList(tomlType(value))\n      }\n      if (isFloat(value) || isInteger(value)) {\n        // unbox now that we've verified they're ok\n        this.state.resultArr.push(value.valueOf())\n      } else {\n        this.state.resultArr.push(value)\n      }\n      return this.goto(this.parseInlineListNext)\n    }\n    parseInlineListNext () {\n      if (this.char === CHAR_SP || this.char === CTRL_I || this.char === CTRL_M || this.char === CTRL_J) {\n        return null\n      } else if (this.char === CHAR_NUM) {\n        return this.call(this.parseComment)\n      } else if (this.char === CHAR_COMMA) {\n        return this.next(this.parseInlineList)\n      } else if (this.char === CHAR_RSQB) {\n        return this.goto(this.parseInlineList)\n      } else {\n        throw this.error(new TomlError('Invalid character, expected whitespace, comma (,) or close bracket (])'))\n      }\n    }\n\n    /* INLINE TABLE */\n    parseInlineTable () {\n      if (this.char === CHAR_SP || this.char === CTRL_I) {\n        return null\n      } else if (this.char === Parser.END || this.char === CHAR_NUM || this.char === CTRL_J || this.char === CTRL_M) {\n        throw this.error(new TomlError('Unterminated inline array'))\n      } else if (this.char === CHAR_RCUB) {\n        return this.return(this.state.resultTable || InlineTable())\n      } else {\n        if (!this.state.resultTable) this.state.resultTable = InlineTable()\n        return this.callNow(this.parseAssign, this.recordInlineTableValue)\n      }\n    }\n    recordInlineTableValue (kv) {\n      let target = this.state.resultTable\n      let finalKey = kv.key.pop()\n      for (let kw of kv.key) {\n        if (hasKey(target, kw) && (!isTable(target[kw]) || target[kw][_declared])) {\n          throw this.error(new TomlError(\"Can't redefine existing key\"))\n        }\n        target = target[kw] = target[kw] || Table()\n      }\n      if (hasKey(target, finalKey)) {\n        throw this.error(new TomlError(\"Can't redefine existing key\"))\n      }\n      if (isInteger(kv.value) || isFloat(kv.value)) {\n        target[finalKey] = kv.value.valueOf()\n      } else {\n        target[finalKey] = kv.value\n      }\n      return this.goto(this.parseInlineTableNext)\n    }\n    parseInlineTableNext () {\n      if (this.char === CHAR_SP || this.char === CTRL_I) {\n        return null\n      } else if (this.char === Parser.END || this.char === CHAR_NUM || this.char === CTRL_J || this.char === CTRL_M) {\n        throw this.error(new TomlError('Unterminated inline array'))\n      } else if (this.char === CHAR_COMMA) {\n        return this.next(this.parseInlineTable)\n      } else if (this.char === CHAR_RCUB) {\n        return this.goto(this.parseInlineTable)\n      } else {\n        throw this.error(new TomlError('Invalid character, expected whitespace, comma (,) or close bracket (])'))\n      }\n    }\n  }\n  return TOMLParser\n}\n\n\n//# sourceURL=webpack://toml-editor/./node_modules/@iarna/toml/lib/toml-parser.js?");
 
 /***/ }),
 
-/***/ 2864:
-/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+/***/ "./node_modules/@iarna/toml/parse-async.js":
+/*!*************************************************!*\
+  !*** ./node_modules/@iarna/toml/parse-async.js ***!
+  \*************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
-
-module.exports = parseAsync
-
-const TOMLParser = __nccwpck_require__(7861)
-const prettyError = __nccwpck_require__(6129)
-
-function parseAsync (str, opts) {
-  if (!opts) opts = {}
-  const index = 0
-  const blocksize = opts.blocksize || 40960
-  const parser = new TOMLParser()
-  return new Promise((resolve, reject) => {
-    setImmediate(parseAsyncNext, index, blocksize, resolve, reject)
-  })
-  function parseAsyncNext (index, blocksize, resolve, reject) {
-    if (index >= str.length) {
-      try {
-        return resolve(parser.finish())
-      } catch (err) {
-        return reject(prettyError(err, str))
-      }
-    }
-    try {
-      parser.parse(str.slice(index, index + blocksize))
-      setImmediate(parseAsyncNext, index + blocksize, blocksize, resolve, reject)
-    } catch (err) {
-      reject(prettyError(err, str))
-    }
-  }
-}
-
+eval("\nmodule.exports = parseAsync\n\nconst TOMLParser = __webpack_require__(/*! ./lib/toml-parser.js */ \"./node_modules/@iarna/toml/lib/toml-parser.js\")\nconst prettyError = __webpack_require__(/*! ./parse-pretty-error.js */ \"./node_modules/@iarna/toml/parse-pretty-error.js\")\n\nfunction parseAsync (str, opts) {\n  if (!opts) opts = {}\n  const index = 0\n  const blocksize = opts.blocksize || 40960\n  const parser = new TOMLParser()\n  return new Promise((resolve, reject) => {\n    setImmediate(parseAsyncNext, index, blocksize, resolve, reject)\n  })\n  function parseAsyncNext (index, blocksize, resolve, reject) {\n    if (index >= str.length) {\n      try {\n        return resolve(parser.finish())\n      } catch (err) {\n        return reject(prettyError(err, str))\n      }\n    }\n    try {\n      parser.parse(str.slice(index, index + blocksize))\n      setImmediate(parseAsyncNext, index + blocksize, blocksize, resolve, reject)\n    } catch (err) {\n      reject(prettyError(err, str))\n    }\n  }\n}\n\n\n//# sourceURL=webpack://toml-editor/./node_modules/@iarna/toml/parse-async.js?");
 
 /***/ }),
 
-/***/ 6129:
+/***/ "./node_modules/@iarna/toml/parse-pretty-error.js":
+/*!********************************************************!*\
+  !*** ./node_modules/@iarna/toml/parse-pretty-error.js ***!
+  \********************************************************/
 /***/ ((module) => {
 
 "use strict";
-
-module.exports = prettyError
-
-function prettyError (err, buf) {
-  /* istanbul ignore if */
-  if (err.pos == null || err.line == null) return err
-  let msg = err.message
-  msg += ` at row ${err.line + 1}, col ${err.col + 1}, pos ${err.pos}:\n`
-
-  /* istanbul ignore else */
-  if (buf && buf.split) {
-    const lines = buf.split(/\n/)
-    const lineNumWidth = String(Math.min(lines.length, err.line + 3)).length
-    let linePadding = ' '
-    while (linePadding.length < lineNumWidth) linePadding += ' '
-    for (let ii = Math.max(0, err.line - 1); ii < Math.min(lines.length, err.line + 2); ++ii) {
-      let lineNum = String(ii + 1)
-      if (lineNum.length < lineNumWidth) lineNum = ' ' + lineNum
-      if (err.line === ii) {
-        msg += lineNum + '> ' + lines[ii] + '\n'
-        msg += linePadding + '  '
-        for (let hh = 0; hh < err.col; ++hh) {
-          msg += ' '
-        }
-        msg += '^\n'
-      } else {
-        msg += lineNum + ': ' + lines[ii] + '\n'
-      }
-    }
-  }
-  err.message = msg + '\n'
-  return err
-}
-
+eval("\nmodule.exports = prettyError\n\nfunction prettyError (err, buf) {\n  /* istanbul ignore if */\n  if (err.pos == null || err.line == null) return err\n  let msg = err.message\n  msg += ` at row ${err.line + 1}, col ${err.col + 1}, pos ${err.pos}:\\n`\n\n  /* istanbul ignore else */\n  if (buf && buf.split) {\n    const lines = buf.split(/\\n/)\n    const lineNumWidth = String(Math.min(lines.length, err.line + 3)).length\n    let linePadding = ' '\n    while (linePadding.length < lineNumWidth) linePadding += ' '\n    for (let ii = Math.max(0, err.line - 1); ii < Math.min(lines.length, err.line + 2); ++ii) {\n      let lineNum = String(ii + 1)\n      if (lineNum.length < lineNumWidth) lineNum = ' ' + lineNum\n      if (err.line === ii) {\n        msg += lineNum + '> ' + lines[ii] + '\\n'\n        msg += linePadding + '  '\n        for (let hh = 0; hh < err.col; ++hh) {\n          msg += ' '\n        }\n        msg += '^\\n'\n      } else {\n        msg += lineNum + ': ' + lines[ii] + '\\n'\n      }\n    }\n  }\n  err.message = msg + '\\n'\n  return err\n}\n\n\n//# sourceURL=webpack://toml-editor/./node_modules/@iarna/toml/parse-pretty-error.js?");
 
 /***/ }),
 
-/***/ 8649:
-/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+/***/ "./node_modules/@iarna/toml/parse-stream.js":
+/*!**************************************************!*\
+  !*** ./node_modules/@iarna/toml/parse-stream.js ***!
+  \**************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
-
-module.exports = parseStream
-
-const stream = __nccwpck_require__(2781)
-const TOMLParser = __nccwpck_require__(7861)
-
-function parseStream (stm) {
-  if (stm) {
-    return parseReadable(stm)
-  } else {
-    return parseTransform(stm)
-  }
-}
-
-function parseReadable (stm) {
-  const parser = new TOMLParser()
-  stm.setEncoding('utf8')
-  return new Promise((resolve, reject) => {
-    let readable
-    let ended = false
-    let errored = false
-    function finish () {
-      ended = true
-      if (readable) return
-      try {
-        resolve(parser.finish())
-      } catch (err) {
-        reject(err)
-      }
-    }
-    function error (err) {
-      errored = true
-      reject(err)
-    }
-    stm.once('end', finish)
-    stm.once('error', error)
-    readNext()
-
-    function readNext () {
-      readable = true
-      let data
-      while ((data = stm.read()) !== null) {
-        try {
-          parser.parse(data)
-        } catch (err) {
-          return error(err)
-        }
-      }
-      readable = false
-      /* istanbul ignore if */
-      if (ended) return finish()
-      /* istanbul ignore if */
-      if (errored) return
-      stm.once('readable', readNext)
-    }
-  })
-}
-
-function parseTransform () {
-  const parser = new TOMLParser()
-  return new stream.Transform({
-    objectMode: true,
-    transform (chunk, encoding, cb) {
-      try {
-        parser.parse(chunk.toString(encoding))
-      } catch (err) {
-        this.emit('error', err)
-      }
-      cb()
-    },
-    flush (cb) {
-      try {
-        this.push(parser.finish())
-      } catch (err) {
-        this.emit('error', err)
-      }
-      cb()
-    }
-  })
-}
-
+eval("\nmodule.exports = parseStream\n\nconst stream = __webpack_require__(/*! stream */ \"stream\")\nconst TOMLParser = __webpack_require__(/*! ./lib/toml-parser.js */ \"./node_modules/@iarna/toml/lib/toml-parser.js\")\n\nfunction parseStream (stm) {\n  if (stm) {\n    return parseReadable(stm)\n  } else {\n    return parseTransform(stm)\n  }\n}\n\nfunction parseReadable (stm) {\n  const parser = new TOMLParser()\n  stm.setEncoding('utf8')\n  return new Promise((resolve, reject) => {\n    let readable\n    let ended = false\n    let errored = false\n    function finish () {\n      ended = true\n      if (readable) return\n      try {\n        resolve(parser.finish())\n      } catch (err) {\n        reject(err)\n      }\n    }\n    function error (err) {\n      errored = true\n      reject(err)\n    }\n    stm.once('end', finish)\n    stm.once('error', error)\n    readNext()\n\n    function readNext () {\n      readable = true\n      let data\n      while ((data = stm.read()) !== null) {\n        try {\n          parser.parse(data)\n        } catch (err) {\n          return error(err)\n        }\n      }\n      readable = false\n      /* istanbul ignore if */\n      if (ended) return finish()\n      /* istanbul ignore if */\n      if (errored) return\n      stm.once('readable', readNext)\n    }\n  })\n}\n\nfunction parseTransform () {\n  const parser = new TOMLParser()\n  return new stream.Transform({\n    objectMode: true,\n    transform (chunk, encoding, cb) {\n      try {\n        parser.parse(chunk.toString(encoding))\n      } catch (err) {\n        this.emit('error', err)\n      }\n      cb()\n    },\n    flush (cb) {\n      try {\n        this.push(parser.finish())\n      } catch (err) {\n        this.emit('error', err)\n      }\n      cb()\n    }\n  })\n}\n\n\n//# sourceURL=webpack://toml-editor/./node_modules/@iarna/toml/parse-stream.js?");
 
 /***/ }),
 
-/***/ 1505:
-/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+/***/ "./node_modules/@iarna/toml/parse-string.js":
+/*!**************************************************!*\
+  !*** ./node_modules/@iarna/toml/parse-string.js ***!
+  \**************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
-
-module.exports = parseString
-
-const TOMLParser = __nccwpck_require__(7861)
-const prettyError = __nccwpck_require__(6129)
-
-function parseString (str) {
-  if (global.Buffer && global.Buffer.isBuffer(str)) {
-    str = str.toString('utf8')
-  }
-  const parser = new TOMLParser()
-  try {
-    parser.parse(str)
-    return parser.finish()
-  } catch (err) {
-    throw prettyError(err, str)
-  }
-}
-
+eval("\nmodule.exports = parseString\n\nconst TOMLParser = __webpack_require__(/*! ./lib/toml-parser.js */ \"./node_modules/@iarna/toml/lib/toml-parser.js\")\nconst prettyError = __webpack_require__(/*! ./parse-pretty-error.js */ \"./node_modules/@iarna/toml/parse-pretty-error.js\")\n\nfunction parseString (str) {\n  if (global.Buffer && global.Buffer.isBuffer(str)) {\n    str = str.toString('utf8')\n  }\n  const parser = new TOMLParser()\n  try {\n    parser.parse(str)\n    return parser.finish()\n  } catch (err) {\n    throw prettyError(err, str)\n  }\n}\n\n\n//# sourceURL=webpack://toml-editor/./node_modules/@iarna/toml/parse-string.js?");
 
 /***/ }),
 
-/***/ 9859:
-/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+/***/ "./node_modules/@iarna/toml/parse.js":
+/*!*******************************************!*\
+  !*** ./node_modules/@iarna/toml/parse.js ***!
+  \*******************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
-
-module.exports = __nccwpck_require__(1505)
-module.exports.async = __nccwpck_require__(2864)
-module.exports.stream = __nccwpck_require__(8649)
-module.exports.prettyError = __nccwpck_require__(6129)
-
+eval("\nmodule.exports = __webpack_require__(/*! ./parse-string.js */ \"./node_modules/@iarna/toml/parse-string.js\")\nmodule.exports.async = __webpack_require__(/*! ./parse-async.js */ \"./node_modules/@iarna/toml/parse-async.js\")\nmodule.exports.stream = __webpack_require__(/*! ./parse-stream.js */ \"./node_modules/@iarna/toml/parse-stream.js\")\nmodule.exports.prettyError = __webpack_require__(/*! ./parse-pretty-error.js */ \"./node_modules/@iarna/toml/parse-pretty-error.js\")\n\n\n//# sourceURL=webpack://toml-editor/./node_modules/@iarna/toml/parse.js?");
 
 /***/ }),
 
-/***/ 3845:
+/***/ "./node_modules/@iarna/toml/stringify.js":
+/*!***********************************************!*\
+  !*** ./node_modules/@iarna/toml/stringify.js ***!
+  \***********************************************/
 /***/ ((module) => {
 
 "use strict";
-
-module.exports = stringify
-module.exports.value = stringifyInline
-
-function stringify (obj) {
-  if (obj === null) throw typeError('null')
-  if (obj === void (0)) throw typeError('undefined')
-  if (typeof obj !== 'object') throw typeError(typeof obj)
-
-  if (typeof obj.toJSON === 'function') obj = obj.toJSON()
-  if (obj == null) return null
-  const type = tomlType(obj)
-  if (type !== 'table') throw typeError(type)
-  return stringifyObject('', '', obj)
-}
-
-function typeError (type) {
-  return new Error('Can only stringify objects, not ' + type)
-}
-
-function arrayOneTypeError () {
-  return new Error("Array values can't have mixed types")
-}
-
-function getInlineKeys (obj) {
-  return Object.keys(obj).filter(key => isInline(obj[key]))
-}
-function getComplexKeys (obj) {
-  return Object.keys(obj).filter(key => !isInline(obj[key]))
-}
-
-function toJSON (obj) {
-  let nobj = Array.isArray(obj) ? [] : Object.prototype.hasOwnProperty.call(obj, '__proto__') ? {['__proto__']: undefined} : {}
-  for (let prop of Object.keys(obj)) {
-    if (obj[prop] && typeof obj[prop].toJSON === 'function' && !('toISOString' in obj[prop])) {
-      nobj[prop] = obj[prop].toJSON()
-    } else {
-      nobj[prop] = obj[prop]
-    }
-  }
-  return nobj
-}
-
-function stringifyObject (prefix, indent, obj) {
-  obj = toJSON(obj)
-  var inlineKeys
-  var complexKeys
-  inlineKeys = getInlineKeys(obj)
-  complexKeys = getComplexKeys(obj)
-  var result = []
-  var inlineIndent = indent || ''
-  inlineKeys.forEach(key => {
-    var type = tomlType(obj[key])
-    if (type !== 'undefined' && type !== 'null') {
-      result.push(inlineIndent + stringifyKey(key) + ' = ' + stringifyAnyInline(obj[key], true))
-    }
-  })
-  if (result.length > 0) result.push('')
-  var complexIndent = prefix && inlineKeys.length > 0 ? indent + '  ' : ''
-  complexKeys.forEach(key => {
-    result.push(stringifyComplex(prefix, complexIndent, key, obj[key]))
-  })
-  return result.join('\n')
-}
-
-function isInline (value) {
-  switch (tomlType(value)) {
-    case 'undefined':
-    case 'null':
-    case 'integer':
-    case 'nan':
-    case 'float':
-    case 'boolean':
-    case 'string':
-    case 'datetime':
-      return true
-    case 'array':
-      return value.length === 0 || tomlType(value[0]) !== 'table'
-    case 'table':
-      return Object.keys(value).length === 0
-    /* istanbul ignore next */
-    default:
-      return false
-  }
-}
-
-function tomlType (value) {
-  if (value === undefined) {
-    return 'undefined'
-  } else if (value === null) {
-    return 'null'
-  /* eslint-disable valid-typeof */
-  } else if (typeof value === 'bigint' || (Number.isInteger(value) && !Object.is(value, -0))) {
-    return 'integer'
-  } else if (typeof value === 'number') {
-    return 'float'
-  } else if (typeof value === 'boolean') {
-    return 'boolean'
-  } else if (typeof value === 'string') {
-    return 'string'
-  } else if ('toISOString' in value) {
-    return isNaN(value) ? 'undefined' : 'datetime'
-  } else if (Array.isArray(value)) {
-    return 'array'
-  } else {
-    return 'table'
-  }
-}
-
-function stringifyKey (key) {
-  var keyStr = String(key)
-  if (/^[-A-Za-z0-9_]+$/.test(keyStr)) {
-    return keyStr
-  } else {
-    return stringifyBasicString(keyStr)
-  }
-}
-
-function stringifyBasicString (str) {
-  return '"' + escapeString(str).replace(/"/g, '\\"') + '"'
-}
-
-function stringifyLiteralString (str) {
-  return "'" + str + "'"
-}
-
-function numpad (num, str) {
-  while (str.length < num) str = '0' + str
-  return str
-}
-
-function escapeString (str) {
-  return str.replace(/\\/g, '\\\\')
-    .replace(/[\b]/g, '\\b')
-    .replace(/\t/g, '\\t')
-    .replace(/\n/g, '\\n')
-    .replace(/\f/g, '\\f')
-    .replace(/\r/g, '\\r')
-    /* eslint-disable no-control-regex */
-    .replace(/([\u0000-\u001f\u007f])/, c => '\\u' + numpad(4, c.codePointAt(0).toString(16)))
-    /* eslint-enable no-control-regex */
-}
-
-function stringifyMultilineString (str) {
-  let escaped = str.split(/\n/).map(str => {
-    return escapeString(str).replace(/"(?="")/g, '\\"')
-  }).join('\n')
-  if (escaped.slice(-1) === '"') escaped += '\\\n'
-  return '"""\n' + escaped + '"""'
-}
-
-function stringifyAnyInline (value, multilineOk) {
-  let type = tomlType(value)
-  if (type === 'string') {
-    if (multilineOk && /\n/.test(value)) {
-      type = 'string-multiline'
-    } else if (!/[\b\t\n\f\r']/.test(value) && /"/.test(value)) {
-      type = 'string-literal'
-    }
-  }
-  return stringifyInline(value, type)
-}
-
-function stringifyInline (value, type) {
-  /* istanbul ignore if */
-  if (!type) type = tomlType(value)
-  switch (type) {
-    case 'string-multiline':
-      return stringifyMultilineString(value)
-    case 'string':
-      return stringifyBasicString(value)
-    case 'string-literal':
-      return stringifyLiteralString(value)
-    case 'integer':
-      return stringifyInteger(value)
-    case 'float':
-      return stringifyFloat(value)
-    case 'boolean':
-      return stringifyBoolean(value)
-    case 'datetime':
-      return stringifyDatetime(value)
-    case 'array':
-      return stringifyInlineArray(value.filter(_ => tomlType(_) !== 'null' && tomlType(_) !== 'undefined' && tomlType(_) !== 'nan'))
-    case 'table':
-      return stringifyInlineTable(value)
-    /* istanbul ignore next */
-    default:
-      throw typeError(type)
-  }
-}
-
-function stringifyInteger (value) {
-  /* eslint-disable security/detect-unsafe-regex */
-  return String(value).replace(/\B(?=(\d{3})+(?!\d))/g, '_')
-}
-
-function stringifyFloat (value) {
-  if (value === Infinity) {
-    return 'inf'
-  } else if (value === -Infinity) {
-    return '-inf'
-  } else if (Object.is(value, NaN)) {
-    return 'nan'
-  } else if (Object.is(value, -0)) {
-    return '-0.0'
-  }
-  var chunks = String(value).split('.')
-  var int = chunks[0]
-  var dec = chunks[1] || 0
-  return stringifyInteger(int) + '.' + dec
-}
-
-function stringifyBoolean (value) {
-  return String(value)
-}
-
-function stringifyDatetime (value) {
-  return value.toISOString()
-}
-
-function isNumber (type) {
-  return type === 'float' || type === 'integer'
-}
-function arrayType (values) {
-  var contentType = tomlType(values[0])
-  if (values.every(_ => tomlType(_) === contentType)) return contentType
-  // mixed integer/float, emit as floats
-  if (values.every(_ => isNumber(tomlType(_)))) return 'float'
-  return 'mixed'
-}
-function validateArray (values) {
-  const type = arrayType(values)
-  if (type === 'mixed') {
-    throw arrayOneTypeError()
-  }
-  return type
-}
-
-function stringifyInlineArray (values) {
-  values = toJSON(values)
-  const type = validateArray(values)
-  var result = '['
-  var stringified = values.map(_ => stringifyInline(_, type))
-  if (stringified.join(', ').length > 60 || /\n/.test(stringified)) {
-    result += '\n  ' + stringified.join(',\n  ') + '\n'
-  } else {
-    result += ' ' + stringified.join(', ') + (stringified.length > 0 ? ' ' : '')
-  }
-  return result + ']'
-}
-
-function stringifyInlineTable (value) {
-  value = toJSON(value)
-  var result = []
-  Object.keys(value).forEach(key => {
-    result.push(stringifyKey(key) + ' = ' + stringifyAnyInline(value[key], false))
-  })
-  return '{ ' + result.join(', ') + (result.length > 0 ? ' ' : '') + '}'
-}
-
-function stringifyComplex (prefix, indent, key, value) {
-  var valueType = tomlType(value)
-  /* istanbul ignore else */
-  if (valueType === 'array') {
-    return stringifyArrayOfTables(prefix, indent, key, value)
-  } else if (valueType === 'table') {
-    return stringifyComplexTable(prefix, indent, key, value)
-  } else {
-    throw typeError(valueType)
-  }
-}
-
-function stringifyArrayOfTables (prefix, indent, key, values) {
-  values = toJSON(values)
-  validateArray(values)
-  var firstValueType = tomlType(values[0])
-  /* istanbul ignore if */
-  if (firstValueType !== 'table') throw typeError(firstValueType)
-  var fullKey = prefix + stringifyKey(key)
-  var result = ''
-  values.forEach(table => {
-    if (result.length > 0) result += '\n'
-    result += indent + '[[' + fullKey + ']]\n'
-    result += stringifyObject(fullKey + '.', indent, table)
-  })
-  return result
-}
-
-function stringifyComplexTable (prefix, indent, key, value) {
-  var fullKey = prefix + stringifyKey(key)
-  var result = ''
-  if (getInlineKeys(value).length > 0) {
-    result += indent + '[' + fullKey + ']\n'
-  }
-  return result + stringifyObject(fullKey + '.', indent, value)
-}
-
+eval("\nmodule.exports = stringify\nmodule.exports.value = stringifyInline\n\nfunction stringify (obj) {\n  if (obj === null) throw typeError('null')\n  if (obj === void (0)) throw typeError('undefined')\n  if (typeof obj !== 'object') throw typeError(typeof obj)\n\n  if (typeof obj.toJSON === 'function') obj = obj.toJSON()\n  if (obj == null) return null\n  const type = tomlType(obj)\n  if (type !== 'table') throw typeError(type)\n  return stringifyObject('', '', obj)\n}\n\nfunction typeError (type) {\n  return new Error('Can only stringify objects, not ' + type)\n}\n\nfunction arrayOneTypeError () {\n  return new Error(\"Array values can't have mixed types\")\n}\n\nfunction getInlineKeys (obj) {\n  return Object.keys(obj).filter(key => isInline(obj[key]))\n}\nfunction getComplexKeys (obj) {\n  return Object.keys(obj).filter(key => !isInline(obj[key]))\n}\n\nfunction toJSON (obj) {\n  let nobj = Array.isArray(obj) ? [] : Object.prototype.hasOwnProperty.call(obj, '__proto__') ? {['__proto__']: undefined} : {}\n  for (let prop of Object.keys(obj)) {\n    if (obj[prop] && typeof obj[prop].toJSON === 'function' && !('toISOString' in obj[prop])) {\n      nobj[prop] = obj[prop].toJSON()\n    } else {\n      nobj[prop] = obj[prop]\n    }\n  }\n  return nobj\n}\n\nfunction stringifyObject (prefix, indent, obj) {\n  obj = toJSON(obj)\n  var inlineKeys\n  var complexKeys\n  inlineKeys = getInlineKeys(obj)\n  complexKeys = getComplexKeys(obj)\n  var result = []\n  var inlineIndent = indent || ''\n  inlineKeys.forEach(key => {\n    var type = tomlType(obj[key])\n    if (type !== 'undefined' && type !== 'null') {\n      result.push(inlineIndent + stringifyKey(key) + ' = ' + stringifyAnyInline(obj[key], true))\n    }\n  })\n  if (result.length > 0) result.push('')\n  var complexIndent = prefix && inlineKeys.length > 0 ? indent + '  ' : ''\n  complexKeys.forEach(key => {\n    result.push(stringifyComplex(prefix, complexIndent, key, obj[key]))\n  })\n  return result.join('\\n')\n}\n\nfunction isInline (value) {\n  switch (tomlType(value)) {\n    case 'undefined':\n    case 'null':\n    case 'integer':\n    case 'nan':\n    case 'float':\n    case 'boolean':\n    case 'string':\n    case 'datetime':\n      return true\n    case 'array':\n      return value.length === 0 || tomlType(value[0]) !== 'table'\n    case 'table':\n      return Object.keys(value).length === 0\n    /* istanbul ignore next */\n    default:\n      return false\n  }\n}\n\nfunction tomlType (value) {\n  if (value === undefined) {\n    return 'undefined'\n  } else if (value === null) {\n    return 'null'\n  /* eslint-disable valid-typeof */\n  } else if (typeof value === 'bigint' || (Number.isInteger(value) && !Object.is(value, -0))) {\n    return 'integer'\n  } else if (typeof value === 'number') {\n    return 'float'\n  } else if (typeof value === 'boolean') {\n    return 'boolean'\n  } else if (typeof value === 'string') {\n    return 'string'\n  } else if ('toISOString' in value) {\n    return isNaN(value) ? 'undefined' : 'datetime'\n  } else if (Array.isArray(value)) {\n    return 'array'\n  } else {\n    return 'table'\n  }\n}\n\nfunction stringifyKey (key) {\n  var keyStr = String(key)\n  if (/^[-A-Za-z0-9_]+$/.test(keyStr)) {\n    return keyStr\n  } else {\n    return stringifyBasicString(keyStr)\n  }\n}\n\nfunction stringifyBasicString (str) {\n  return '\"' + escapeString(str).replace(/\"/g, '\\\\\"') + '\"'\n}\n\nfunction stringifyLiteralString (str) {\n  return \"'\" + str + \"'\"\n}\n\nfunction numpad (num, str) {\n  while (str.length < num) str = '0' + str\n  return str\n}\n\nfunction escapeString (str) {\n  return str.replace(/\\\\/g, '\\\\\\\\')\n    .replace(/[\\b]/g, '\\\\b')\n    .replace(/\\t/g, '\\\\t')\n    .replace(/\\n/g, '\\\\n')\n    .replace(/\\f/g, '\\\\f')\n    .replace(/\\r/g, '\\\\r')\n    /* eslint-disable no-control-regex */\n    .replace(/([\\u0000-\\u001f\\u007f])/, c => '\\\\u' + numpad(4, c.codePointAt(0).toString(16)))\n    /* eslint-enable no-control-regex */\n}\n\nfunction stringifyMultilineString (str) {\n  let escaped = str.split(/\\n/).map(str => {\n    return escapeString(str).replace(/\"(?=\"\")/g, '\\\\\"')\n  }).join('\\n')\n  if (escaped.slice(-1) === '\"') escaped += '\\\\\\n'\n  return '\"\"\"\\n' + escaped + '\"\"\"'\n}\n\nfunction stringifyAnyInline (value, multilineOk) {\n  let type = tomlType(value)\n  if (type === 'string') {\n    if (multilineOk && /\\n/.test(value)) {\n      type = 'string-multiline'\n    } else if (!/[\\b\\t\\n\\f\\r']/.test(value) && /\"/.test(value)) {\n      type = 'string-literal'\n    }\n  }\n  return stringifyInline(value, type)\n}\n\nfunction stringifyInline (value, type) {\n  /* istanbul ignore if */\n  if (!type) type = tomlType(value)\n  switch (type) {\n    case 'string-multiline':\n      return stringifyMultilineString(value)\n    case 'string':\n      return stringifyBasicString(value)\n    case 'string-literal':\n      return stringifyLiteralString(value)\n    case 'integer':\n      return stringifyInteger(value)\n    case 'float':\n      return stringifyFloat(value)\n    case 'boolean':\n      return stringifyBoolean(value)\n    case 'datetime':\n      return stringifyDatetime(value)\n    case 'array':\n      return stringifyInlineArray(value.filter(_ => tomlType(_) !== 'null' && tomlType(_) !== 'undefined' && tomlType(_) !== 'nan'))\n    case 'table':\n      return stringifyInlineTable(value)\n    /* istanbul ignore next */\n    default:\n      throw typeError(type)\n  }\n}\n\nfunction stringifyInteger (value) {\n  /* eslint-disable security/detect-unsafe-regex */\n  return String(value).replace(/\\B(?=(\\d{3})+(?!\\d))/g, '_')\n}\n\nfunction stringifyFloat (value) {\n  if (value === Infinity) {\n    return 'inf'\n  } else if (value === -Infinity) {\n    return '-inf'\n  } else if (Object.is(value, NaN)) {\n    return 'nan'\n  } else if (Object.is(value, -0)) {\n    return '-0.0'\n  }\n  var chunks = String(value).split('.')\n  var int = chunks[0]\n  var dec = chunks[1] || 0\n  return stringifyInteger(int) + '.' + dec\n}\n\nfunction stringifyBoolean (value) {\n  return String(value)\n}\n\nfunction stringifyDatetime (value) {\n  return value.toISOString()\n}\n\nfunction isNumber (type) {\n  return type === 'float' || type === 'integer'\n}\nfunction arrayType (values) {\n  var contentType = tomlType(values[0])\n  if (values.every(_ => tomlType(_) === contentType)) return contentType\n  // mixed integer/float, emit as floats\n  if (values.every(_ => isNumber(tomlType(_)))) return 'float'\n  return 'mixed'\n}\nfunction validateArray (values) {\n  const type = arrayType(values)\n  if (type === 'mixed') {\n    throw arrayOneTypeError()\n  }\n  return type\n}\n\nfunction stringifyInlineArray (values) {\n  values = toJSON(values)\n  const type = validateArray(values)\n  var result = '['\n  var stringified = values.map(_ => stringifyInline(_, type))\n  if (stringified.join(', ').length > 60 || /\\n/.test(stringified)) {\n    result += '\\n  ' + stringified.join(',\\n  ') + '\\n'\n  } else {\n    result += ' ' + stringified.join(', ') + (stringified.length > 0 ? ' ' : '')\n  }\n  return result + ']'\n}\n\nfunction stringifyInlineTable (value) {\n  value = toJSON(value)\n  var result = []\n  Object.keys(value).forEach(key => {\n    result.push(stringifyKey(key) + ' = ' + stringifyAnyInline(value[key], false))\n  })\n  return '{ ' + result.join(', ') + (result.length > 0 ? ' ' : '') + '}'\n}\n\nfunction stringifyComplex (prefix, indent, key, value) {\n  var valueType = tomlType(value)\n  /* istanbul ignore else */\n  if (valueType === 'array') {\n    return stringifyArrayOfTables(prefix, indent, key, value)\n  } else if (valueType === 'table') {\n    return stringifyComplexTable(prefix, indent, key, value)\n  } else {\n    throw typeError(valueType)\n  }\n}\n\nfunction stringifyArrayOfTables (prefix, indent, key, values) {\n  values = toJSON(values)\n  validateArray(values)\n  var firstValueType = tomlType(values[0])\n  /* istanbul ignore if */\n  if (firstValueType !== 'table') throw typeError(firstValueType)\n  var fullKey = prefix + stringifyKey(key)\n  var result = ''\n  values.forEach(table => {\n    if (result.length > 0) result += '\\n'\n    result += indent + '[[' + fullKey + ']]\\n'\n    result += stringifyObject(fullKey + '.', indent, table)\n  })\n  return result\n}\n\nfunction stringifyComplexTable (prefix, indent, key, value) {\n  var fullKey = prefix + stringifyKey(key)\n  var result = ''\n  if (getInlineKeys(value).length > 0) {\n    result += indent + '[' + fullKey + ']\\n'\n  }\n  return result + stringifyObject(fullKey + '.', indent, value)\n}\n\n\n//# sourceURL=webpack://toml-editor/./node_modules/@iarna/toml/stringify.js?");
 
 /***/ }),
 
-/***/ 2521:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+/***/ "./node_modules/@iarna/toml/toml.js":
+/*!******************************************!*\
+  !*** ./node_modules/@iarna/toml/toml.js ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
-
-exports.parse = __nccwpck_require__(9859)
-exports.stringify = __nccwpck_require__(3845)
-
+eval("\nexports.parse = __webpack_require__(/*! ./parse.js */ \"./node_modules/@iarna/toml/parse.js\")\nexports.stringify = __webpack_require__(/*! ./stringify.js */ \"./node_modules/@iarna/toml/stringify.js\")\n\n\n//# sourceURL=webpack://toml-editor/./node_modules/@iarna/toml/toml.js?");
 
 /***/ }),
 
-/***/ 586:
-/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+/***/ "./node_modules/tunnel/index.js":
+/*!**************************************!*\
+  !*** ./node_modules/tunnel/index.js ***!
+  \**************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-module.exports = __nccwpck_require__(8526);
-
+eval("module.exports = __webpack_require__(/*! ./lib/tunnel */ \"./node_modules/tunnel/lib/tunnel.js\");\n\n\n//# sourceURL=webpack://toml-editor/./node_modules/tunnel/index.js?");
 
 /***/ }),
 
-/***/ 8526:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+/***/ "./node_modules/tunnel/lib/tunnel.js":
+/*!*******************************************!*\
+  !*** ./node_modules/tunnel/lib/tunnel.js ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
-
-
-var net = __nccwpck_require__(1808);
-var tls = __nccwpck_require__(4404);
-var http = __nccwpck_require__(3685);
-var https = __nccwpck_require__(5687);
-var events = __nccwpck_require__(2361);
-var assert = __nccwpck_require__(9491);
-var util = __nccwpck_require__(3837);
-
-
-exports.httpOverHttp = httpOverHttp;
-exports.httpsOverHttp = httpsOverHttp;
-exports.httpOverHttps = httpOverHttps;
-exports.httpsOverHttps = httpsOverHttps;
-
-
-function httpOverHttp(options) {
-  var agent = new TunnelingAgent(options);
-  agent.request = http.request;
-  return agent;
-}
-
-function httpsOverHttp(options) {
-  var agent = new TunnelingAgent(options);
-  agent.request = http.request;
-  agent.createSocket = createSecureSocket;
-  agent.defaultPort = 443;
-  return agent;
-}
-
-function httpOverHttps(options) {
-  var agent = new TunnelingAgent(options);
-  agent.request = https.request;
-  return agent;
-}
-
-function httpsOverHttps(options) {
-  var agent = new TunnelingAgent(options);
-  agent.request = https.request;
-  agent.createSocket = createSecureSocket;
-  agent.defaultPort = 443;
-  return agent;
-}
-
-
-function TunnelingAgent(options) {
-  var self = this;
-  self.options = options || {};
-  self.proxyOptions = self.options.proxy || {};
-  self.maxSockets = self.options.maxSockets || http.Agent.defaultMaxSockets;
-  self.requests = [];
-  self.sockets = [];
-
-  self.on('free', function onFree(socket, host, port, localAddress) {
-    var options = toOptions(host, port, localAddress);
-    for (var i = 0, len = self.requests.length; i < len; ++i) {
-      var pending = self.requests[i];
-      if (pending.host === options.host && pending.port === options.port) {
-        // Detect the request to connect same origin server,
-        // reuse the connection.
-        self.requests.splice(i, 1);
-        pending.request.onSocket(socket);
-        return;
-      }
-    }
-    socket.destroy();
-    self.removeSocket(socket);
-  });
-}
-util.inherits(TunnelingAgent, events.EventEmitter);
-
-TunnelingAgent.prototype.addRequest = function addRequest(req, host, port, localAddress) {
-  var self = this;
-  var options = mergeOptions({request: req}, self.options, toOptions(host, port, localAddress));
-
-  if (self.sockets.length >= this.maxSockets) {
-    // We are over limit so we'll add it to the queue.
-    self.requests.push(options);
-    return;
-  }
-
-  // If we are under maxSockets create a new one.
-  self.createSocket(options, function(socket) {
-    socket.on('free', onFree);
-    socket.on('close', onCloseOrRemove);
-    socket.on('agentRemove', onCloseOrRemove);
-    req.onSocket(socket);
-
-    function onFree() {
-      self.emit('free', socket, options);
-    }
-
-    function onCloseOrRemove(err) {
-      self.removeSocket(socket);
-      socket.removeListener('free', onFree);
-      socket.removeListener('close', onCloseOrRemove);
-      socket.removeListener('agentRemove', onCloseOrRemove);
-    }
-  });
-};
-
-TunnelingAgent.prototype.createSocket = function createSocket(options, cb) {
-  var self = this;
-  var placeholder = {};
-  self.sockets.push(placeholder);
-
-  var connectOptions = mergeOptions({}, self.proxyOptions, {
-    method: 'CONNECT',
-    path: options.host + ':' + options.port,
-    agent: false,
-    headers: {
-      host: options.host + ':' + options.port
-    }
-  });
-  if (options.localAddress) {
-    connectOptions.localAddress = options.localAddress;
-  }
-  if (connectOptions.proxyAuth) {
-    connectOptions.headers = connectOptions.headers || {};
-    connectOptions.headers['Proxy-Authorization'] = 'Basic ' +
-        new Buffer(connectOptions.proxyAuth).toString('base64');
-  }
-
-  debug('making CONNECT request');
-  var connectReq = self.request(connectOptions);
-  connectReq.useChunkedEncodingByDefault = false; // for v0.6
-  connectReq.once('response', onResponse); // for v0.6
-  connectReq.once('upgrade', onUpgrade);   // for v0.6
-  connectReq.once('connect', onConnect);   // for v0.7 or later
-  connectReq.once('error', onError);
-  connectReq.end();
-
-  function onResponse(res) {
-    // Very hacky. This is necessary to avoid http-parser leaks.
-    res.upgrade = true;
-  }
-
-  function onUpgrade(res, socket, head) {
-    // Hacky.
-    process.nextTick(function() {
-      onConnect(res, socket, head);
-    });
-  }
-
-  function onConnect(res, socket, head) {
-    connectReq.removeAllListeners();
-    socket.removeAllListeners();
-
-    if (res.statusCode !== 200) {
-      debug('tunneling socket could not be established, statusCode=%d',
-        res.statusCode);
-      socket.destroy();
-      var error = new Error('tunneling socket could not be established, ' +
-        'statusCode=' + res.statusCode);
-      error.code = 'ECONNRESET';
-      options.request.emit('error', error);
-      self.removeSocket(placeholder);
-      return;
-    }
-    if (head.length > 0) {
-      debug('got illegal response body from proxy');
-      socket.destroy();
-      var error = new Error('got illegal response body from proxy');
-      error.code = 'ECONNRESET';
-      options.request.emit('error', error);
-      self.removeSocket(placeholder);
-      return;
-    }
-    debug('tunneling connection has established');
-    self.sockets[self.sockets.indexOf(placeholder)] = socket;
-    return cb(socket);
-  }
-
-  function onError(cause) {
-    connectReq.removeAllListeners();
-
-    debug('tunneling socket could not be established, cause=%s\n',
-          cause.message, cause.stack);
-    var error = new Error('tunneling socket could not be established, ' +
-                          'cause=' + cause.message);
-    error.code = 'ECONNRESET';
-    options.request.emit('error', error);
-    self.removeSocket(placeholder);
-  }
-};
-
-TunnelingAgent.prototype.removeSocket = function removeSocket(socket) {
-  var pos = this.sockets.indexOf(socket)
-  if (pos === -1) {
-    return;
-  }
-  this.sockets.splice(pos, 1);
-
-  var pending = this.requests.shift();
-  if (pending) {
-    // If we have pending requests and a socket gets closed a new one
-    // needs to be created to take over in the pool for the one that closed.
-    this.createSocket(pending, function(socket) {
-      pending.request.onSocket(socket);
-    });
-  }
-};
-
-function createSecureSocket(options, cb) {
-  var self = this;
-  TunnelingAgent.prototype.createSocket.call(self, options, function(socket) {
-    var hostHeader = options.request.getHeader('host');
-    var tlsOptions = mergeOptions({}, self.options, {
-      socket: socket,
-      servername: hostHeader ? hostHeader.replace(/:.*$/, '') : options.host
-    });
-
-    // 0 is dummy port for v0.6
-    var secureSocket = tls.connect(0, tlsOptions);
-    self.sockets[self.sockets.indexOf(socket)] = secureSocket;
-    cb(secureSocket);
-  });
-}
-
-
-function toOptions(host, port, localAddress) {
-  if (typeof host === 'string') { // since v0.10
-    return {
-      host: host,
-      port: port,
-      localAddress: localAddress
-    };
-  }
-  return host; // for v0.11 or later
-}
-
-function mergeOptions(target) {
-  for (var i = 1, len = arguments.length; i < len; ++i) {
-    var overrides = arguments[i];
-    if (typeof overrides === 'object') {
-      var keys = Object.keys(overrides);
-      for (var j = 0, keyLen = keys.length; j < keyLen; ++j) {
-        var k = keys[j];
-        if (overrides[k] !== undefined) {
-          target[k] = overrides[k];
-        }
-      }
-    }
-  }
-  return target;
-}
-
-
-var debug;
-if (process.env.NODE_DEBUG && /\btunnel\b/.test(process.env.NODE_DEBUG)) {
-  debug = function() {
-    var args = Array.prototype.slice.call(arguments);
-    if (typeof args[0] === 'string') {
-      args[0] = 'TUNNEL: ' + args[0];
-    } else {
-      args.unshift('TUNNEL:');
-    }
-    console.error.apply(console, args);
-  }
-} else {
-  debug = function() {};
-}
-exports.debug = debug; // for test
-
+eval("\n\nvar net = __webpack_require__(/*! net */ \"net\");\nvar tls = __webpack_require__(/*! tls */ \"tls\");\nvar http = __webpack_require__(/*! http */ \"http\");\nvar https = __webpack_require__(/*! https */ \"https\");\nvar events = __webpack_require__(/*! events */ \"events\");\nvar assert = __webpack_require__(/*! assert */ \"assert\");\nvar util = __webpack_require__(/*! util */ \"util\");\n\n\nexports.httpOverHttp = httpOverHttp;\nexports.httpsOverHttp = httpsOverHttp;\nexports.httpOverHttps = httpOverHttps;\nexports.httpsOverHttps = httpsOverHttps;\n\n\nfunction httpOverHttp(options) {\n  var agent = new TunnelingAgent(options);\n  agent.request = http.request;\n  return agent;\n}\n\nfunction httpsOverHttp(options) {\n  var agent = new TunnelingAgent(options);\n  agent.request = http.request;\n  agent.createSocket = createSecureSocket;\n  agent.defaultPort = 443;\n  return agent;\n}\n\nfunction httpOverHttps(options) {\n  var agent = new TunnelingAgent(options);\n  agent.request = https.request;\n  return agent;\n}\n\nfunction httpsOverHttps(options) {\n  var agent = new TunnelingAgent(options);\n  agent.request = https.request;\n  agent.createSocket = createSecureSocket;\n  agent.defaultPort = 443;\n  return agent;\n}\n\n\nfunction TunnelingAgent(options) {\n  var self = this;\n  self.options = options || {};\n  self.proxyOptions = self.options.proxy || {};\n  self.maxSockets = self.options.maxSockets || http.Agent.defaultMaxSockets;\n  self.requests = [];\n  self.sockets = [];\n\n  self.on('free', function onFree(socket, host, port, localAddress) {\n    var options = toOptions(host, port, localAddress);\n    for (var i = 0, len = self.requests.length; i < len; ++i) {\n      var pending = self.requests[i];\n      if (pending.host === options.host && pending.port === options.port) {\n        // Detect the request to connect same origin server,\n        // reuse the connection.\n        self.requests.splice(i, 1);\n        pending.request.onSocket(socket);\n        return;\n      }\n    }\n    socket.destroy();\n    self.removeSocket(socket);\n  });\n}\nutil.inherits(TunnelingAgent, events.EventEmitter);\n\nTunnelingAgent.prototype.addRequest = function addRequest(req, host, port, localAddress) {\n  var self = this;\n  var options = mergeOptions({request: req}, self.options, toOptions(host, port, localAddress));\n\n  if (self.sockets.length >= this.maxSockets) {\n    // We are over limit so we'll add it to the queue.\n    self.requests.push(options);\n    return;\n  }\n\n  // If we are under maxSockets create a new one.\n  self.createSocket(options, function(socket) {\n    socket.on('free', onFree);\n    socket.on('close', onCloseOrRemove);\n    socket.on('agentRemove', onCloseOrRemove);\n    req.onSocket(socket);\n\n    function onFree() {\n      self.emit('free', socket, options);\n    }\n\n    function onCloseOrRemove(err) {\n      self.removeSocket(socket);\n      socket.removeListener('free', onFree);\n      socket.removeListener('close', onCloseOrRemove);\n      socket.removeListener('agentRemove', onCloseOrRemove);\n    }\n  });\n};\n\nTunnelingAgent.prototype.createSocket = function createSocket(options, cb) {\n  var self = this;\n  var placeholder = {};\n  self.sockets.push(placeholder);\n\n  var connectOptions = mergeOptions({}, self.proxyOptions, {\n    method: 'CONNECT',\n    path: options.host + ':' + options.port,\n    agent: false,\n    headers: {\n      host: options.host + ':' + options.port\n    }\n  });\n  if (options.localAddress) {\n    connectOptions.localAddress = options.localAddress;\n  }\n  if (connectOptions.proxyAuth) {\n    connectOptions.headers = connectOptions.headers || {};\n    connectOptions.headers['Proxy-Authorization'] = 'Basic ' +\n        new Buffer(connectOptions.proxyAuth).toString('base64');\n  }\n\n  debug('making CONNECT request');\n  var connectReq = self.request(connectOptions);\n  connectReq.useChunkedEncodingByDefault = false; // for v0.6\n  connectReq.once('response', onResponse); // for v0.6\n  connectReq.once('upgrade', onUpgrade);   // for v0.6\n  connectReq.once('connect', onConnect);   // for v0.7 or later\n  connectReq.once('error', onError);\n  connectReq.end();\n\n  function onResponse(res) {\n    // Very hacky. This is necessary to avoid http-parser leaks.\n    res.upgrade = true;\n  }\n\n  function onUpgrade(res, socket, head) {\n    // Hacky.\n    process.nextTick(function() {\n      onConnect(res, socket, head);\n    });\n  }\n\n  function onConnect(res, socket, head) {\n    connectReq.removeAllListeners();\n    socket.removeAllListeners();\n\n    if (res.statusCode !== 200) {\n      debug('tunneling socket could not be established, statusCode=%d',\n        res.statusCode);\n      socket.destroy();\n      var error = new Error('tunneling socket could not be established, ' +\n        'statusCode=' + res.statusCode);\n      error.code = 'ECONNRESET';\n      options.request.emit('error', error);\n      self.removeSocket(placeholder);\n      return;\n    }\n    if (head.length > 0) {\n      debug('got illegal response body from proxy');\n      socket.destroy();\n      var error = new Error('got illegal response body from proxy');\n      error.code = 'ECONNRESET';\n      options.request.emit('error', error);\n      self.removeSocket(placeholder);\n      return;\n    }\n    debug('tunneling connection has established');\n    self.sockets[self.sockets.indexOf(placeholder)] = socket;\n    return cb(socket);\n  }\n\n  function onError(cause) {\n    connectReq.removeAllListeners();\n\n    debug('tunneling socket could not be established, cause=%s\\n',\n          cause.message, cause.stack);\n    var error = new Error('tunneling socket could not be established, ' +\n                          'cause=' + cause.message);\n    error.code = 'ECONNRESET';\n    options.request.emit('error', error);\n    self.removeSocket(placeholder);\n  }\n};\n\nTunnelingAgent.prototype.removeSocket = function removeSocket(socket) {\n  var pos = this.sockets.indexOf(socket)\n  if (pos === -1) {\n    return;\n  }\n  this.sockets.splice(pos, 1);\n\n  var pending = this.requests.shift();\n  if (pending) {\n    // If we have pending requests and a socket gets closed a new one\n    // needs to be created to take over in the pool for the one that closed.\n    this.createSocket(pending, function(socket) {\n      pending.request.onSocket(socket);\n    });\n  }\n};\n\nfunction createSecureSocket(options, cb) {\n  var self = this;\n  TunnelingAgent.prototype.createSocket.call(self, options, function(socket) {\n    var hostHeader = options.request.getHeader('host');\n    var tlsOptions = mergeOptions({}, self.options, {\n      socket: socket,\n      servername: hostHeader ? hostHeader.replace(/:.*$/, '') : options.host\n    });\n\n    // 0 is dummy port for v0.6\n    var secureSocket = tls.connect(0, tlsOptions);\n    self.sockets[self.sockets.indexOf(socket)] = secureSocket;\n    cb(secureSocket);\n  });\n}\n\n\nfunction toOptions(host, port, localAddress) {\n  if (typeof host === 'string') { // since v0.10\n    return {\n      host: host,\n      port: port,\n      localAddress: localAddress\n    };\n  }\n  return host; // for v0.11 or later\n}\n\nfunction mergeOptions(target) {\n  for (var i = 1, len = arguments.length; i < len; ++i) {\n    var overrides = arguments[i];\n    if (typeof overrides === 'object') {\n      var keys = Object.keys(overrides);\n      for (var j = 0, keyLen = keys.length; j < keyLen; ++j) {\n        var k = keys[j];\n        if (overrides[k] !== undefined) {\n          target[k] = overrides[k];\n        }\n      }\n    }\n  }\n  return target;\n}\n\n\nvar debug;\nif (process.env.NODE_DEBUG && /\\btunnel\\b/.test(process.env.NODE_DEBUG)) {\n  debug = function() {\n    var args = Array.prototype.slice.call(arguments);\n    if (typeof args[0] === 'string') {\n      args[0] = 'TUNNEL: ' + args[0];\n    } else {\n      args.unshift('TUNNEL:');\n    }\n    console.error.apply(console, args);\n  }\n} else {\n  debug = function() {};\n}\nexports.debug = debug; // for test\n\n\n//# sourceURL=webpack://toml-editor/./node_modules/tunnel/lib/tunnel.js?");
 
 /***/ }),
 
-/***/ 53:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+/***/ "./node_modules/uuid/dist/esm-node/index.js":
+/*!**************************************************!*\
+  !*** ./node_modules/uuid/dist/esm-node/index.js ***!
+  \**************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-
-
-Object.defineProperty(exports, "__esModule", ({
-  value: true
-}));
-Object.defineProperty(exports, "v1", ({
-  enumerable: true,
-  get: function () {
-    return _v.default;
-  }
-}));
-Object.defineProperty(exports, "v3", ({
-  enumerable: true,
-  get: function () {
-    return _v2.default;
-  }
-}));
-Object.defineProperty(exports, "v4", ({
-  enumerable: true,
-  get: function () {
-    return _v3.default;
-  }
-}));
-Object.defineProperty(exports, "v5", ({
-  enumerable: true,
-  get: function () {
-    return _v4.default;
-  }
-}));
-Object.defineProperty(exports, "NIL", ({
-  enumerable: true,
-  get: function () {
-    return _nil.default;
-  }
-}));
-Object.defineProperty(exports, "version", ({
-  enumerable: true,
-  get: function () {
-    return _version.default;
-  }
-}));
-Object.defineProperty(exports, "validate", ({
-  enumerable: true,
-  get: function () {
-    return _validate.default;
-  }
-}));
-Object.defineProperty(exports, "stringify", ({
-  enumerable: true,
-  get: function () {
-    return _stringify.default;
-  }
-}));
-Object.defineProperty(exports, "parse", ({
-  enumerable: true,
-  get: function () {
-    return _parse.default;
-  }
-}));
-
-var _v = _interopRequireDefault(__nccwpck_require__(5258));
-
-var _v2 = _interopRequireDefault(__nccwpck_require__(3140));
-
-var _v3 = _interopRequireDefault(__nccwpck_require__(36));
-
-var _v4 = _interopRequireDefault(__nccwpck_require__(7309));
-
-var _nil = _interopRequireDefault(__nccwpck_require__(7198));
-
-var _version = _interopRequireDefault(__nccwpck_require__(2936));
-
-var _validate = _interopRequireDefault(__nccwpck_require__(1890));
-
-var _stringify = _interopRequireDefault(__nccwpck_require__(9204));
-
-var _parse = _interopRequireDefault(__nccwpck_require__(3725));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   NIL: () => (/* reexport safe */ _nil_js__WEBPACK_IMPORTED_MODULE_4__[\"default\"]),\n/* harmony export */   parse: () => (/* reexport safe */ _parse_js__WEBPACK_IMPORTED_MODULE_8__[\"default\"]),\n/* harmony export */   stringify: () => (/* reexport safe */ _stringify_js__WEBPACK_IMPORTED_MODULE_7__[\"default\"]),\n/* harmony export */   v1: () => (/* reexport safe */ _v1_js__WEBPACK_IMPORTED_MODULE_0__[\"default\"]),\n/* harmony export */   v3: () => (/* reexport safe */ _v3_js__WEBPACK_IMPORTED_MODULE_1__[\"default\"]),\n/* harmony export */   v4: () => (/* reexport safe */ _v4_js__WEBPACK_IMPORTED_MODULE_2__[\"default\"]),\n/* harmony export */   v5: () => (/* reexport safe */ _v5_js__WEBPACK_IMPORTED_MODULE_3__[\"default\"]),\n/* harmony export */   validate: () => (/* reexport safe */ _validate_js__WEBPACK_IMPORTED_MODULE_6__[\"default\"]),\n/* harmony export */   version: () => (/* reexport safe */ _version_js__WEBPACK_IMPORTED_MODULE_5__[\"default\"])\n/* harmony export */ });\n/* harmony import */ var _v1_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./v1.js */ \"./node_modules/uuid/dist/esm-node/v1.js\");\n/* harmony import */ var _v3_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./v3.js */ \"./node_modules/uuid/dist/esm-node/v3.js\");\n/* harmony import */ var _v4_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./v4.js */ \"./node_modules/uuid/dist/esm-node/v4.js\");\n/* harmony import */ var _v5_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./v5.js */ \"./node_modules/uuid/dist/esm-node/v5.js\");\n/* harmony import */ var _nil_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./nil.js */ \"./node_modules/uuid/dist/esm-node/nil.js\");\n/* harmony import */ var _version_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./version.js */ \"./node_modules/uuid/dist/esm-node/version.js\");\n/* harmony import */ var _validate_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./validate.js */ \"./node_modules/uuid/dist/esm-node/validate.js\");\n/* harmony import */ var _stringify_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./stringify.js */ \"./node_modules/uuid/dist/esm-node/stringify.js\");\n/* harmony import */ var _parse_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./parse.js */ \"./node_modules/uuid/dist/esm-node/parse.js\");\n\n\n\n\n\n\n\n\n\n\n//# sourceURL=webpack://toml-editor/./node_modules/uuid/dist/esm-node/index.js?");
 
 /***/ }),
 
-/***/ 9727:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+/***/ "./node_modules/uuid/dist/esm-node/md5.js":
+/*!************************************************!*\
+  !*** ./node_modules/uuid/dist/esm-node/md5.js ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-
-
-Object.defineProperty(exports, "__esModule", ({
-  value: true
-}));
-exports["default"] = void 0;
-
-var _crypto = _interopRequireDefault(__nccwpck_require__(6113));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function md5(bytes) {
-  if (Array.isArray(bytes)) {
-    bytes = Buffer.from(bytes);
-  } else if (typeof bytes === 'string') {
-    bytes = Buffer.from(bytes, 'utf8');
-  }
-
-  return _crypto.default.createHash('md5').update(bytes).digest();
-}
-
-var _default = md5;
-exports["default"] = _default;
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var crypto__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! crypto */ \"crypto\");\n/* harmony import */ var crypto__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(crypto__WEBPACK_IMPORTED_MODULE_0__);\n\n\nfunction md5(bytes) {\n  if (Array.isArray(bytes)) {\n    bytes = Buffer.from(bytes);\n  } else if (typeof bytes === 'string') {\n    bytes = Buffer.from(bytes, 'utf8');\n  }\n\n  return crypto__WEBPACK_IMPORTED_MODULE_0___default().createHash('md5').update(bytes).digest();\n}\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (md5);\n\n//# sourceURL=webpack://toml-editor/./node_modules/uuid/dist/esm-node/md5.js?");
 
 /***/ }),
 
-/***/ 7198:
-/***/ ((__unused_webpack_module, exports) => {
+/***/ "./node_modules/uuid/dist/esm-node/nil.js":
+/*!************************************************!*\
+  !*** ./node_modules/uuid/dist/esm-node/nil.js ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-
-
-Object.defineProperty(exports, "__esModule", ({
-  value: true
-}));
-exports["default"] = void 0;
-var _default = '00000000-0000-0000-0000-000000000000';
-exports["default"] = _default;
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ('00000000-0000-0000-0000-000000000000');\n\n//# sourceURL=webpack://toml-editor/./node_modules/uuid/dist/esm-node/nil.js?");
 
 /***/ }),
 
-/***/ 3725:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+/***/ "./node_modules/uuid/dist/esm-node/parse.js":
+/*!**************************************************!*\
+  !*** ./node_modules/uuid/dist/esm-node/parse.js ***!
+  \**************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-
-
-Object.defineProperty(exports, "__esModule", ({
-  value: true
-}));
-exports["default"] = void 0;
-
-var _validate = _interopRequireDefault(__nccwpck_require__(1890));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function parse(uuid) {
-  if (!(0, _validate.default)(uuid)) {
-    throw TypeError('Invalid UUID');
-  }
-
-  let v;
-  const arr = new Uint8Array(16); // Parse ########-....-....-....-............
-
-  arr[0] = (v = parseInt(uuid.slice(0, 8), 16)) >>> 24;
-  arr[1] = v >>> 16 & 0xff;
-  arr[2] = v >>> 8 & 0xff;
-  arr[3] = v & 0xff; // Parse ........-####-....-....-............
-
-  arr[4] = (v = parseInt(uuid.slice(9, 13), 16)) >>> 8;
-  arr[5] = v & 0xff; // Parse ........-....-####-....-............
-
-  arr[6] = (v = parseInt(uuid.slice(14, 18), 16)) >>> 8;
-  arr[7] = v & 0xff; // Parse ........-....-....-####-............
-
-  arr[8] = (v = parseInt(uuid.slice(19, 23), 16)) >>> 8;
-  arr[9] = v & 0xff; // Parse ........-....-....-....-############
-  // (Use "/" to avoid 32-bit truncation when bit-shifting high-order bytes)
-
-  arr[10] = (v = parseInt(uuid.slice(24, 36), 16)) / 0x10000000000 & 0xff;
-  arr[11] = v / 0x100000000 & 0xff;
-  arr[12] = v >>> 24 & 0xff;
-  arr[13] = v >>> 16 & 0xff;
-  arr[14] = v >>> 8 & 0xff;
-  arr[15] = v & 0xff;
-  return arr;
-}
-
-var _default = parse;
-exports["default"] = _default;
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var _validate_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./validate.js */ \"./node_modules/uuid/dist/esm-node/validate.js\");\n\n\nfunction parse(uuid) {\n  if (!(0,_validate_js__WEBPACK_IMPORTED_MODULE_0__[\"default\"])(uuid)) {\n    throw TypeError('Invalid UUID');\n  }\n\n  let v;\n  const arr = new Uint8Array(16); // Parse ########-....-....-....-............\n\n  arr[0] = (v = parseInt(uuid.slice(0, 8), 16)) >>> 24;\n  arr[1] = v >>> 16 & 0xff;\n  arr[2] = v >>> 8 & 0xff;\n  arr[3] = v & 0xff; // Parse ........-####-....-....-............\n\n  arr[4] = (v = parseInt(uuid.slice(9, 13), 16)) >>> 8;\n  arr[5] = v & 0xff; // Parse ........-....-####-....-............\n\n  arr[6] = (v = parseInt(uuid.slice(14, 18), 16)) >>> 8;\n  arr[7] = v & 0xff; // Parse ........-....-....-####-............\n\n  arr[8] = (v = parseInt(uuid.slice(19, 23), 16)) >>> 8;\n  arr[9] = v & 0xff; // Parse ........-....-....-....-############\n  // (Use \"/\" to avoid 32-bit truncation when bit-shifting high-order bytes)\n\n  arr[10] = (v = parseInt(uuid.slice(24, 36), 16)) / 0x10000000000 & 0xff;\n  arr[11] = v / 0x100000000 & 0xff;\n  arr[12] = v >>> 24 & 0xff;\n  arr[13] = v >>> 16 & 0xff;\n  arr[14] = v >>> 8 & 0xff;\n  arr[15] = v & 0xff;\n  return arr;\n}\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (parse);\n\n//# sourceURL=webpack://toml-editor/./node_modules/uuid/dist/esm-node/parse.js?");
 
 /***/ }),
 
-/***/ 9765:
-/***/ ((__unused_webpack_module, exports) => {
+/***/ "./node_modules/uuid/dist/esm-node/regex.js":
+/*!**************************************************!*\
+  !*** ./node_modules/uuid/dist/esm-node/regex.js ***!
+  \**************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-
-
-Object.defineProperty(exports, "__esModule", ({
-  value: true
-}));
-exports["default"] = void 0;
-var _default = /^(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|00000000-0000-0000-0000-000000000000)$/i;
-exports["default"] = _default;
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (/^(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|00000000-0000-0000-0000-000000000000)$/i);\n\n//# sourceURL=webpack://toml-editor/./node_modules/uuid/dist/esm-node/regex.js?");
 
 /***/ }),
 
-/***/ 7422:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+/***/ "./node_modules/uuid/dist/esm-node/rng.js":
+/*!************************************************!*\
+  !*** ./node_modules/uuid/dist/esm-node/rng.js ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-
-
-Object.defineProperty(exports, "__esModule", ({
-  value: true
-}));
-exports["default"] = rng;
-
-var _crypto = _interopRequireDefault(__nccwpck_require__(6113));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-const rnds8Pool = new Uint8Array(256); // # of random values to pre-allocate
-
-let poolPtr = rnds8Pool.length;
-
-function rng() {
-  if (poolPtr > rnds8Pool.length - 16) {
-    _crypto.default.randomFillSync(rnds8Pool);
-
-    poolPtr = 0;
-  }
-
-  return rnds8Pool.slice(poolPtr, poolPtr += 16);
-}
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ rng)\n/* harmony export */ });\n/* harmony import */ var crypto__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! crypto */ \"crypto\");\n/* harmony import */ var crypto__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(crypto__WEBPACK_IMPORTED_MODULE_0__);\n\nconst rnds8Pool = new Uint8Array(256); // # of random values to pre-allocate\n\nlet poolPtr = rnds8Pool.length;\nfunction rng() {\n  if (poolPtr > rnds8Pool.length - 16) {\n    crypto__WEBPACK_IMPORTED_MODULE_0___default().randomFillSync(rnds8Pool);\n    poolPtr = 0;\n  }\n\n  return rnds8Pool.slice(poolPtr, poolPtr += 16);\n}\n\n//# sourceURL=webpack://toml-editor/./node_modules/uuid/dist/esm-node/rng.js?");
 
 /***/ }),
 
-/***/ 6317:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+/***/ "./node_modules/uuid/dist/esm-node/sha1.js":
+/*!*************************************************!*\
+  !*** ./node_modules/uuid/dist/esm-node/sha1.js ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-
-
-Object.defineProperty(exports, "__esModule", ({
-  value: true
-}));
-exports["default"] = void 0;
-
-var _crypto = _interopRequireDefault(__nccwpck_require__(6113));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function sha1(bytes) {
-  if (Array.isArray(bytes)) {
-    bytes = Buffer.from(bytes);
-  } else if (typeof bytes === 'string') {
-    bytes = Buffer.from(bytes, 'utf8');
-  }
-
-  return _crypto.default.createHash('sha1').update(bytes).digest();
-}
-
-var _default = sha1;
-exports["default"] = _default;
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var crypto__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! crypto */ \"crypto\");\n/* harmony import */ var crypto__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(crypto__WEBPACK_IMPORTED_MODULE_0__);\n\n\nfunction sha1(bytes) {\n  if (Array.isArray(bytes)) {\n    bytes = Buffer.from(bytes);\n  } else if (typeof bytes === 'string') {\n    bytes = Buffer.from(bytes, 'utf8');\n  }\n\n  return crypto__WEBPACK_IMPORTED_MODULE_0___default().createHash('sha1').update(bytes).digest();\n}\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (sha1);\n\n//# sourceURL=webpack://toml-editor/./node_modules/uuid/dist/esm-node/sha1.js?");
 
 /***/ }),
 
-/***/ 9204:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+/***/ "./node_modules/uuid/dist/esm-node/stringify.js":
+/*!******************************************************!*\
+  !*** ./node_modules/uuid/dist/esm-node/stringify.js ***!
+  \******************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-
-
-Object.defineProperty(exports, "__esModule", ({
-  value: true
-}));
-exports["default"] = void 0;
-
-var _validate = _interopRequireDefault(__nccwpck_require__(1890));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Convert array of 16 byte values to UUID string format of the form:
- * XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
- */
-const byteToHex = [];
-
-for (let i = 0; i < 256; ++i) {
-  byteToHex.push((i + 0x100).toString(16).substr(1));
-}
-
-function stringify(arr, offset = 0) {
-  // Note: Be careful editing this code!  It's been tuned for performance
-  // and works in ways you may not expect. See https://github.com/uuidjs/uuid/pull/434
-  const uuid = (byteToHex[arr[offset + 0]] + byteToHex[arr[offset + 1]] + byteToHex[arr[offset + 2]] + byteToHex[arr[offset + 3]] + '-' + byteToHex[arr[offset + 4]] + byteToHex[arr[offset + 5]] + '-' + byteToHex[arr[offset + 6]] + byteToHex[arr[offset + 7]] + '-' + byteToHex[arr[offset + 8]] + byteToHex[arr[offset + 9]] + '-' + byteToHex[arr[offset + 10]] + byteToHex[arr[offset + 11]] + byteToHex[arr[offset + 12]] + byteToHex[arr[offset + 13]] + byteToHex[arr[offset + 14]] + byteToHex[arr[offset + 15]]).toLowerCase(); // Consistency check for valid UUID.  If this throws, it's likely due to one
-  // of the following:
-  // - One or more input array values don't map to a hex octet (leading to
-  // "undefined" in the uuid)
-  // - Invalid input values for the RFC `version` or `variant` fields
-
-  if (!(0, _validate.default)(uuid)) {
-    throw TypeError('Stringified UUID is invalid');
-  }
-
-  return uuid;
-}
-
-var _default = stringify;
-exports["default"] = _default;
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var _validate_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./validate.js */ \"./node_modules/uuid/dist/esm-node/validate.js\");\n\n/**\n * Convert array of 16 byte values to UUID string format of the form:\n * XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX\n */\n\nconst byteToHex = [];\n\nfor (let i = 0; i < 256; ++i) {\n  byteToHex.push((i + 0x100).toString(16).substr(1));\n}\n\nfunction stringify(arr, offset = 0) {\n  // Note: Be careful editing this code!  It's been tuned for performance\n  // and works in ways you may not expect. See https://github.com/uuidjs/uuid/pull/434\n  const uuid = (byteToHex[arr[offset + 0]] + byteToHex[arr[offset + 1]] + byteToHex[arr[offset + 2]] + byteToHex[arr[offset + 3]] + '-' + byteToHex[arr[offset + 4]] + byteToHex[arr[offset + 5]] + '-' + byteToHex[arr[offset + 6]] + byteToHex[arr[offset + 7]] + '-' + byteToHex[arr[offset + 8]] + byteToHex[arr[offset + 9]] + '-' + byteToHex[arr[offset + 10]] + byteToHex[arr[offset + 11]] + byteToHex[arr[offset + 12]] + byteToHex[arr[offset + 13]] + byteToHex[arr[offset + 14]] + byteToHex[arr[offset + 15]]).toLowerCase(); // Consistency check for valid UUID.  If this throws, it's likely due to one\n  // of the following:\n  // - One or more input array values don't map to a hex octet (leading to\n  // \"undefined\" in the uuid)\n  // - Invalid input values for the RFC `version` or `variant` fields\n\n  if (!(0,_validate_js__WEBPACK_IMPORTED_MODULE_0__[\"default\"])(uuid)) {\n    throw TypeError('Stringified UUID is invalid');\n  }\n\n  return uuid;\n}\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (stringify);\n\n//# sourceURL=webpack://toml-editor/./node_modules/uuid/dist/esm-node/stringify.js?");
 
 /***/ }),
 
-/***/ 5258:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+/***/ "./node_modules/uuid/dist/esm-node/v1.js":
+/*!***********************************************!*\
+  !*** ./node_modules/uuid/dist/esm-node/v1.js ***!
+  \***********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-
-
-Object.defineProperty(exports, "__esModule", ({
-  value: true
-}));
-exports["default"] = void 0;
-
-var _rng = _interopRequireDefault(__nccwpck_require__(7422));
-
-var _stringify = _interopRequireDefault(__nccwpck_require__(9204));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// **`v1()` - Generate time-based UUID**
-//
-// Inspired by https://github.com/LiosK/UUID.js
-// and http://docs.python.org/library/uuid.html
-let _nodeId;
-
-let _clockseq; // Previous uuid creation time
-
-
-let _lastMSecs = 0;
-let _lastNSecs = 0; // See https://github.com/uuidjs/uuid for API details
-
-function v1(options, buf, offset) {
-  let i = buf && offset || 0;
-  const b = buf || new Array(16);
-  options = options || {};
-  let node = options.node || _nodeId;
-  let clockseq = options.clockseq !== undefined ? options.clockseq : _clockseq; // node and clockseq need to be initialized to random values if they're not
-  // specified.  We do this lazily to minimize issues related to insufficient
-  // system entropy.  See #189
-
-  if (node == null || clockseq == null) {
-    const seedBytes = options.random || (options.rng || _rng.default)();
-
-    if (node == null) {
-      // Per 4.5, create and 48-bit node id, (47 random bits + multicast bit = 1)
-      node = _nodeId = [seedBytes[0] | 0x01, seedBytes[1], seedBytes[2], seedBytes[3], seedBytes[4], seedBytes[5]];
-    }
-
-    if (clockseq == null) {
-      // Per 4.2.2, randomize (14 bit) clockseq
-      clockseq = _clockseq = (seedBytes[6] << 8 | seedBytes[7]) & 0x3fff;
-    }
-  } // UUID timestamps are 100 nano-second units since the Gregorian epoch,
-  // (1582-10-15 00:00).  JSNumbers aren't precise enough for this, so
-  // time is handled internally as 'msecs' (integer milliseconds) and 'nsecs'
-  // (100-nanoseconds offset from msecs) since unix epoch, 1970-01-01 00:00.
-
-
-  let msecs = options.msecs !== undefined ? options.msecs : Date.now(); // Per 4.2.1.2, use count of uuid's generated during the current clock
-  // cycle to simulate higher resolution clock
-
-  let nsecs = options.nsecs !== undefined ? options.nsecs : _lastNSecs + 1; // Time since last uuid creation (in msecs)
-
-  const dt = msecs - _lastMSecs + (nsecs - _lastNSecs) / 10000; // Per 4.2.1.2, Bump clockseq on clock regression
-
-  if (dt < 0 && options.clockseq === undefined) {
-    clockseq = clockseq + 1 & 0x3fff;
-  } // Reset nsecs if clock regresses (new clockseq) or we've moved onto a new
-  // time interval
-
-
-  if ((dt < 0 || msecs > _lastMSecs) && options.nsecs === undefined) {
-    nsecs = 0;
-  } // Per 4.2.1.2 Throw error if too many uuids are requested
-
-
-  if (nsecs >= 10000) {
-    throw new Error("uuid.v1(): Can't create more than 10M uuids/sec");
-  }
-
-  _lastMSecs = msecs;
-  _lastNSecs = nsecs;
-  _clockseq = clockseq; // Per 4.1.4 - Convert from unix epoch to Gregorian epoch
-
-  msecs += 12219292800000; // `time_low`
-
-  const tl = ((msecs & 0xfffffff) * 10000 + nsecs) % 0x100000000;
-  b[i++] = tl >>> 24 & 0xff;
-  b[i++] = tl >>> 16 & 0xff;
-  b[i++] = tl >>> 8 & 0xff;
-  b[i++] = tl & 0xff; // `time_mid`
-
-  const tmh = msecs / 0x100000000 * 10000 & 0xfffffff;
-  b[i++] = tmh >>> 8 & 0xff;
-  b[i++] = tmh & 0xff; // `time_high_and_version`
-
-  b[i++] = tmh >>> 24 & 0xf | 0x10; // include version
-
-  b[i++] = tmh >>> 16 & 0xff; // `clock_seq_hi_and_reserved` (Per 4.2.2 - include variant)
-
-  b[i++] = clockseq >>> 8 | 0x80; // `clock_seq_low`
-
-  b[i++] = clockseq & 0xff; // `node`
-
-  for (let n = 0; n < 6; ++n) {
-    b[i + n] = node[n];
-  }
-
-  return buf || (0, _stringify.default)(b);
-}
-
-var _default = v1;
-exports["default"] = _default;
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var _rng_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./rng.js */ \"./node_modules/uuid/dist/esm-node/rng.js\");\n/* harmony import */ var _stringify_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./stringify.js */ \"./node_modules/uuid/dist/esm-node/stringify.js\");\n\n // **`v1()` - Generate time-based UUID**\n//\n// Inspired by https://github.com/LiosK/UUID.js\n// and http://docs.python.org/library/uuid.html\n\nlet _nodeId;\n\nlet _clockseq; // Previous uuid creation time\n\n\nlet _lastMSecs = 0;\nlet _lastNSecs = 0; // See https://github.com/uuidjs/uuid for API details\n\nfunction v1(options, buf, offset) {\n  let i = buf && offset || 0;\n  const b = buf || new Array(16);\n  options = options || {};\n  let node = options.node || _nodeId;\n  let clockseq = options.clockseq !== undefined ? options.clockseq : _clockseq; // node and clockseq need to be initialized to random values if they're not\n  // specified.  We do this lazily to minimize issues related to insufficient\n  // system entropy.  See #189\n\n  if (node == null || clockseq == null) {\n    const seedBytes = options.random || (options.rng || _rng_js__WEBPACK_IMPORTED_MODULE_0__[\"default\"])();\n\n    if (node == null) {\n      // Per 4.5, create and 48-bit node id, (47 random bits + multicast bit = 1)\n      node = _nodeId = [seedBytes[0] | 0x01, seedBytes[1], seedBytes[2], seedBytes[3], seedBytes[4], seedBytes[5]];\n    }\n\n    if (clockseq == null) {\n      // Per 4.2.2, randomize (14 bit) clockseq\n      clockseq = _clockseq = (seedBytes[6] << 8 | seedBytes[7]) & 0x3fff;\n    }\n  } // UUID timestamps are 100 nano-second units since the Gregorian epoch,\n  // (1582-10-15 00:00).  JSNumbers aren't precise enough for this, so\n  // time is handled internally as 'msecs' (integer milliseconds) and 'nsecs'\n  // (100-nanoseconds offset from msecs) since unix epoch, 1970-01-01 00:00.\n\n\n  let msecs = options.msecs !== undefined ? options.msecs : Date.now(); // Per 4.2.1.2, use count of uuid's generated during the current clock\n  // cycle to simulate higher resolution clock\n\n  let nsecs = options.nsecs !== undefined ? options.nsecs : _lastNSecs + 1; // Time since last uuid creation (in msecs)\n\n  const dt = msecs - _lastMSecs + (nsecs - _lastNSecs) / 10000; // Per 4.2.1.2, Bump clockseq on clock regression\n\n  if (dt < 0 && options.clockseq === undefined) {\n    clockseq = clockseq + 1 & 0x3fff;\n  } // Reset nsecs if clock regresses (new clockseq) or we've moved onto a new\n  // time interval\n\n\n  if ((dt < 0 || msecs > _lastMSecs) && options.nsecs === undefined) {\n    nsecs = 0;\n  } // Per 4.2.1.2 Throw error if too many uuids are requested\n\n\n  if (nsecs >= 10000) {\n    throw new Error(\"uuid.v1(): Can't create more than 10M uuids/sec\");\n  }\n\n  _lastMSecs = msecs;\n  _lastNSecs = nsecs;\n  _clockseq = clockseq; // Per 4.1.4 - Convert from unix epoch to Gregorian epoch\n\n  msecs += 12219292800000; // `time_low`\n\n  const tl = ((msecs & 0xfffffff) * 10000 + nsecs) % 0x100000000;\n  b[i++] = tl >>> 24 & 0xff;\n  b[i++] = tl >>> 16 & 0xff;\n  b[i++] = tl >>> 8 & 0xff;\n  b[i++] = tl & 0xff; // `time_mid`\n\n  const tmh = msecs / 0x100000000 * 10000 & 0xfffffff;\n  b[i++] = tmh >>> 8 & 0xff;\n  b[i++] = tmh & 0xff; // `time_high_and_version`\n\n  b[i++] = tmh >>> 24 & 0xf | 0x10; // include version\n\n  b[i++] = tmh >>> 16 & 0xff; // `clock_seq_hi_and_reserved` (Per 4.2.2 - include variant)\n\n  b[i++] = clockseq >>> 8 | 0x80; // `clock_seq_low`\n\n  b[i++] = clockseq & 0xff; // `node`\n\n  for (let n = 0; n < 6; ++n) {\n    b[i + n] = node[n];\n  }\n\n  return buf || (0,_stringify_js__WEBPACK_IMPORTED_MODULE_1__[\"default\"])(b);\n}\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (v1);\n\n//# sourceURL=webpack://toml-editor/./node_modules/uuid/dist/esm-node/v1.js?");
 
 /***/ }),
 
-/***/ 3140:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+/***/ "./node_modules/uuid/dist/esm-node/v3.js":
+/*!***********************************************!*\
+  !*** ./node_modules/uuid/dist/esm-node/v3.js ***!
+  \***********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-
-
-Object.defineProperty(exports, "__esModule", ({
-  value: true
-}));
-exports["default"] = void 0;
-
-var _v = _interopRequireDefault(__nccwpck_require__(344));
-
-var _md = _interopRequireDefault(__nccwpck_require__(9727));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-const v3 = (0, _v.default)('v3', 0x30, _md.default);
-var _default = v3;
-exports["default"] = _default;
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var _v35_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./v35.js */ \"./node_modules/uuid/dist/esm-node/v35.js\");\n/* harmony import */ var _md5_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./md5.js */ \"./node_modules/uuid/dist/esm-node/md5.js\");\n\n\nconst v3 = (0,_v35_js__WEBPACK_IMPORTED_MODULE_0__[\"default\"])('v3', 0x30, _md5_js__WEBPACK_IMPORTED_MODULE_1__[\"default\"]);\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (v3);\n\n//# sourceURL=webpack://toml-editor/./node_modules/uuid/dist/esm-node/v3.js?");
 
 /***/ }),
 
-/***/ 344:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+/***/ "./node_modules/uuid/dist/esm-node/v35.js":
+/*!************************************************!*\
+  !*** ./node_modules/uuid/dist/esm-node/v35.js ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-
-
-Object.defineProperty(exports, "__esModule", ({
-  value: true
-}));
-exports["default"] = _default;
-exports.URL = exports.DNS = void 0;
-
-var _stringify = _interopRequireDefault(__nccwpck_require__(9204));
-
-var _parse = _interopRequireDefault(__nccwpck_require__(3725));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function stringToBytes(str) {
-  str = unescape(encodeURIComponent(str)); // UTF8 escape
-
-  const bytes = [];
-
-  for (let i = 0; i < str.length; ++i) {
-    bytes.push(str.charCodeAt(i));
-  }
-
-  return bytes;
-}
-
-const DNS = '6ba7b810-9dad-11d1-80b4-00c04fd430c8';
-exports.DNS = DNS;
-const URL = '6ba7b811-9dad-11d1-80b4-00c04fd430c8';
-exports.URL = URL;
-
-function _default(name, version, hashfunc) {
-  function generateUUID(value, namespace, buf, offset) {
-    if (typeof value === 'string') {
-      value = stringToBytes(value);
-    }
-
-    if (typeof namespace === 'string') {
-      namespace = (0, _parse.default)(namespace);
-    }
-
-    if (namespace.length !== 16) {
-      throw TypeError('Namespace must be array-like (16 iterable integer values, 0-255)');
-    } // Compute hash of namespace and value, Per 4.3
-    // Future: Use spread syntax when supported on all platforms, e.g. `bytes =
-    // hashfunc([...namespace, ... value])`
-
-
-    let bytes = new Uint8Array(16 + value.length);
-    bytes.set(namespace);
-    bytes.set(value, namespace.length);
-    bytes = hashfunc(bytes);
-    bytes[6] = bytes[6] & 0x0f | version;
-    bytes[8] = bytes[8] & 0x3f | 0x80;
-
-    if (buf) {
-      offset = offset || 0;
-
-      for (let i = 0; i < 16; ++i) {
-        buf[offset + i] = bytes[i];
-      }
-
-      return buf;
-    }
-
-    return (0, _stringify.default)(bytes);
-  } // Function#name is not settable on some platforms (#270)
-
-
-  try {
-    generateUUID.name = name; // eslint-disable-next-line no-empty
-  } catch (err) {} // For CommonJS default export support
-
-
-  generateUUID.DNS = DNS;
-  generateUUID.URL = URL;
-  return generateUUID;
-}
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   DNS: () => (/* binding */ DNS),\n/* harmony export */   URL: () => (/* binding */ URL),\n/* harmony export */   \"default\": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var _stringify_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./stringify.js */ \"./node_modules/uuid/dist/esm-node/stringify.js\");\n/* harmony import */ var _parse_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./parse.js */ \"./node_modules/uuid/dist/esm-node/parse.js\");\n\n\n\nfunction stringToBytes(str) {\n  str = unescape(encodeURIComponent(str)); // UTF8 escape\n\n  const bytes = [];\n\n  for (let i = 0; i < str.length; ++i) {\n    bytes.push(str.charCodeAt(i));\n  }\n\n  return bytes;\n}\n\nconst DNS = '6ba7b810-9dad-11d1-80b4-00c04fd430c8';\nconst URL = '6ba7b811-9dad-11d1-80b4-00c04fd430c8';\n/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(name, version, hashfunc) {\n  function generateUUID(value, namespace, buf, offset) {\n    if (typeof value === 'string') {\n      value = stringToBytes(value);\n    }\n\n    if (typeof namespace === 'string') {\n      namespace = (0,_parse_js__WEBPACK_IMPORTED_MODULE_0__[\"default\"])(namespace);\n    }\n\n    if (namespace.length !== 16) {\n      throw TypeError('Namespace must be array-like (16 iterable integer values, 0-255)');\n    } // Compute hash of namespace and value, Per 4.3\n    // Future: Use spread syntax when supported on all platforms, e.g. `bytes =\n    // hashfunc([...namespace, ... value])`\n\n\n    let bytes = new Uint8Array(16 + value.length);\n    bytes.set(namespace);\n    bytes.set(value, namespace.length);\n    bytes = hashfunc(bytes);\n    bytes[6] = bytes[6] & 0x0f | version;\n    bytes[8] = bytes[8] & 0x3f | 0x80;\n\n    if (buf) {\n      offset = offset || 0;\n\n      for (let i = 0; i < 16; ++i) {\n        buf[offset + i] = bytes[i];\n      }\n\n      return buf;\n    }\n\n    return (0,_stringify_js__WEBPACK_IMPORTED_MODULE_1__[\"default\"])(bytes);\n  } // Function#name is not settable on some platforms (#270)\n\n\n  try {\n    generateUUID.name = name; // eslint-disable-next-line no-empty\n  } catch (err) {} // For CommonJS default export support\n\n\n  generateUUID.DNS = DNS;\n  generateUUID.URL = URL;\n  return generateUUID;\n}\n\n//# sourceURL=webpack://toml-editor/./node_modules/uuid/dist/esm-node/v35.js?");
 
 /***/ }),
 
-/***/ 36:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+/***/ "./node_modules/uuid/dist/esm-node/v4.js":
+/*!***********************************************!*\
+  !*** ./node_modules/uuid/dist/esm-node/v4.js ***!
+  \***********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-
-
-Object.defineProperty(exports, "__esModule", ({
-  value: true
-}));
-exports["default"] = void 0;
-
-var _rng = _interopRequireDefault(__nccwpck_require__(7422));
-
-var _stringify = _interopRequireDefault(__nccwpck_require__(9204));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function v4(options, buf, offset) {
-  options = options || {};
-
-  const rnds = options.random || (options.rng || _rng.default)(); // Per 4.4, set bits for version and `clock_seq_hi_and_reserved`
-
-
-  rnds[6] = rnds[6] & 0x0f | 0x40;
-  rnds[8] = rnds[8] & 0x3f | 0x80; // Copy bytes to buffer, if provided
-
-  if (buf) {
-    offset = offset || 0;
-
-    for (let i = 0; i < 16; ++i) {
-      buf[offset + i] = rnds[i];
-    }
-
-    return buf;
-  }
-
-  return (0, _stringify.default)(rnds);
-}
-
-var _default = v4;
-exports["default"] = _default;
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var _rng_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./rng.js */ \"./node_modules/uuid/dist/esm-node/rng.js\");\n/* harmony import */ var _stringify_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./stringify.js */ \"./node_modules/uuid/dist/esm-node/stringify.js\");\n\n\n\nfunction v4(options, buf, offset) {\n  options = options || {};\n  const rnds = options.random || (options.rng || _rng_js__WEBPACK_IMPORTED_MODULE_0__[\"default\"])(); // Per 4.4, set bits for version and `clock_seq_hi_and_reserved`\n\n  rnds[6] = rnds[6] & 0x0f | 0x40;\n  rnds[8] = rnds[8] & 0x3f | 0x80; // Copy bytes to buffer, if provided\n\n  if (buf) {\n    offset = offset || 0;\n\n    for (let i = 0; i < 16; ++i) {\n      buf[offset + i] = rnds[i];\n    }\n\n    return buf;\n  }\n\n  return (0,_stringify_js__WEBPACK_IMPORTED_MODULE_1__[\"default\"])(rnds);\n}\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (v4);\n\n//# sourceURL=webpack://toml-editor/./node_modules/uuid/dist/esm-node/v4.js?");
 
 /***/ }),
 
-/***/ 7309:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+/***/ "./node_modules/uuid/dist/esm-node/v5.js":
+/*!***********************************************!*\
+  !*** ./node_modules/uuid/dist/esm-node/v5.js ***!
+  \***********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-
-
-Object.defineProperty(exports, "__esModule", ({
-  value: true
-}));
-exports["default"] = void 0;
-
-var _v = _interopRequireDefault(__nccwpck_require__(344));
-
-var _sha = _interopRequireDefault(__nccwpck_require__(6317));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-const v5 = (0, _v.default)('v5', 0x50, _sha.default);
-var _default = v5;
-exports["default"] = _default;
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var _v35_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./v35.js */ \"./node_modules/uuid/dist/esm-node/v35.js\");\n/* harmony import */ var _sha1_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./sha1.js */ \"./node_modules/uuid/dist/esm-node/sha1.js\");\n\n\nconst v5 = (0,_v35_js__WEBPACK_IMPORTED_MODULE_0__[\"default\"])('v5', 0x50, _sha1_js__WEBPACK_IMPORTED_MODULE_1__[\"default\"]);\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (v5);\n\n//# sourceURL=webpack://toml-editor/./node_modules/uuid/dist/esm-node/v5.js?");
 
 /***/ }),
 
-/***/ 1890:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+/***/ "./node_modules/uuid/dist/esm-node/validate.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/uuid/dist/esm-node/validate.js ***!
+  \*****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-
-
-Object.defineProperty(exports, "__esModule", ({
-  value: true
-}));
-exports["default"] = void 0;
-
-var _regex = _interopRequireDefault(__nccwpck_require__(9765));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function validate(uuid) {
-  return typeof uuid === 'string' && _regex.default.test(uuid);
-}
-
-var _default = validate;
-exports["default"] = _default;
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var _regex_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./regex.js */ \"./node_modules/uuid/dist/esm-node/regex.js\");\n\n\nfunction validate(uuid) {\n  return typeof uuid === 'string' && _regex_js__WEBPACK_IMPORTED_MODULE_0__[\"default\"].test(uuid);\n}\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (validate);\n\n//# sourceURL=webpack://toml-editor/./node_modules/uuid/dist/esm-node/validate.js?");
 
 /***/ }),
 
-/***/ 2936:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+/***/ "./node_modules/uuid/dist/esm-node/version.js":
+/*!****************************************************!*\
+  !*** ./node_modules/uuid/dist/esm-node/version.js ***!
+  \****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-
-
-Object.defineProperty(exports, "__esModule", ({
-  value: true
-}));
-exports["default"] = void 0;
-
-var _validate = _interopRequireDefault(__nccwpck_require__(1890));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function version(uuid) {
-  if (!(0, _validate.default)(uuid)) {
-    throw TypeError('Invalid UUID');
-  }
-
-  return parseInt(uuid.substr(14, 1), 16);
-}
-
-var _default = version;
-exports["default"] = _default;
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var _validate_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./validate.js */ \"./node_modules/uuid/dist/esm-node/validate.js\");\n\n\nfunction version(uuid) {\n  if (!(0,_validate_js__WEBPACK_IMPORTED_MODULE_0__[\"default\"])(uuid)) {\n    throw TypeError('Invalid UUID');\n  }\n\n  return parseInt(uuid.substr(14, 1), 16);\n}\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (version);\n\n//# sourceURL=webpack://toml-editor/./node_modules/uuid/dist/esm-node/version.js?");
 
 /***/ }),
 
-/***/ 9491:
+/***/ "assert":
+/*!*************************!*\
+  !*** external "assert" ***!
+  \*************************/
 /***/ ((module) => {
 
 "use strict";
@@ -4947,7 +480,10 @@ module.exports = require("assert");
 
 /***/ }),
 
-/***/ 6113:
+/***/ "crypto":
+/*!*************************!*\
+  !*** external "crypto" ***!
+  \*************************/
 /***/ ((module) => {
 
 "use strict";
@@ -4955,7 +491,10 @@ module.exports = require("crypto");
 
 /***/ }),
 
-/***/ 2361:
+/***/ "events":
+/*!*************************!*\
+  !*** external "events" ***!
+  \*************************/
 /***/ ((module) => {
 
 "use strict";
@@ -4963,7 +502,10 @@ module.exports = require("events");
 
 /***/ }),
 
-/***/ 7147:
+/***/ "fs":
+/*!*********************!*\
+  !*** external "fs" ***!
+  \*********************/
 /***/ ((module) => {
 
 "use strict";
@@ -4971,7 +513,10 @@ module.exports = require("fs");
 
 /***/ }),
 
-/***/ 3685:
+/***/ "http":
+/*!***********************!*\
+  !*** external "http" ***!
+  \***********************/
 /***/ ((module) => {
 
 "use strict";
@@ -4979,7 +524,10 @@ module.exports = require("http");
 
 /***/ }),
 
-/***/ 5687:
+/***/ "https":
+/*!************************!*\
+  !*** external "https" ***!
+  \************************/
 /***/ ((module) => {
 
 "use strict";
@@ -4987,7 +535,10 @@ module.exports = require("https");
 
 /***/ }),
 
-/***/ 1808:
+/***/ "net":
+/*!**********************!*\
+  !*** external "net" ***!
+  \**********************/
 /***/ ((module) => {
 
 "use strict";
@@ -4995,7 +546,10 @@ module.exports = require("net");
 
 /***/ }),
 
-/***/ 7561:
+/***/ "node:fs":
+/*!**************************!*\
+  !*** external "node:fs" ***!
+  \**************************/
 /***/ ((module) => {
 
 "use strict";
@@ -5003,7 +557,10 @@ module.exports = require("node:fs");
 
 /***/ }),
 
-/***/ 9411:
+/***/ "node:path":
+/*!****************************!*\
+  !*** external "node:path" ***!
+  \****************************/
 /***/ ((module) => {
 
 "use strict";
@@ -5011,7 +568,10 @@ module.exports = require("node:path");
 
 /***/ }),
 
-/***/ 2037:
+/***/ "os":
+/*!*********************!*\
+  !*** external "os" ***!
+  \*********************/
 /***/ ((module) => {
 
 "use strict";
@@ -5019,7 +579,10 @@ module.exports = require("os");
 
 /***/ }),
 
-/***/ 1017:
+/***/ "path":
+/*!***********************!*\
+  !*** external "path" ***!
+  \***********************/
 /***/ ((module) => {
 
 "use strict";
@@ -5027,7 +590,10 @@ module.exports = require("path");
 
 /***/ }),
 
-/***/ 2781:
+/***/ "stream":
+/*!*************************!*\
+  !*** external "stream" ***!
+  \*************************/
 /***/ ((module) => {
 
 "use strict";
@@ -5035,7 +601,10 @@ module.exports = require("stream");
 
 /***/ }),
 
-/***/ 4404:
+/***/ "tls":
+/*!**********************!*\
+  !*** external "tls" ***!
+  \**********************/
 /***/ ((module) => {
 
 "use strict";
@@ -5043,7 +612,10 @@ module.exports = require("tls");
 
 /***/ }),
 
-/***/ 3837:
+/***/ "util":
+/*!***********************!*\
+  !*** external "util" ***!
+  \***********************/
 /***/ ((module) => {
 
 "use strict";
@@ -5057,7 +629,7 @@ module.exports = require("util");
 /******/ 	var __webpack_module_cache__ = {};
 /******/ 	
 /******/ 	// The require function
-/******/ 	function __nccwpck_require__(moduleId) {
+/******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
 /******/ 		var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
@@ -5071,30 +643,59 @@ module.exports = require("util");
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		var threw = true;
-/******/ 		try {
-/******/ 			__webpack_modules__[moduleId].call(module.exports, module, module.exports, __nccwpck_require__);
-/******/ 			threw = false;
-/******/ 		} finally {
-/******/ 			if(threw) delete __webpack_module_cache__[moduleId];
-/******/ 		}
+/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
 /******/ 	
 /************************************************************************/
-/******/ 	/* webpack/runtime/compat */
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__webpack_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	})();
 /******/ 	
-/******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
 /******/ 	
 /************************************************************************/
 /******/ 	
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	var __webpack_exports__ = __nccwpck_require__(4716);
-/******/ 	module.exports = __webpack_exports__;
+/******/ 	var __webpack_exports__ = __webpack_require__("./index.js");
 /******/ 	
 /******/ })()
 ;
