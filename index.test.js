@@ -121,3 +121,26 @@ test("two new key", () => {
 
   expect(setValue === value).toBeTruthy();
 });
+
+function getTomlString2() {
+  return `
+[package]
+name = "hello-world"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+  `;
+}
+
+test("two new toml", () => {
+  let key = "version";
+  let value = "v2.0.0";
+  let tomlContent = getTomlString2();
+  let tomlObj = index.parseTomlContent(tomlContent);
+
+  index.updateToml(tomlObj, key, value);
+  let setValue = index.getTomlValue(tomlObj, key);
+
+  expect(setValue === value).toBeTruthy();
+})
