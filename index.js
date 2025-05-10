@@ -10,14 +10,13 @@ function run() {
     const value = core.getInput("value", { required: true });
 
     const filePath = path.join(process.env.GITHUB_WORKSPACE, fileName);
-    core.info(`TOML filePath: ${filePath}`);
-    core.info(`TOML fileName: ${fileName}`);
     let tomlContent = getTomlContent(filePath);
     
     let tomlObj = parseTomlContent(tomlContent);
-
     updateToml(tomlObj, key, value);
-    writeTomlObj(tomlObj, fileName);
+    const parsed = toml.stringify(tomlObj);
+    core.info(`value: ${parsed}`);
+    writeTomlObj(tomlObj, filePath);
   } catch (error) {
     core.setFailed(error.message);
   }
