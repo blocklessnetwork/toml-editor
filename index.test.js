@@ -128,18 +128,17 @@ function getTomlString2() {
 name = "hello-world"
 version = "0.1.0"
 edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-  `;
+`;
 }
 
 test("two new toml", () => {
-  let key = "version";
+  let key = "package.version";
   let value = "v2.0.0";
   let tomlContent = getTomlString2();
   let tomlObj = index.parseTomlContent(tomlContent);
 
   index.updateToml(tomlObj, key, value);
+  console.log(index.stringifyToml(tomlObj));
   let setValue = index.getTomlValue(tomlObj, key);
 
   expect(setValue === value).toBeTruthy();

@@ -15,7 +15,6 @@ function run() {
     let tomlObj = parseTomlContent(tomlContent);
     updateToml(tomlObj, key, value);
     const parsed = toml.stringify(tomlObj);
-    core.info(`value: ${parsed}`);
     writeTomlObj(tomlObj, filePath);
   } catch (error) {
     core.setFailed(error.message);
